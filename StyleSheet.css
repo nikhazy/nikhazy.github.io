@@ -1,0 +1,21 @@
+﻿article {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 1300px;
+  border-style: solid;
+}
+div {
+  height: 100px;
+  width: 250px;
+  background: lime;
+  font-size: 25px;
+  position: absolute;
+  padding: 20px;
+  text-align: center;
+}
+section {
+  position: relative;
+  height: 600px;
+  width: 600px;
+}
