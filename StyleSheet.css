@@ -1,4 +1,8 @@
-﻿header {
+﻿@font-face {
+  font-family: myFirstFont;
+  src: url(https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Josefin+Sans&family=Merriweather&display=swap);
+}
+header {
   background-image: url("http://stayathome-syllabus.greenfox.academy/week01/assets/first-website-header.png");
   height: 400px;
   background-position: center;
@@ -14,7 +18,7 @@
   justify-content: center;
 }
 .welcome {
-  font-family: 'Abril Fatface', cursive;
+  font-family: myFirstFont;
   color: #222;
   width: 700px;
   padding: 50px;
@@ -29,6 +33,7 @@ h6 {
   margin: 0px;
 }
 p {
+  text-indent: 50px;
   font-family: 'Josefin Sans', sans-serif;
   font-size: 20px;
   color: #222;
