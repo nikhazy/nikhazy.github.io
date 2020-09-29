@@ -1,21 +1,108 @@
-﻿article {
+﻿header {
+  background-image: url("http://stayathome-syllabus.greenfox.academy/week01/assets/first-website-header.png");
+  height: 400px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   position: relative;
+  width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-wrap: wrap;
-  width: 1300px;
-  border-style: solid;
+  align-content: flex-end;
+  justify-content: center;
 }
-div {
-  height: 100px;
-  width: 250px;
-  background: lime;
-  font-size: 25px;
-  position: absolute;
-  padding: 20px;
+.welcome {
+  font-family: 'Abril Fatface', cursive;
+  color: #222;
+  width: 700px;
+  padding: 50px;
+}
+h1 {
+  font-size: 70px;
+  font-weight: 700;
+  margin: 0px;
+}
+h6 {
+  font-size: 30px;
+  margin: 0px;
+}
+p {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 20px;
+  color: #222;
+}
+.fp {
+  font-size: 20px;
+}
+ul {
+  font-family: 'Josefin Sans', sans-serif;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+li {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.fu {
+  font-size: 20px;
+}
+h2 {
+  font-size: 50px;
+  background: #222;
+  color: white;
+  padding: 50px;
+  padding-bottom: 10px;
   text-align: center;
-}
-section {
   position: relative;
-  height: 600px;
-  width: 600px;
+  margin-left: -50px;
+  margin-right: -50px;
+  text-align: left;
+}
+.quotation {
+  position: absolute;
+  transform: rotate(180deg);
+  top: 0px;
+  left: 0px;
+  font-size: 120px;
+}
+.author {
+  margin-top: -45px;
+  text-align: right;
+  background: #222;
+  margin-left: -50px;
+  margin-right: -50px;
+  color: white;
+  padding: 5px;
+}
+h3 {
+  text-transform: uppercase;
+  font-family: 'Merriweather', serif;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  letter-spacing: 3px;
+  font-size: 25px;
+}
+h4 {
+  font-family: 'Merriweather', serif;
+  margin-bottom: 0px;
+  font-size: 25px;
+}
+h5 {
+  font-family: 'Merriweather', serif;
+  font-style: italic;
+  margin-top: 0px;
+}
+article {
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+hr {
+  height: 2px;
+  background: #222;
+  border-style: solid;
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
