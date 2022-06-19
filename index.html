@@ -7,7 +7,9 @@
 
 	
 	
-<textarea disabled>
+<textarea disabled style="width:100%; height: 800px">
+************************************************** LOGIN HTML PAGE *************************************************************
+
 
 <!DOCTYPE html>
 <html>
@@ -39,6 +41,187 @@
 </body>
 </html>
 
+	
+	
+	
+************************************************** LOGIN PHP PAGE *************************************************************
+<?php
+//NikhazyMarci
+//Larixkft25!
+$name=$_POST["name"];
+$pass=$_POST["pass"];
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+
+$userData = GetUserData($conn, $name);
+if(is_array($userData)){
+	$id = $userData["id"];
+	if(password_verify($pass, $userData["password"])){
+		$q = "INSERT INTO db1.logs (userid, ts, muvelet, error_message) VALUES ($id, now(), 2, null);";
+		$conn->query($q);
+		$q = "UPDATE db1.users set lastlogin=now() WHERE username='$name';";
+		$conn->query($q);
+		echo "<h1>Bejelentkezés sikeres</h1>";
+	}
+	else{
+		$q = "INSERT INTO db1.logs (userid, ts, muvelet, error_message) VALUES ($id, now(), 3, 'A megadott jelszó nem megfelelő!');";
+		$conn->query($q);
+		echo "<h1>Bejelentkezés sikertelen!</h1>";
+	}
+}
+else{
+	$q = "INSERT INTO db1.logs (userid, ts, muvelet, error_message) VALUES (null, now(), 3, 'A megadott felhasználónév nem létezik: $name');";
+	$conn->query($q);
+	echo "<h1>Bejelentkezés sikertelen!</h1>";
+}
+
+
+
+function GetUserData($input_conn, $input_name){
+	$q = "SELECT * FROM db1.users WHERE username='$input_name';";
+	$r = $input_conn->query($q);
+	$x = $r->fetch_assoc();
+	return $x;
+}
+$conn->close();
+
+?>
+	
+	
+	
+********************************************************************REGISTRATION HTML PAGE******************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Regisztrációs lap</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<h1>Felhasználó regisztrálás:</h1>
+
+<form method="POST" action="registration.php">
+	<div class="form-group">
+	  <label for="name">Név:</label><br>
+	  <input type="text" id="name" name="name" class="form-control"><br>
+	</div>
+	<div class="form-group">
+	  <label for="pass">Jelszó:</label><br>
+	  <input type="password" id="pass" name="pass" class="form-control"><br><br>
+	</div>
+  <input type="submit" class="btn btn-default" value="Regisztráció">
+</form>
+
+
+<h3>Bejelentkezéshez kattints ide: <a href="/vizsga/login.html">Bejelentkezés</a> </h3>
+
+</body>
+</html>
+
+
+
+***********************************************************************REGISTRATION PHP PAGE ******************************************************************
+<?php
+//var_dump($_POST);
+
+$name=$_POST["name"];
+$pass=$_POST["pass"];
+$hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$issues = [];
+
+if(!isNameCorrectFirstChar($name)){
+	array_push($issues,"A név első karakterének betűnek kell lennie!");
+}
+if(!isNameCorrectLength($name)){
+	array_push($issues,"A név hosszának minimum 8 karakternek kell lennie!");
+}
+if(!isPasswordCorrectLowerCase($pass)){
+	array_push($issues,"A jelszónak tartalmaznia kell kis betűt!");
+}
+if(!isPasswordCorrectUpperCase($pass)){
+	array_push($issues,"A jelszónak tartalmaznia kell nagy betűt!");
+}
+if(!isPasswordCorrectNumber($pass)){
+	array_push($issues,"A jelszónak tartalmaznia kell számot!");
+}
+if(!isPasswordCorrectSpecialChar($pass)){
+	array_push($issues,"A jelszónak tartalmaznia kell speciális karaktert!");
+}
+if(!isPasswordCorrectSpace($pass)){
+	array_push($issues,"A jelszó nem tartalmazhat szóközt!");
+}
+if(!isPasswordCorrectLength($pass)){
+	array_push($issues,"A jelszónak legalább 10 karakter hosszúnak kell lennie!");
+}
+
+if(count($issues) == 0){
+	$q = "INSERT INTO db1.users (username, PASSWORD, lastlogin, reg_ts) VALUES ('$name', '$hashed_password', null, now());";
+	$conn->query($q);
+	$q = "SELECT id FROM db1.users WHERE username='$name' AND PASSWORD='$hashed_password';";
+	$r = $conn->query($q);
+	$x = $r->fetch_assoc();
+	$id = $x["id"];
+	$q = "INSERT INTO db1.logs (userid, ts, muvelet, error_message) VALUES ($id, now(), 1, null);";
+	//echo $q;
+	$conn->query($q);
+	echo "<h1>Sikeres regisztráció!</h1><br>";
+}
+else{
+	echo "<h1>A regisztráció sikertelen!</h1><br>";
+	echo "<h3>A jelszó nem felel meg az alábbi követelményeknek:</h3><br>";
+	echo "<ul>";
+	foreach($issues as $issue){
+		echo "<li>$issue</li><br>";
+	}
+	echo "</ul>";
+}
+
+$conn->close();
+
+function isNameCorrectFirstChar($input){
+	return ctype_alpha($input);
+}
+function isNameCorrectLength($input){
+	return strlen($input) > 7;
+}
+function isPasswordCorrectLowerCase($input){
+	return preg_match("/[a-z]/i", $input);
+}
+function isPasswordCorrectUpperCase($input){
+	return preg_match("/[A-Z]/i", $input);
+}
+function isPasswordCorrectNumber($input){
+	return preg_match("/[0-9]/i", $input);
+}
+function isPasswordCorrectSpecialChar($input){
+	return preg_match('/[\'!^£$%&*()}{@#~?><>,|=_+¬-]/', $input);
+}
+function isPasswordCorrectSpace($input){
+	return !str_contains($input, ' ');
+}
+function isPasswordCorrectLength($input){
+	return strlen($input) > 9;
+}
+
+?>
+	
+	
+	
 </textarea>
 
 	
