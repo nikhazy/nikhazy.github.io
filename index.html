@@ -219,8 +219,102 @@ function isPasswordCorrectLength($input){
 }
 
 ?>
+
+*********************************************************2. feladathoz SQL parancsok***************************************************
+SELECT menu.`id` FROM menu
+WHERE menu.`id` NOT IN (SELECT DISTINCT apa FROM menu);
+
+SELECT * FROM termek
+WHERE tipus IN(SELECT menu.`id` FROM menu
+WHERE menu.`id` NOT IN (SELECT DISTINCT apa FROM menu));
+
+SELECT menu.`id`, menu.`megnevezes`, (SELECT COUNT(*) FROM termek WHERE tipus=menu.`id`) c FROM menu WHERE id=11;
+
+SELECT COUNT(*) FROM termek WHERE tipus=3;
+
+-- 1. lépés
+UPDATE menu SET db=0;
+
+-- 2. lépés
+SELECT menu.`id`,menu.`megnevezes`, (SELECT COUNT(*) FROM termek WHERE tipus=menu.`id`) c FROM menu;
+UPDATE menu SET menu.`db`=(SELECT COUNT(*) FROM termek WHERE tipus=menu.`id`);
+
+-- 3. lépés
+SELECT * FROM menu WHERE menu.`id` NOT IN (SELECT DISTINCT apa FROM menu);
 	
 	
+**************************************************************Főmenű Almenü Összegzés****************************************************************
+<html>
+<head>
+</head>
+<body>
+<?php
+// db settings
+$hostname = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'menuteszt';
+
+// db connection
+$con = mysqli_connect($hostname, $username, $password, $database) or die ("Error ".mysqli_error($con));
+
+//Főmenü
+function menux ($apax,$conx,$b) {
+	$sql ="SELECT * FROM menu WHERE apa=$apax";
+	$result = mysqli_query($conx, $sql);
+	if ($result->num_rows > 0) {
+		while($row = mysqli_fetch_assoc($result)) {
+			for ($i=0; $i<$b; $i++) {echo '&nbsp;'; }
+			echo $row["megnevezés"]." (".$row["darab"].")".'<br>';
+			menux($row["id"],$conx,$b+2);
+			//var_dump($row);
+			//echo'<br><br>';
+		}
+	}
+}
+function szamolr2($conx, $id, $darabx) {
+	$sql = "select * from menu where id=$id";
+	//echo $sql.'<br>';
+	$result = mysqli_query($conx, $sql);
+	$row = mysqli_fetch_assoc($result);
+	if ($row["apa"] <> 0) {
+		$sql = "update menu set darab=darab+".$darabx." where id=".$row["apa"];
+		mysqli_query($conx, $sql);
+		//echo $sql.'<br><br>';
+		szamolr2($conx,$row["apa"],$darabx);
+	}
+}
+
+function szamolr($conx) {
+	$sql = "SELECT * FROM menu WHERE menu.`id` NOT IN(SELECT DISTINCT apa FROM menu);";
+	$result = mysqli_query($conx, $sql);
+	while($row = mysqli_fetch_assoc($result)) {
+		/*if ($row["apa"] <> 0) {
+			$sql = "update menu set darab=darab+".$row["darab"]." where id=".$row["apa"];
+			mysqli_query($conx, $sql);
+		}*/
+		szamolr2($conx,$row["id"],$row["darab"]);
+	}
+}
+
+function szamol ($conx) {
+	$sql ="UPDATE menu SET darab=0";
+	mysqli_query($conx, $sql);
+	
+	$sql ="UPDATE menu SET darab=(SELECT COUNT(*) FROM termek WHERE típus=menu.`id`);";
+	mysqli_query($conx, $sql);
+	
+	szamolr($conx);
+}
+szamol($con); 
+menux(0,$con,0);
+
+?>
+
+</body>
+</html>
+	
+*****************************************************************************************************************************************************************
 	
 </textarea>
 
