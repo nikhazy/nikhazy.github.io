@@ -314,7 +314,813 @@ menux(0,$con,0);
 </body>
 </html>
 	
+****************************************************************************Vizsgafeladatom**********************************************************************
+****************************************************************************AddPeople.html**********************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<h1>Emberek rögzítése:</h1>
+
+<form method="POST" action="addpeople.php">
+	<div class="form-group">
+	  <label for="name">Név:</label><br>
+	  <input type="text" id="name" name="name" class="form-control"><br>
+	</div>
+	<div class="form-group">
+	  <label for="dateofbirth">Születési dátum:</label><br>
+	  <input type="date" id="dateofbirth" name="dateofbirth" class="form-control"><br><br>
+	</div>
+	<div class="form-group">
+		<label for="sex">Nem:</label><br>
+		<select name="sex" id="sex" class="form-control">
+		  <option value="men">Férfi</option>
+		  <option value="women">Nő</option>
+		</select>
+	</div>
+  <input type="submit" class="btn btn-default" value="Rögzítés">
+</form>
+
+</body>
+</html>
+	
+************************************************************************index.html*******************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Rokonság</title>
+</head>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+<body>
+
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+</body>
+</html>
+	
+*************************************************************************addpeople.php***********************************************************************
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<?php
+//var_dump($_POST);
+
+$name=$_POST["name"];
+$date=$_POST["dateofbirth"];
+$sexString=$_POST["sex"];
+$sexInt = 0;
+if($sexString=="women"){
+	$sexInt = 1;
+}
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "INSERT INTO db1.emberek (nev, szul_datum, nem) VALUES ('$name', '$date', $sexInt);";
+
+$conn->query($q);
+
+echo "<h1>Felhasználó sikeresen hozzáadva!</h1>";
+?>
+
+
+</body>
+</html>
+*************************************************************************selectpeople.php*******************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<?php
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "SELECT nev FROM db1.emberek;";
+
+$r = $conn->query($q);
+$emberek = mysqli_fetch_all ($r, MYSQLI_ASSOC);
+
+?>
+
+<h1>Emberek módosítása:</h1>
+<h3>Válassz egy személyt:</h3>
+<form action="modifypeople.php" method="post">
+ <select name="people"  class="form-control"> 
+<?php foreach($emberek as $ember){ ?>
+                <option value="<?php echo $ember["nev"];?>"><?php echo $ember["nev"];     ?></option> 
+<?php } ?>
+</select>
+<input type = "submit" name = "submit" value = "Ember kiválasztása">
+</form>
+
+
+</body>
+</html>
+	
+************************************************************************modifypeople.php********************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Ember módosítása</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<?php
+$currentName = $_POST["people"];
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "SELECT * FROM db1.emberek WHERE nev='$currentName';";
+$r = $conn->query($q);
+$emberem = $r->fetch_assoc();
+
+?>
+
+<form method="POST" action="modify.php">
+	<div class="form-group">
+	  <input style="display:none" type="text" id="id" name="id" value="<?php echo $emberem["id"]; ?>"><br>
+	  <label for="name">Név:</label><br>
+	  <input type="text" id="name" name="name" class="form-control" value="<?php echo $emberem["nev"]; ?>"><br>
+	</div>
+	<div class="form-group">
+	  <label for="dateofbirth">Születési dátum:</label><br>
+	  <input type="date" id="dateofbirth" name="dateofbirth" class="form-control"  value="<?php echo $emberem["szul_datum"]; ?>"><br><br>
+	</div>
+	<div class="form-group">
+		<label for="sex">Nem:</label><br>
+		<select name="sex" id="sex" class="form-control">
+		  <option <?php if($emberem["nem"]=="0"){echo "selected";} ?> value="men">Férfi</option>
+		  <option <?php if($emberem["nem"]=="1"){echo "selected";} ?> value="women">Nő</option>
+		</select>
+	</div>
+  <input type="submit" class="btn btn-default" value="Módosítás">
+</form>
+
+<form method="POST" action="delete.php">
+	<input style="display:none" type="text" id="id" name="id" value="<?php echo $emberem["id"]; ?>"><br>
+	<input type="submit" class="btn btn-default" value="Törlés">
+</form>
+
+</body>
+</html>
+*********************************************************************************modify.php************************************************************
+	
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+
+<?php
+//var_dump($_POST);
+$id = $_POST["id"];
+$name = $_POST["name"];
+$date = $_POST["dateofbirth"];
+$sexString = $_POST["sex"];
+
+$sexInt = 0;
+if($sexString=="women"){
+	$sexInt = 1;
+}
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "UPDATE db1.emberek SET nev='$name', szul_datum='$date', nem='$sexInt' WHERE id=$id;";
+
+$conn->query($q);
+
+echo "<h1>A módosítások sikeresen megtörténtek!</h1>";
+
+?>
+
+
+</body>
+</html>
+*****************************************************************************delete.php*********************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+
+<?php
+var_dump($_POST);
+$id = $_POST["id"];
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "DELETE FROM db1.emberek WHERE id=$id;";
+
+$conn->query($q);
+
+echo "<h1>A felhasználó törölve!</h1>";
+
+?>
+
+
+</body>
+</html>
+	
+****************************************************************************relationship.php*****************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<?php
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+$q = "SELECT db1.emberek.id, db1.emberek.nev, db1.emberek.nem, db1.kapcsolat.apa_id, db1.kapcsolat.anya_id FROM db1.emberek LEFT JOIN db1.kapcsolat ON db1.emberek.id = db1.kapcsolat.ember_id";
+
+$r = $conn->query($q);
+$emberek = mysqli_fetch_all ($r, MYSQLI_ASSOC);
+//var_dump($emberek);
+	
+
+
+?>
+
+<h1>Kapcsolatok beállítása:</h1>
+
+<h3>Válassz egy személyt:</h3>
+<form action="" method="post">
+		 <select name="people"  class="form-control"> 
+		<?php foreach($emberek as $ember){ ?>
+						<option value="<?php echo $ember["id"];?>"><?php echo $ember["nev"];     ?></option> 
+		<?php } ?>
+</select>
+<input type = "submit" name = "submit" value = "Ember kiválasztása" class="btn btn-default">
+</form>
+
+<?php
+	$selectedId = '0';
+	if(is_array($_POST)){
+	
+		$selectedId = $_POST["people"];
+		//echo $selectedId;
+		
+		$conn = new mysqli($servername, $username, $password);
+		$q = "SELECT * FROM db1.emberek WHERE id='$selectedId';";
+		$r = $conn->query($q);
+		$szemely = $r->fetch_assoc();
+		
+		//var_dump($szemely);
+		
+		$conn = new mysqli($servername, $username, $password);
+		$q = "SELECT * FROM db1.emberek WHERE nem=1 AND id<>'$selectedId';";
+		$r = $conn->query($q);
+		$anyukak = mysqli_fetch_all ($r, MYSQLI_ASSOC);
+	
+		$conn = new mysqli($servername, $username, $password);
+		$q = "SELECT * FROM db1.emberek WHERE nem=0 AND id<>'$selectedId';";
+		$r = $conn->query($q);
+		$apukak = mysqli_fetch_all ($r, MYSQLI_ASSOC);
+		
+	}
+?>
+
+
+
+<form method="POST" action="modifyrelation.php">
+	<input style="display:none" type="text" id="id" name="id" value="<?php echo $selectedId; ?>"><br>
+	<input type="text" id="name" name="name" value="<?php echo $szemely["nev"]; ?>"  class="form-control"><br>
+	
+	<div class="form-group">
+		<label for="mom">Anya:</label><br>
+		<select name="mom" id="mom" class="form-control">
+		<?php foreach($anyukak as $anya){ ?>
+						<option value="<?php echo $anya["id"];?>"><?php echo $anya["nev"];     ?></option> 
+		<?php } ?>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="dad">Apa:</label><br>
+		<select name="dad" id="dad" class="form-control">
+		<?php foreach($apukak as $apa){ ?>
+						<option value="<?php echo $apa["id"];?>"><?php echo $apa["nev"];     ?></option> 
+		<?php } ?>
+		</select>
+	</div>
+  <input type="submit" class="btn btn-default" value="Beállítás">
+</form>
+
+</body>
+</html>
+	
+*******************************************************************************modifyrelation.php************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+
+<?php
+
+//var_dump($_POST);
+
+$id = $_POST["id"];
+$apa_id = $_POST["dad"];
+$anya_id = $_POST["mom"];
+
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+$q = "SELECT COUNT(*) c FROM db1.kapcsolat WHERE ember_id='$id';";
+$r = $conn->query($q);
+$x = $r->fetch_assoc();
+
+if($x["c"]>0){
+	$q = "UPDATE db1.kapcsolat SET apa_id = '$apa_id', anya_id = '$anya_id' WHERE ember_id = '$id';";
+	$conn->query($q);
+}
+else{
+	$q = "INSERT INTO db1.kapcsolat (ember_id ,apa_id, anya_id) VALUES ('$id','$apa_id','$anya_id');";
+	$conn->query($q);
+}
+
+echo "<h1>Kapcsolat beállítva!</h1>";
+
+?>
+
+
+</body>
+</html>
+	
+**************************************************************************listpeople.php**********************************************************************
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+<title>Emberek rögzítése</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+</style>
+</head>
+<body>
+<ul class="menu">
+<li><a href="/vizsga/index.html">Főmenü</a></li>
+<li><a href="/vizsga/addpeople.html">Emberek rögzítése</a></li>
+<li><a href="/vizsga/selectpeople.php">Emberek módosítása/törlése</a></li>
+<li><a href="/vizsga/relationship.php">Rokoni kapcsolatok beállítása</a></li>
+<li><a href="/vizsga/listpeople.php">Listázás</a></li>	
+</ul>
+
+<?php
+$servername="localhost";
+$username="root";
+$password="";
+
+$conn = new mysqli($servername, $username, $password);
+
+//$q = "SELECT * FROM db1.emberek;";
+$q = "SELECT e1.id, e1.nev, e1.szul_datum, e1.nem, e2.nev AS apa, e3.nev AS anya FROM db1.emberek AS e1
+LEFT JOIN db1.kapcsolat ON e1.id = db1.kapcsolat.ember_id 
+LEFT JOIN db1.emberek AS e2 ON e2.id = db1.kapcsolat.apa_id
+LEFT JOIN db1.emberek AS e3 ON e3.id = db1.kapcsolat.anya_id";
+
+$r = $conn->query($q);
+$emberek = mysqli_fetch_all ($r, MYSQLI_ASSOC);
+
+//var_dump($emberek);
+?>
+
+<h1>Emberek táblázata:</h1>
+
+<table class="table">
+<tr>
+	<th>ID</td>
+	<th>Név</td>
+	<th>Születési dátum</td>
+	<th>Nem</td>
+	<th>Apa neve</td>
+	<th>Anya neve</td>
+</tr>
+	<?php  foreach($emberek as $row): ?>
+			<tr>
+				<td><?php echo $row['id'];?></td>
+				<td><?php echo $row['nev'];?></td>
+				<td><?php echo $row['szul_datum'];?></td>
+				<td><?php if($row['nem']=="0"){echo "Férfi";} else { echo "Nő";};?></td>
+				<td><?php echo $row['apa'];?></td>
+				<td><?php echo $row['anya'];?></td>
+			</tr>
+	  <?php endforeach;?>
+</table>
+
+
+
+</body>
+</html>
 *****************************************************************************************************************************************************************
+	
+
 	
 </textarea>
 
