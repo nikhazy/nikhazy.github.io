@@ -138,6 +138,7 @@ h3.sec span{font-family:var(--f-mono);font-size:10px;font-weight:400;letter-spac
 .panel{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.gridr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
 
 /* ---------- readouts (instrument feel) ---------- */
 .readout{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);padding:13px 15px 14px}
@@ -164,6 +165,9 @@ input[type=range]::-moz-range-track{height:3px;background:var(--line);border-rad
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--seed);margin-top:-5.5px;border:2px solid var(--surface)}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--seed);border:2px solid var(--surface)}
 input[type=range]:focus-visible{outline:2px solid var(--seed);outline-offset:3px;border-radius:3px}
+select.pick{width:100%;font-family:var(--f-body);font-size:14px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:6px 9px;cursor:pointer}
+select.pick:focus-visible{outline:2px solid var(--seed);outline-offset:1px}
 button.act{font-family:var(--f-display);font-weight:500;font-size:13px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .13s,border-color .13s}
 button.act:hover{background:var(--surface-2);border-color:var(--ink-3)}
 button.act:focus-visible{outline:2px solid var(--seed);outline-offset:2px}
@@ -175,7 +179,7 @@ button.act.primary:hover{filter:brightness(1.06)}
 
 /* ---------- tables ---------- */
 .tw{overflow-x:auto;border:1px solid var(--line-soft);border-radius:var(--r)}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:440px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:360px}
 th,td{text-align:left;padding:8px 13px;border-bottom:1px solid var(--line-soft);vertical-align:top}
 thead th{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:400;background:var(--surface-2)}
 tbody tr:last-child td{border-bottom:0}
@@ -373,9 +377,19 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
           <span class="hint">Hidegsajtolás csigapréssel: 50–65% (Rombaut 2015). A többi a pogácsában marad.</span></label>
 
         <h3 class="sec">Értékesítés <span>amiért eladod</span></h3>
-        <label class="ctrl"><span class="row"><span class="name">Szőlőmagolaj ára</span><span class="num" id="o-price">9 000 Ft/L</span></span>
-          <input type="range" id="i-price" min="1500" max="40000" step="250" value="9000">
-          <span class="hint" id="h-price">Palackozva, helyi piacon.</span></label>
+        <label class="ctrl"><span class="row"><span class="name">Szőlőmagolaj ára</span><span class="num" id="o-price">12 000 Ft/L</span></span>
+          <input type="range" id="i-price" min="1000" max="30000" step="250" value="12000">
+          <span class="hint" id="h-price">A fő eladási sáv: 250 ml-es palackban, helyi piacon.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Kiszerelés</span><span class="num" id="o-pack">1 760 Ft/L</span></span>
+          <select class="pick" id="i-pack">
+            <option value="250" selected>250 ml-es üveg — a fő eladási forma</option>
+            <option value="100">100 ml-es üveg — legjobb literár, legdrágább csomagolás</option>
+            <option value="500">500 ml-es üveg</option>
+            <option value="1000">1 literes palack</option>
+            <option value="0">Ömlesztve, palackozatlanul</option>
+          </select>
+          <span class="hint" id="h-pack">Üveg + kupak + címke, 300–1000 db-os szériában.</span></label>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
           <button class="act" type="button" data-preset="konzerv">Konzervatív</button>
@@ -412,10 +426,13 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
         </div>
 
         <h3 class="sec">Bevétel <span>a beállított áron</span></h3>
-        <div class="grid3" style="margin-bottom:14px">
-          <div class="readout hi"><span class="lbl">Bruttó bevétel</span><div class="val" id="r-rev">11 700<small>Ft</small></div><div class="note" id="r-bottles">5 db 250 ml-es palack</div></div>
-          <div class="readout"><span class="lbl">Fajlagos érték</span><div class="val" id="r-perkg">117<small>Ft/kg</small></div><div class="note">friss törkölyre vetítve</div></div>
-          <div class="readout"><span class="lbl">Órabér</span><div class="val" id="r-perhour">6 100<small>Ft/h</small></div><div class="note">szeparálásra fordított időre</div></div>
+        <div class="gridr" style="margin-bottom:14px">
+          <div class="readout hi"><span class="lbl">Bruttó bevétel</span><div class="val" id="r-rev">15 600<small>Ft</small></div><div class="note" id="r-bottles">5 db 250 ml-es palack</div></div>
+          <div class="readout"><span class="lbl">Csomagolás</span><div class="val" id="r-pack">2 300<small>Ft</small></div><div class="note" id="r-packnote">üveg, kupak, címke</div></div>
+          <div class="readout good"><span class="lbl">Marad</span><div class="val" id="r-net">13 300<small>Ft</small></div><div class="note">csomagolás után</div></div>
+          <div class="readout"><span class="lbl">Fajlagos érték</span><div class="val" id="r-perkg">133<small>Ft/kg</small></div><div class="note">friss törkölyre vetítve</div></div>
+          <div class="readout"><span class="lbl">Órabér</span><div class="val" id="r-perhour">6 800<small>Ft/h</small></div><div class="note">szeparálásra fordított időre</div></div>
+          <div class="readout"><span class="lbl">Préspogácsa</span><div class="val" id="r-cake">13,1<small>kg</small></div><div class="note">őrleményként külön értékesíthető</div></div>
         </div>
         <p class="note" id="r-payback">—</p>
 
@@ -681,6 +698,40 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
       </tbody>
     </table></div>
 
+    <h3 class="sec">Árak <span>2026. augusztusi hazai piackutatás</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Szegmens</th><th class="n">Ft/liter</th><th>Példák</th></tr></thead>
+      <tbody>
+        <tr><td>Dél-európai export tömegár</td><td class="n">700–1 350</td><td>Portugália 708, Spanyolország 1 235, Olaszország 1 330</td></tr>
+        <tr><td>Ömlesztve viszonteladónak (becslés)</td><td class="n">3 000–5 000</td><td>a palackozott ár 35–50%-a; kozmetikai nagyker ~3 940</td></tr>
+        <tr><td>Reformbolti melegen sajtolt / finomított, 1 L</td><td class="n">2 790–5 940</td><td>Naturganik, Naturmind, Pietro Coricelli</td></tr>
+        <tr><td><b>Magyar hidegen sajtolt, belépő (1 L)</b></td><td class="n">8 000–9 900</td><td>Jómagyar 8 000, Grapoila 9 160, Göcseji 9 900</td></tr>
+        <tr><td><b>Márkázott hidegen sajtolt, 250 ml</b></td><td class="n">10 800–16 900</td><td>Grapoila 12 120, Gere 13 960, Olajütő 16 920</td></tr>
+        <tr><td>Bio, kézműves</td><td class="n">16 000–21 200</td><td>Gyukli 16 000, Biogold 21 200</td></tr>
+        <tr><td>Ultraprémium</td><td class="n">30 380–61 500</td><td>Pödör Zweigelt, Pödör BIO — háztáji léptékben nem reális</td></tr>
+      </tbody>
+      <caption>A kiszerelés számít: ugyanaz a gyártó 100 ml-ben 24–32%-kal magasabb literárat kér, mint 1 literben.</caption>
+    </table></div>
+
+    <h3 class="sec">Csomagolási önköltség <span>üveg + kupak + címke, 300–1000 db</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Kiszerelés</th><th class="n">Ft/db</th><th class="n">Ft/liter</th></tr></thead>
+      <tbody>
+        <tr><td>100 ml</td><td class="n">~370</td><td class="n">~3 700</td></tr>
+        <tr><td>250 ml</td><td class="n">~440</td><td class="n">~1 760</td></tr>
+        <tr><td>500 ml</td><td class="n">~650</td><td class="n">~1 300</td></tr>
+        <tr><td>1 liter</td><td class="n">~450</td><td class="n">~450</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout">
+      <b>A döntő gazdasági korlát.</b> Egy liter olajhoz 12–16 kg mag kell. Vásárolt magból (650 Ft/kg nagy tételben) az alapanyagköltség önmagában ~9 750 Ft/liter — <b>magasabb, mint a kész olaj bolti ára</b>. A számítás csak akkor jön ki, ha a törköly saját vagy szomszédos pincészetből, gyakorlatilag ingyen érkezik. Épp ezért van értelme a háztáji gépnek.
+    </div>
+
+    <div class="callout">
+      <b>Engedélyek.</b> A gyakran hivatkozott 52/2010. FVM kistermelői rendelet hatályon kívül van; helyette a <b>60/2023. (XI. 15.) AM rendelet</b> hatályos. A tevékenység nem engedély-, hanem <b>bejelentés-köteles</b> a járási hivatalnál (FELIR-azonosító). Webshop és házhoz szállítás megengedett. A növényi olaj mennyiségi besorolása nem egyértelmű a rendeletben — kérj írásos állásfoglalást.
+    </div>
+
     <h3 class="sec">Hivatkozások</h3>
     <div class="srcs">
       Romaniello, Tamborrino, Leone (2019), <i>Heliyon</i> — centrifugális szeparátor; száraz 90% vs friss &lt;40%<br>
@@ -706,7 +757,30 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
       Real Seeds — nyílt forrású DIY mag-aspirátor tervrajz<br>
       <a href="https://realseeds.co.uk/seedcleaner.html">realseeds.co.uk/seedcleaner.html</a><br><br>
       Chocolate Alchemy — DIY winnower ~50 USD PVC-ből (az elv 1:1 átvihető)<br>
-      <a href="https://chocolatealchemy.com/blog/2011/07/11/chocolate-alchemys-diy-winnower">chocolatealchemy.com — DIY winnower</a>
+      <a href="https://chocolatealchemy.com/blog/2011/07/11/chocolate-alchemys-diy-winnower">chocolatealchemy.com — DIY winnower</a><br><br>
+
+      <b style="color:var(--ink-2)">Árak és értékesítés</b><br><br>
+      Hazai webshopok (2026.08.): Jómagyar, Grapoila, Göcseji, Pödör, Gyukli, NapiBio, Biobolt, Rossmann<br>
+      <a href="https://grapoila.hu/spd/OILV105/Szolomagolaj-1000-ml-PET">grapoila.hu</a> ·
+      <a href="https://gocsejiolaj.hu/szolomagolaj_65">gocsejiolaj.hu</a> ·
+      <a href="https://podor.hu/termekek/hidegen-sajtolt-olajok/bio-szolomagolaj">podor.hu</a><br><br>
+
+      Nemzetközi bulk árak — Tridge, 2026. február<br>
+      <a href="https://www.tridge.com/intelligences/grapeseed-oil/price">tridge.com/intelligences/grapeseed-oil/price</a><br><br>
+
+      Szőlőmag mint alapanyag, magyar apróhirdetés 2026.07.08.<br>
+      <a href="https://www.agroinform.hu/aprohirdetes_adatlap/termeny/egyeb-termeny/voros-edes-szolomag-elado-postai-utanvettel/h_7004658">agroinform.hu — vörös édes szőlőmag árlista</a><br><br>
+
+      Arany Kapu Zrt. — évi 40–45 e t törköly, ~6 000 t szárított mag (a hazai mennyiség 80–90%-a)<br>
+      <a href="https://vinoport.hu/tema/a-szolotorkoly-felhasznalasi-lehetosegei/3917">vinoport.hu — A szőlőtörköly felhasználási lehetőségei</a><br><br>
+
+      Kistermelői élelmiszer-előállítás: 60/2023. (XI. 15.) AM rendelet<br>
+      <a href="https://net.jogtar.hu/jogszabaly?docid=a2300060.am">net.jogtar.hu — 60/2023. (XI. 15.) AM</a> ·
+      <a href="https://portal.nebih.gov.hu/-/nem-engedelykoteles-letesitmenyek-bejelentese">nebih.gov.hu — bejelentés</a> ·
+      <a href="https://elelmiszerlanc.kormany.hu/download/6/ae/e1000/Kistermeloi%20GHP.pdf">Kistermelői GHP útmutató (PDF)</a><br><br>
+
+      Adózás 2026: őstermelői adómentes határ 1 936 800 Ft, ÁFA alanyi mentesség 20 M Ft<br>
+      <a href="https://nav.gov.hu/ado/afa/Emelkedik_az_alanyi_adomentesseg_ertekhatara">nav.gov.hu — alanyi adómentesség</a>
     </div>
 
     <div class="callout" style="margin-top:26px">
@@ -825,8 +899,18 @@ function drawVt(){
 }
 
 /* ======================= 02 — YIELD CALC ======================= */
-const CALC = {input:100, moist:55, seedfrac:40, sep:75, oil:14, press:58, price:9000};
+const CALC = {input:100, moist:55, seedfrac:40, sep:75, oil:14, press:58, price:12000, pack:250};
 const BUILD_COST = 120000;   // anyagköltség a géptervlapról, Ft
+
+/* Csomagolási önköltség kiszerelésenként (bruttó Ft/db, 300–1000 db-os széria:
+   üveg + kupak + címke), 2026-os hazai listaárakból. */
+const PACKS = {
+  0:    {name:'ömlesztve',  ml:0,    perUnit:0,   perL:0},
+  100:  {name:'100 ml',     ml:100,  perUnit:370, perL:3700},
+  250:  {name:'250 ml',     ml:250,  perUnit:440, perL:1760},
+  500:  {name:'500 ml',     ml:500,  perUnit:650, perL:1300},
+  1000: {name:'1 literes',  ml:1000, perUnit:450, perL:450},
+};
 const PRESETS = {
   konzerv: {moist:70, seedfrac:30, sep:45, oil:9,  press:50},
   tipikus: {moist:55, seedfrac:40, sep:75, oil:14, press:58},
@@ -848,8 +932,13 @@ function calc(){
   const husk = dry - seedTheor;
   const hours = dry/25;
   const revenue = oilL * CALC.price;
-  return {dry, seedTheor, seed, seedLost, oilIn, oilKg, oilL, water, husk, hours,
-          revenue, perKg: revenue/CALC.input, perHour: hours > 0 ? revenue/hours : 0};
+  const pk = PACKS[CALC.pack];
+  const units = pk.ml ? Math.ceil(oilL*1000 / pk.ml) : 0;   // ennyi üveget kell megvenni
+  const packCost = units * pk.perUnit;
+  const net = revenue - packCost;
+  const cake = seed - oilKg;              // préspogácsa: a mag, amiből az olaj kijött
+  return {dry, seedTheor, seed, seedLost, oilIn, oilKg, oilL, water, husk, hours, cake,
+          revenue, packCost, units, net, perKg: net/CALC.input, perHour: hours > 0 ? net/hours : 0};
 }
 
 /* Forint formatting: millions get their own unit so the readout stays legible */
@@ -869,10 +958,19 @@ function renderCalc(){
   document.getElementById('o-price').textContent = fmt0(CALC.price) + ' Ft/L';
 
   const hp = document.getElementById('h-price');
-  hp.textContent = CALC.price < 4000 ? 'Ömlesztett, palackozatlan átadási ár nagyságrendje.'
-    : CALC.price < 9000 ? 'Bolti tömegtermék sávja.'
-    : CALC.price < 18000 ? 'Palackozva, helyi piacon vagy saját webshopban.'
-    : 'Prémium bio / kozmetikai minőség, kis kiszerelésben.';
+  hp.textContent =
+      CALC.price < 2000  ? 'Dél-európai export tömegár (700–1 350 Ft/L). Ezen a szinten egy magyar háztáji termelő nem versenyképes.'
+    : CALC.price < 6000  ? 'Ömlesztve, palackozatlanul viszonteladónak: 3 000–5 000 Ft/L.'
+    : CALC.price < 10000 ? 'Magyar hidegen sajtolt belépő szint, literes kiszerelésben (Jómagyar 8 000, Grapoila 9 160, Göcseji 9 900 Ft/L).'
+    : CALC.price < 17000 ? 'A fő eladási sáv: 250 ml-es palackban, helyi piacon vagy saját webshopban.'
+    : CALC.price < 22000 ? 'Bio tanúsítvánnyal és eredetjelöléssel elérhető (Gyukli 16 000, Biogold 21 200 Ft/L).'
+    : 'Ultraprémium márkaszint (Pödör 30–61 e Ft/L). Kiépített márka és delikátesz-forgalmazás nélkül háztáji léptékben nem reális.';
+
+  const pk = PACKS[CALC.pack];
+  document.getElementById('o-pack').textContent = pk.perL ? fmt0(pk.perL) + ' Ft/L' : 'nincs költség';
+  document.getElementById('h-pack').textContent = pk.ml
+    ? `Üveg + kupak + címke ~${fmt0(pk.perUnit)} Ft/db, 300–1000 db-os szériában.`
+    : 'Palackozatlan átadás — nincs csomagolási költség, de az elérhető ár is jóval alacsonyabb.';
 
   const hs = document.getElementById('h-sep');
   hs.textContent = CALC.sep < 45 ? 'Ez a nedvesen rostált eset — a mag több mint fele elmegy.'
@@ -907,18 +1005,32 @@ function renderCalc(){
   // revenue block
   const rev = huf(r.revenue);
   document.getElementById('r-rev').innerHTML = rev.v + '<small>' + rev.u + '</small>';
-  document.getElementById('r-bottles').textContent = fmt0(r.oilL/0.25) + ' db 250 ml-es palack';
-  const pk = huf(r.perKg);
-  document.getElementById('r-perkg').innerHTML = (r.perKg >= 1e6 ? pk.v : fmt0(r.perKg)) + '<small>Ft/kg</small>';
+  document.getElementById('r-bottles').textContent = pk.ml
+    ? fmt0(r.units) + ' db ' + pk.name + ' palack'
+    : fmt(r.oilL,1) + ' liter ömlesztve';
+
+  const pc = huf(r.packCost);
+  document.getElementById('r-pack').innerHTML = pc.v + '<small>' + pc.u + '</small>';
+  document.getElementById('r-packnote').textContent = pk.ml
+    ? `üveg, kupak, címke — ~${fmt0(pk.perUnit)} Ft/db` : 'nincs palackozás';
+
+  const nt = huf(r.net);
+  document.getElementById('r-net').innerHTML = nt.v + '<small>' + nt.u + '</small>';
+
+  const pkg = huf(r.perKg);
+  document.getElementById('r-perkg').innerHTML = (r.perKg >= 1e6 ? pkg.v : fmt0(r.perKg)) + '<small>Ft/kg</small>';
   const ph = huf(r.perHour);
   document.getElementById('r-perhour').innerHTML = ph.v + '<small>' + ph.u + '/h</small>';
+  document.getElementById('r-cake').innerHTML = fmt(r.cake, r.cake<10?1:0) + '<small>kg</small>';
 
   const pay = document.getElementById('r-payback');
   const kgForPayback = r.perKg > 0 ? BUILD_COST / r.perKg : Infinity;
-  if (r.revenue >= BUILD_COST){
-    pay.innerHTML = `Ez az egy tétel <b>kitermeli a gépsor ~${fmt0(BUILD_COST)} Ft-os anyagköltségét</b> — ${fmt(r.revenue/BUILD_COST,1)}× fedezi.`;
-  } else {
+  if (r.net >= BUILD_COST){
+    pay.innerHTML = `Ez az egy tétel <b>kitermeli a gépsor ~${fmt0(BUILD_COST)} Ft-os anyagköltségét</b> — ${fmt(r.net/BUILD_COST,1)}× fedezi.`;
+  } else if (r.perKg > 0){
     pay.innerHTML = `A gépsor ~${fmt0(BUILD_COST)} Ft-os anyagköltsége <b>${fmt0(kgForPayback)} kg friss törköly</b> feldolgozásából jön vissza (${fmt(kgForPayback/CALC.input,1)}× ennyi tétel).`;
+  } else {
+    pay.innerHTML = `Ezen az áron a csomagolás többe kerül, mint amennyit az olaj hoz — <b>nagyobb kiszerelés vagy magasabb ár kell</b>.`;
   }
 
   // backwards: per 1 L
@@ -988,6 +1100,9 @@ function sliderToKg(pos){
 });
 document.getElementById('i-input').addEventListener('input', e => {
   CALC.input = sliderToKg(+e.target.value); renderCalc();
+});
+document.getElementById('i-pack').addEventListener('change', e => {
+  CALC.pack = +e.target.value; renderCalc();
 });
 document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
   Object.assign(CALC, PRESETS[b.dataset.preset]);
