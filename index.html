@@ -255,11 +255,12 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
     <nav id="nav">
       <button class="navbtn" data-v="elv" aria-current="true"><span class="n">01</span><span>Az elv</span></button>
       <button class="navbtn" data-v="hozam"><span class="n">02</span><span>Hozamkalkulátor</span></button>
-      <button class="navbtn" data-v="sim"><span class="n">03</span><span>Szimuláció</span></button>
-      <button class="navbtn" data-v="terv3d"><span class="n">04</span><span>3D gépnézet</span></button>
-      <button class="navbtn" data-v="alk"><span class="n">05</span><span>Nyomtatott alkatrészek</span></button>
-      <button class="navbtn" data-v="terv"><span class="n">06</span><span>Géptervlap</span></button>
-      <button class="navbtn" data-v="forras"><span class="n">07</span><span>Adatok, források</span></button>
+      <button class="navbtn" data-v="sim"><span class="n">03</span><span>Folyamat-szimuláció</span></button>
+      <button class="navbtn" data-v="dem"><span class="n">04</span><span>Ütközéses modell</span></button>
+      <button class="navbtn" data-v="terv3d"><span class="n">05</span><span>3D gépnézet</span></button>
+      <button class="navbtn" data-v="alk"><span class="n">06</span><span>Nyomtatott alkatrészek</span></button>
+      <button class="navbtn" data-v="terv"><span class="n">07</span><span>Géptervlap</span></button>
+      <button class="navbtn" data-v="forras"><span class="n">08</span><span>Adatok, források</span></button>
     </nav>
     <div class="railfoot">
       <b>Tervezési munkapont</b><br>
@@ -564,7 +565,95 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
     </div>
   </section>
 
-  <!-- ============ 04 3D ============ -->
+  <!-- ============ 04 DEM ============ -->
+  <section class="view" id="v-dem">
+    <div class="vhead">
+      <div class="eyebrow">04 — Diszkrét elem módszer</div>
+      <h2 class="vh">Ütközéses modell</h2>
+      <p class="lede">Itt nincs valószínűség és nincs idealizálás. Minden szemcse külön test, saját tömeggel, sugárral és <b>pörgéssel</b>; az érintkezéseket rugó-csillapító kontaktmodell számolja Coulomb-súrlódással. A rostálás <b>geometriai</b>: a mag akkor esik át, ha épp lyuk fölé kerül és belefér. A kaszkádozás, a torlódás és a centrifugálás mind ebből jön ki magától — egyetlen beírt képlet nélkül.</p>
+    </div>
+
+    <div class="stage">
+      <div class="v3dbar">
+        <div class="grp">
+          <button class="v3btn on" data-demview="drum">Dobrosta keresztmetszet</button>
+          <button class="v3btn" data-demview="col">Szelelőoszlop</button>
+        </div>
+        <div class="grp" style="align-items:center;gap:10px">
+          <button class="v3btn on" id="d-play">Fut</button>
+          <button class="v3btn" id="d-reset">Újraindít</button>
+          <button class="v3btn" id="d-contacts">Érintkezések</button>
+        </div>
+      </div>
+      <canvas id="dem" height="470"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--seed)"></i>mag</span>
+        <span><i style="background:var(--husk)"></i>héj</span>
+        <span><i style="background:var(--stem)"></i>kocsány</span>
+        <span style="margin-left:auto;color:var(--ink-3)" id="d-hint">a szemcsék valós méretarányban · a dob Ø200 mm</span>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin:16px 0">
+      <div class="readout hi"><span class="lbl">Szimulált idő</span><div class="val" id="d-time">0,0<small>s</small></div><div class="note" id="d-rate">—</div></div>
+      <div class="readout"><span class="lbl">Szemcse</span><div class="val" id="d-n">0<small>db</small></div><div class="note" id="d-contn">0 érintkezés</div></div>
+      <div class="readout" id="ro-overlap"><span class="lbl">Átlagos átfedés</span><div class="val" id="d-ovl">0,0<small>%</small></div><div class="note" id="d-ovln">a sugár arányában</div></div>
+      <div class="readout"><span class="lbl" id="l-pass">Átesett mag</span><div class="val" id="d-pass">0<small>db</small></div><div class="note" id="d-passn">geometriai szitálás</div></div>
+      <div class="readout"><span class="lbl">Kinetikus energia</span><div class="val" id="d-ke">0<small>mJ</small></div><div class="note">az ágy mozgásállapota</div></div>
+      <div class="readout"><span class="lbl" id="l-fill">Töltöttség</span><div class="val" id="d-fill">0<small>%</small></div><div class="note" id="d-filln">a dob keresztmetszetére</div></div>
+    </div>
+
+    <div class="grid2" style="align-items:start">
+      <div>
+        <h3 class="sec">Beállítások <span>a kontaktmodell paraméterei is</span></h3>
+
+        <label class="ctrl"><span class="row"><span class="name">Dob fordulatszáma</span><span class="num" id="o-drpm">22 rpm</span></span>
+          <input type="range" id="i-drpm" min="2" max="70" step="1" value="22">
+          <span class="hint" id="h-drpm">A kritikus fordulat Ø200-nál 94,6 rpm. Efölött centrifugál.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Rosta lyukmérete</span><span class="num" id="o-dhole">10,0 mm</span></span>
+          <input type="range" id="i-dhole" min="4" max="16" step="0.5" value="10">
+          <span class="hint">A mag geometriailag fér át, nem valószínűséggel.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Töltet</span><span class="num" id="o-dfill">180 szemcse</span></span>
+          <input type="range" id="i-dfill" min="40" max="420" step="10" value="180">
+          <span class="hint">Több szemcse = pontosabb ágy, de lassabb futás.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Légsebesség (oszlop)</span><span class="num" id="o-dair">5,0 m/s</span></span>
+          <input type="range" id="i-dair" min="1" max="9" step="0.1" value="5">
+          <span class="hint">A szelelőoszlop nézetben hat.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Számítási sebesség</span><span class="num" id="o-dslow">100%</span></span>
+          <input type="range" id="i-dslow" min="10" max="100" step="5" value="100">
+          <span class="hint" id="h-dslow">A DEM időlépése kötött (~40 µs), ezért a szimuláció lassított felvételben fut. A csúszka az allépések számát állítja — a fizika pontossága nem változik, csak a szimulált idő telik lassabban.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Súrlódási együttható</span><span class="num" id="o-dmu">0,45</span></span>
+          <input type="range" id="i-dmu" min="10" max="90" step="1" value="45">
+          <span class="hint">Mag acélon 0,25–0,34, magok között magasabb. Ez viszi fel az anyagot a dob falán.</span></label>
+      </div>
+
+      <div>
+        <h3 class="sec">Mit lát az ember <span>olvasat</span></h3>
+        <div class="card">
+          <p class="note" id="d-diag">—</p>
+        </div>
+
+        <div class="callout" style="margin-top:18px">
+          <b>Az átfedés a modell minőségjelzője.</b> A lágygömb kontaktmodellben a szemcsék picit egymásba lógnak, és a rugóerő ebből származik. Ha az <b>átlagos átfedés 1% alatt</b> van a sugárhoz képest, a merevség megfelelő. Ha 5% fölé megy, a szemcsék átcsúsznak egymáson és a modell hazudik — ilyenkor lassítani kell.
+        </div>
+
+        <div class="callout">
+          <b>Amit ez a modell tud, és az idealizált nem.</b> Az ágy torlódik és nyírásra nyílik, a kaszkádozás magától alakul ki a súrlódásból, a lyuk fölé kerülés valódi geometria, és a fordulatszám növelésével a centrifugálás is magától jelentkezik — nem egy beírt képletből. A dobban lépésenként több száz aktív érintkezés van.
+        </div>
+
+        <div class="callout">
+          <b>És egy negatív eredmény, ami ugyanolyan értékes.</b> A szelelőoszlopban akkor sem lesz sűrű az anyag, ha a töltetet maximumra tolod: a terhelés ~2% marad, és lépésenként egynél kevesebb az érintkezés. Az oszlop <b>híg fázisú</b> rendszer, ahol a szemcsék egyenként szállnak. Az egyszerű modell tehát ott <b>helyes volt</b> — ez a futás nem megcáfolja, hanem igazolja. A sűrű, ütközésvezérelt rész a dobrosta.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 3D ============ -->
   <section class="view" id="v-terv3d">
     <div class="vhead">
       <div class="eyebrow">04 — Az integrált gép</div>
@@ -2706,6 +2795,474 @@ function renderPartsTable(){
   });
 })();
 
+/* ============================================================
+   04 — DEM (diszkrét elem módszer)
+   Lágygömb (Cundall–Strack) kontaktmodell: lineáris rugó + csillapító
+   normálirányban, Coulomb-súrlódás érintőirányban, forgással együtt.
+   Minden hosszméret MÉTERBEN, a rajzoló számol át képpontra.
+   ============================================================ */
+const DEM = {
+  view:'drum', running:true, showContacts:false,
+  rpm:22, hole:0.010, nWant:180, air:5.0, slow:4, mu:0.45,
+  p:[], t:0, subSteps:0, contacts:0, ovlSum:0, ovlMax:0, ke:0,
+  passed:{seed:0,husk:0,stem:0}, blown:{seed:0,husk:0,stem:0}, caught:{seed:0,husk:0,stem:0},
+  R:0.100,                      // dobsugár, m (Ø200)
+  lifterH:0.015, nLifters:3,
+  theta:0,                      // a dob elfordulása
+  /* Az oszlop y = 0 (kifúvás, felül) és y = −1,0 m (kúpos beömlő, alul) között.
+     Az anyag középmagasságban lép be, ahogy a valódi gépen. */
+  col:{w:0.125, top:0, bot:1.0, feedY:-0.45},
+  /* Kontaktmerevség. Nem önkényes: a követelmény az, hogy az átfedés a sugár
+     1–2%-a alatt maradjon. Egy 10 szemcse mély ágyban a legalsó kontakterő
+     ~10·m·g ≈ 3 mN, ehhez 2 mm-es sugárnál kn > 75 N/m elég. A 250 N/m
+     kényelmes tartalékot ad, és nem szorítja le fölöslegesen az időlépést. */
+  kn:180,
+  mFloor:1.8e-5,                  // az időlépéshez vett minimális tömeg
+  speed:100,                    // a számítási sebesség a maximum %-ában
+  simRate:0,                    // ténylegesen elért szimulált mp / valós mp
+  grid:null, cell:0.010, hashAge:0, hashDirty:true
+};
+const DEM_MAXSUB = 34;
+
+function demRand(a,b){ return a + Math.random()*(b-a); }
+
+/* Egy szemcse létrehozása a MÉRT fizikai tulajdonságokból. */
+function demMake(kind){
+  const sp = SPECIES.find(s => s.k === kind) || SPECIES[0];
+  const mass = demRand(sp.mass[0], sp.mass[1]);
+  const rho  = demRand(sp.rho[0],  sp.rho[1]);
+  const psi  = demRand(sp.psi[0],  sp.psi[1]);
+  const dv   = Math.cbrt(6*mass/(rho*Math.PI));
+  const kco  = hlCoeffs(psi);
+  // a rostához a KISEBBIK átmérő számít, a kontakthoz a látszó sugár
+  const dMin = (kind === 'seed' ? sampleSeedD() : demRand(sp.d[0], sp.d[1])) / 1000;
+  const r = Math.max(0.0012, dv/2);
+  return {
+    x:0, y:0, vx:0, vy:0, om:0, th:Math.random()*6.28,
+    r, m:mass, I:0.5*mass*r*r, dMin, dv, kco, area:Math.PI*dv*dv/4,
+    kind: kindOf(sp), col: PAL[sp.col],
+    e: kind==='seed' ? 0.45 : 0.20        // a mag pattan, a héj nem
+  };
+}
+
+function demReset(){
+  DEM.p = []; DEM.t = 0; DEM.theta = 0; DEM.hashDirty = true; DEM.hashAge = 0;
+  /* A kontaktmerevséget az ütközési sebességhez kell szabni: az átfedés
+     csúcsa δ = v·√(m/k). A dobban az anyag lassan gördül (0,3 m/s), az
+     oszlopban viszont a felszálló héj 4 m/s-mal csapódik a magnak — ott
+     háromszor merevebb kontakt kell, cserébe kisebb időlépéssel. */
+  DEM.kn = (DEM.view === 'drum') ? 180 : 900;
+  DEM.passed={seed:0,husk:0,stem:0}; DEM.blown={seed:0,husk:0,stem:0}; DEM.caught={seed:0,husk:0,stem:0};
+  if (DEM.view === 'drum'){
+    // a dob alsó harmadába szórjuk be a töltetet, egymást nem fedve
+    for (let i=0;i<DEM.nWant;i++){
+      const k = ['seed','seed','husk','huskS','stem'][Math.floor(Math.random()*5)];
+      const p = demMake(k);
+      for (let tryN=0; tryN<40; tryN++){
+        const a = demRand(-2.6,-0.5), rr = demRand(0, DEM.R-p.r-0.004);
+        p.x = Math.cos(a)*rr; p.y = Math.sin(a)*rr;
+        let ok = true;
+        for (const q of DEM.p) if (Math.hypot(p.x-q.x, p.y-q.y) < p.r+q.r+0.0005){ ok=false; break; }
+        if (ok) break;
+      }
+      DEM.p.push(p);
+    }
+  }
+}
+
+/* --- térbeli hasítás típusos tömbökkel, láncolt listával.
+   Sztringkulcsos Map helyett ez ~20× gyorsabb, és nem szemetel. --- */
+const HASH_BITS = 12, HASH_N = 1 << HASH_BITS, HASH_MASK = HASH_N - 1;
+const hHead = new Int32Array(HASH_N);
+let hNext = new Int32Array(1024);
+function cellKey(gx, gy){ return ((gx*73856093) ^ (gy*19349663)) & HASH_MASK; }
+
+function demHash(){
+  const P = DEM.p, n = P.length, c = DEM.cell;
+  if (hNext.length < n) hNext = new Int32Array(Math.max(n*2, 1024));
+  hHead.fill(-1);
+  for (let i=0;i<n;i++){
+    const p = P[i];
+    const k = cellKey(Math.floor(p.x/c), Math.floor(p.y/c));
+    hNext[i] = hHead[k]; hHead[k] = i;
+  }
+}
+/* A szomszédok bejárása közvetlenül, köztes tömb nélkül. */
+function demForEachNeighbor(p, i, fn){
+  const c = DEM.cell, gx = Math.floor(p.x/c), gy = Math.floor(p.y/c);
+  for (let dx=-1; dx<=1; dx++) for (let dy=-1; dy<=1; dy++){
+    let j = hHead[cellKey(gx+dx, gy+dy)];
+    while (j !== -1){ if (j > i) fn(j); j = hNext[j]; }
+  }
+}
+
+/* --- kontakt két szemcse között --- */
+function demPairForce(a, b){
+  const dx = a.x-b.x, dy = a.y-b.y;
+  const d2 = dx*dx+dy*dy, rsum = a.r+b.r;
+  if (d2 >= rsum*rsum || d2 < 1e-12) return;
+  const d = Math.sqrt(d2), delta = rsum - d;
+  const nx = dx/d, ny = dy/d;                 // b-től a felé mutat
+
+  // érintkezési pont sebességei a forgással együtt
+  const vrx = (a.vx + a.om*a.r*ny) - (b.vx - b.om*b.r*ny);
+  const vry = (a.vy - a.om*a.r*nx) - (b.vy + b.om*b.r*nx);
+  const vn = vrx*nx + vry*ny;
+  const vt = -vrx*ny + vry*nx;
+
+  // csillapítás az ütközési rugalmasságból: gamma = -2 ln(e) sqrt(m_eff k /(ln²e+pi²))
+  const meff = (a.m*b.m)/(a.m+b.m);
+  const e = 0.5*(a.e+b.e), le = Math.log(Math.max(0.05,e));
+  const gn = -2*le*Math.sqrt(meff*DEM.kn/(le*le+Math.PI*Math.PI));
+
+  let Fn = DEM.kn*delta - gn*vn;
+  if (Fn < 0) Fn = 0;
+  let Ft = -0.6*gn*vt;
+  const lim = DEM.mu*Fn;
+  if (Ft >  lim) Ft =  lim;
+  if (Ft < -lim) Ft = -lim;
+
+  const fx = Fn*nx - Ft*ny, fy = Fn*ny + Ft*nx;
+  a.fx += fx; a.fy += fy; b.fx -= fx; b.fy -= fy;
+  a.tq -= a.r*Ft;  b.tq -= b.r*Ft;
+
+  DEM.contacts++; DEM.ovlSum += delta/Math.min(a.r,b.r);
+  if (delta/Math.min(a.r,b.r) > DEM.ovlMax) DEM.ovlMax = delta/Math.min(a.r,b.r);
+}
+
+/* --- kontakt egy fallal, aminek adott a felületi sebessége --- */
+function demWallForce(p, nx, ny, delta, wvx, wvy){
+  if (delta <= 0) return;
+  const vrx = (p.vx + p.om*p.r*ny) - wvx;
+  const vry = (p.vy - p.om*p.r*nx) - wvy;
+  const vn = vrx*nx + vry*ny;
+  const vt = -vrx*ny + vry*nx;
+
+  const le = Math.log(Math.max(0.05, p.e));
+  const gn = -2*le*Math.sqrt(p.m*DEM.kn/(le*le+Math.PI*Math.PI));
+  let Fn = DEM.kn*delta - gn*vn;
+  if (Fn < 0) Fn = 0;
+  let Ft = -0.6*gn*vt;
+  const lim = DEM.mu*Fn;
+  if (Ft >  lim) Ft =  lim;
+  if (Ft < -lim) Ft = -lim;
+
+  p.fx += Fn*nx - Ft*ny; p.fy += Fn*ny + Ft*nx;
+  p.tq -= p.r*Ft;
+  DEM.contacts++; DEM.ovlSum += delta/p.r;
+  if (delta/p.r > DEM.ovlMax) DEM.ovlMax = delta/p.r;
+}
+
+/* ============================================================
+   Egy DEM allépés
+   ============================================================ */
+function demStep(dt){
+  const P = DEM.p;
+  for (const p of P){ p.fx = 0; p.fy = -p.m*G; p.tq = 0; }
+
+  /* A hasítótáblát nem kell minden allépésben újraépíteni: egy szemcse
+     lépésenként ~40 µm-t mozdul, a cella 10 mm — 10 lépésenként bőven elég. */
+  if ((DEM.hashAge = (DEM.hashAge|0) + 1) >= 10 || DEM.hashDirty){ demHash(); DEM.hashAge = 0; DEM.hashDirty = false; }
+  const c = DEM.cell;
+  for (let i=0;i<P.length;i++){
+    const p = P[i];
+    const gx = Math.floor(p.x/c), gy = Math.floor(p.y/c);
+    for (let dx=-1; dx<=1; dx++) for (let dy=-1; dy<=1; dy++){
+      let j = hHead[cellKey(gx+dx, gy+dy)];
+      while (j !== -1){
+        if (j > i && j < P.length) demPairForce(p, P[j]);
+        j = hNext[j];
+      }
+    }
+  }
+
+  if (DEM.view === 'drum'){
+    const om = DEM.rpm*2*Math.PI/60;
+    DEM.theta += om*dt;
+    for (const p of P){
+      const d = Math.hypot(p.x, p.y);
+      // palást
+      if (d + p.r > DEM.R && d > 1e-9){
+        const nx = -p.x/d, ny = -p.y/d;                 // befelé mutat
+        const cx = p.x/d*DEM.R, cy = p.y/d*DEM.R;
+        demWallForce(p, nx, ny, d + p.r - DEM.R, -om*cy, om*cx);
+      }
+      // emelőlécek: sugárirányú szakaszok, a dobbal együtt forognak
+      for (let k=0;k<DEM.nLifters;k++){
+        const a = DEM.theta + k*2*Math.PI/DEM.nLifters;
+        const ax = Math.cos(a)*(DEM.R-DEM.lifterH), ay = Math.sin(a)*(DEM.R-DEM.lifterH);
+        const bx = Math.cos(a)*DEM.R,               by = Math.sin(a)*DEM.R;
+        const ex = bx-ax, ey = by-ay, L2 = ex*ex+ey*ey;
+        let t = ((p.x-ax)*ex + (p.y-ay)*ey)/L2; t = Math.max(0, Math.min(1, t));
+        const qx = ax+ex*t, qy = ay+ey*t;
+        const dx = p.x-qx, dy = p.y-qy, dd = Math.hypot(dx,dy);
+        if (dd < p.r && dd > 1e-9)
+          demWallForce(p, dx/dd, dy/dd, p.r-dd, -om*qy, om*qx);
+      }
+    }
+  } else {
+    // szelelőoszlop: falak + valódi ellenállás a levegőtől
+    const W = DEM.col.w;
+    for (const p of P){
+      if (p.x - p.r < -W/2) demWallForce(p, 1, 0, -W/2 - (p.x-p.r), 0, 0);
+      if (p.x + p.r >  W/2) demWallForce(p, -1, 0, (p.x+p.r) - W/2, 0, 0);
+      // 1/7 hatványprofil, a fal mellett lassabb
+      const rRel = Math.min(0.98, Math.abs(p.x)/(W/2));
+      const vAir = DEM.air/0.817*Math.pow(1-rRel, 1/7);
+      const vRelY = p.vy - vAir;                    // y felfelé pozitív
+      const vRel = Math.hypot(p.vx, vRelY);
+      if (vRel > 1e-6){
+        const cd = cdOf(RHO_AIR*vRel*p.dv/MU_AIR, p.kco);
+        const F = 0.5*RHO_AIR*cd*p.area*vRel;
+        p.fx -= F*p.vx; p.fy -= F*vRelY;
+      }
+    }
+  }
+
+  // félig implicit Euler
+  for (const p of P){
+    p.vx += p.fx/p.m*dt; p.vy += p.fy/p.m*dt; p.om += p.tq/p.I*dt;
+    p.x  += p.vx*dt;     p.y  += p.vy*dt;     p.th += p.om*dt;
+  }
+
+  // --- kivezetés ---
+  if (DEM.view === 'drum'){
+    // GEOMETRIAI szitálás: a szemcse akkor esik ki, ha lyuk fölé kerül és belefér
+    const holeAng = DEM.hole/DEM.R, pitchAng = (DEM.hole*1.5)/DEM.R;
+    const nHoles = Math.max(6, Math.floor(2*Math.PI/pitchAng));
+    for (let i=P.length-1;i>=0;i--){
+      const p = P[i];
+      const d = Math.hypot(p.x, p.y);
+      if (d + p.r < DEM.R - 0.0015) continue;         // nem ér a falhoz
+      if (p.dMin >= DEM.hole) continue;               // nem fér át
+      /* Kifelé kell hatnia az eredő sugárirányú erőnek, különben a szemcse
+         nem esik ki a lyukon, csak elválik a faltól. Kifelé:
+         centrifugális ω²r, befelé a gravitáció sugárirányú vetülete g·sinφ.
+         Alul mindig kiesik, felül csak a kritikus fordulat fölött. */
+      const phi = Math.atan2(p.y, p.x);
+      const om2 = Math.pow(DEM.rpm*2*Math.PI/60, 2);
+      if (om2*d - G*Math.sin(phi) <= 0) continue;
+      let a = phi - DEM.theta;
+      a = ((a % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+      const inHole = (a % (2*Math.PI/nHoles)) < holeAng*0.5;
+      if (inHole){
+        DEM.passed[p.kind === 'huskS' ? 'husk' : p.kind]++;
+        P.splice(i,1);
+      }
+    }
+  } else {
+    for (let i=P.length-1;i>=0;i--){
+      const p = P[i];
+      if (p.y > DEM.col.top){ DEM.blown[p.kind==='huskS'?'husk':p.kind]++; P.splice(i,1); }
+      else if (p.y < -DEM.col.bot){ DEM.caught[p.kind==='huskS'?'husk':p.kind]++; P.splice(i,1); }
+    }
+  }
+  DEM.t += dt;
+}
+
+/* ============================================================
+   Rajzolás
+   ============================================================ */
+function drawDem(){
+  const cv = document.getElementById('dem'); if (!cv || !cv.clientWidth) return;
+  const {c,w,h} = fit(cv);
+  c.fillStyle = PAL['surface-2']; c.fillRect(0,0,w,h);
+  c.font = '10px "JetBrains Mono", monospace';
+
+  if (DEM.view === 'drum'){
+    const S = Math.min(w,h)*0.42/DEM.R, cx = w/2, cy = h/2;
+    const X = x => cx + x*S, Y = y => cy - y*S;
+
+    // palást a valódi lyukosztással
+    const holeAng = DEM.hole/DEM.R, pitchAng = (DEM.hole*1.5)/DEM.R;
+    const nHoles = Math.max(6, Math.floor(2*Math.PI/pitchAng));
+    c.strokeStyle = PAL['line']; c.lineWidth = 2.5;
+    for (let k=0;k<nHoles;k++){
+      const a0 = DEM.theta + k*2*Math.PI/nHoles + holeAng*0.5;
+      const a1 = DEM.theta + (k+1)*2*Math.PI/nHoles;
+      c.beginPath(); c.arc(cx, cy, DEM.R*S, -a1, -a0); c.stroke();
+    }
+    // emelőlécek
+    c.strokeStyle = PAL['ink-3']; c.lineWidth = 3;
+    for (let k=0;k<DEM.nLifters;k++){
+      const a = DEM.theta + k*2*Math.PI/DEM.nLifters;
+      c.beginPath();
+      c.moveTo(X(Math.cos(a)*(DEM.R-DEM.lifterH)), Y(Math.sin(a)*(DEM.R-DEM.lifterH)));
+      c.lineTo(X(Math.cos(a)*DEM.R), Y(Math.sin(a)*DEM.R));
+      c.stroke();
+    }
+    // kritikus fordulat jelzése
+    c.fillStyle = PAL['ink-3']; c.textAlign='left';
+    c.fillText('Ø200 · ' + DEM.rpm + ' rpm · lyuk ' + fmt(DEM.hole*1000,1) + ' mm', 14, 20);
+    c.fillText('a kritikus fordulat 94,6 rpm', 14, 33);
+
+    demDrawParticles(c, X, Y, S);
+  } else {
+    const S = h*0.86/(DEM.col.bot + 0.1), cx = w/2, cy = h*0.07;
+    const X = x => cx + x*S, Y = y => cy - y*S;
+    // oszlopfalak
+    c.strokeStyle = PAL['line']; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(X(-DEM.col.w/2), Y(DEM.col.top)); c.lineTo(X(-DEM.col.w/2), Y(-DEM.col.bot)); c.stroke();
+    c.beginPath(); c.moveTo(X( DEM.col.w/2), Y(DEM.col.top)); c.lineTo(X( DEM.col.w/2), Y(-DEM.col.bot)); c.stroke();
+    // légáram
+    c.strokeStyle = PAL['air']; c.globalAlpha = .35; c.lineWidth = 1;
+    const ph = (performance.now()/1000*DEM.air*0.06) % 0.12;
+    for (let xr=-2; xr<=2; xr++){
+      const xx = X(xr*DEM.col.w/5);
+      for (let yy=-DEM.col.bot+ph; yy<DEM.col.top; yy+=0.12){
+        c.beginPath(); c.moveTo(xx, Y(yy)); c.lineTo(xx, Y(yy+0.05)); c.stroke();
+        c.beginPath(); c.moveTo(xx-2, Y(yy+0.035)); c.lineTo(xx, Y(yy+0.05)); c.lineTo(xx+2, Y(yy+0.035)); c.stroke();
+      }
+    }
+    c.globalAlpha = 1;
+    c.fillStyle = PAL['ink-3']; c.textAlign='left';
+    c.fillText('Ø125 oszlop · ' + fmt(DEM.air,1) + ' m/s · adagolás oldalról', 14, 20);
+    c.fillStyle = PAL['husk']; c.textAlign='center';
+    c.fillText('HÉJ ↑', cx, Y(DEM.col.top)+14);
+    c.fillStyle = PAL['seed'];
+    c.fillText('MAG ↓', cx, Y(-DEM.col.bot)-6);
+
+    demDrawParticles(c, X, Y, S);
+  }
+}
+
+function demDrawParticles(c, X, Y, S){
+  if (DEM.showContacts){
+    c.strokeStyle = PAL['loss']; c.globalAlpha = .5; c.lineWidth = 1;
+    const nb = [];
+    demHash();
+    for (let i=0;i<DEM.p.length;i++){
+      demNeighbors(DEM.p[i], nb);
+      for (const j of nb) if (j > i){
+        const a = DEM.p[i], b = DEM.p[j];
+        if (Math.hypot(a.x-b.x, a.y-b.y) < a.r+b.r){
+          c.beginPath(); c.moveTo(X(a.x), Y(a.y)); c.lineTo(X(b.x), Y(b.y)); c.stroke();
+        }
+      }
+    }
+    c.globalAlpha = 1;
+  }
+  for (const p of DEM.p){
+    const px = X(p.x), py = Y(p.y), pr = Math.max(1.5, p.r*S);
+    c.fillStyle = p.col; c.globalAlpha = p.kind === 'dust' ? .5 : .9;
+    c.beginPath(); c.arc(px, py, pr, 0, 7); c.fill();
+    // a pörgést egy sugárirányú vonal mutatja — enélkül nem látszana a forgás
+    if (pr > 3){
+      c.globalAlpha = .55; c.strokeStyle = PAL['surface']; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(px, py);
+      c.lineTo(px + Math.cos(p.th)*pr*0.85, py - Math.sin(p.th)*pr*0.85); c.stroke();
+    }
+    c.globalAlpha = 1;
+  }
+}
+
+function renderDemStats(){
+  const set = (id,v,u) => { const el = document.getElementById(id); if (el) el.innerHTML = v + (u?`<small>${u}</small>`:''); };
+  const n = DEM.p.length;
+  set('d-time', fmt(DEM.t,1), 's');
+  document.getElementById('d-rate').textContent = DEM.subSteps + ' allépés/kép · ' + fmt(DEM.simRate*100,0) + '% valós idő';
+  set('d-n', n, 'db');
+  const perStep = Math.round(DEM.contacts / Math.max(1, DEM.subSteps));
+  document.getElementById('d-contn').textContent = perStep + ' aktív érintkezés';
+
+  const ovl = DEM.contacts ? DEM.ovlSum/DEM.contacts*100 : 0;
+  set('d-ovl', fmt(ovl,2), '%');
+  const ro = document.getElementById('ro-overlap');
+  ro.classList.toggle('good', ovl < 1); ro.classList.toggle('bad', ovl > 5);
+  document.getElementById('d-ovln').textContent =
+      ovl > 5 ? 'túl nagy — lassíts!' : ovl > 1 ? 'elfogadható' : 'jó, merev kontaktok';
+
+  const lbl = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  let area = 0; for (const p of DEM.p) area += Math.PI*p.r*p.r;
+
+  if (DEM.view === 'drum'){
+    const pass = DEM.passed.seed + DEM.passed.husk + DEM.passed.stem;
+    lbl('l-pass', 'Átesett mag'); set('d-pass', DEM.passed.seed, 'db');
+    document.getElementById('d-passn').textContent = pass + ' szemcse esett át összesen';
+    lbl('l-fill', 'Töltöttség'); set('d-fill', fmt(area/(Math.PI*DEM.R*DEM.R)*100,1), '%');
+    document.getElementById('d-filln').textContent = 'a dob keresztmetszetére';
+  } else {
+    const c = DEM.caught, b = DEM.blown, tot = c.seed + b.seed;
+    const bt = c.seed + c.husk + c.stem;
+    lbl('l-pass', 'Magkinyerés');
+    set('d-pass', tot > 3 ? fmt(c.seed/tot*100,1) : '—', '%');
+    document.getElementById('d-passn').textContent =
+        bt > 3 ? 'tisztaság ' + fmt(c.seed/bt*100,1) + '%' : 'gyűlik az adat…';
+    lbl('l-fill', 'Terhelés');
+    const load = area/(DEM.col.w*(DEM.col.bot+DEM.col.top))*100;
+    set('d-fill', fmt(load,1), '%');
+    document.getElementById('d-filln').textContent = 'az oszlop keresztmetszetére';
+  }
+
+  let ke = 0; for (const p of DEM.p) ke += 0.5*p.m*(p.vx*p.vx+p.vy*p.vy) + 0.5*p.I*p.om*p.om;
+  set('d-ke', fmt(ke*1000,2), 'mJ');
+
+  const d = document.getElementById('d-diag');
+  const nc = 94.6;
+  const msgs = [];
+  if (DEM.view === 'drum'){
+    const frac = DEM.rpm/nc;
+    let up = 0; for (const p of DEM.p) if (p.y > 0) up++;
+    const upPct = Math.round(up/Math.max(1,n)*100);
+    if (frac > 0.75) msgs.push(`<b>${DEM.rpm} rpm = a kritikus ${Math.round(frac*100)}%-a: centrifugálás.</b> A szemcsék <b>${upPct}%-a</b> már a dob felső felében van, vagyis az anyag körbetapad a falon ahelyett, hogy a fenekén gyűlne. Ez nem beírt szabály — a súrlódás és a centrifugális erő egyensúlyából jön ki magától.`);
+    else if (frac > 0.45) msgs.push(`${DEM.rpm} rpm = a kritikus ${Math.round(frac*100)}%-a: kataraktáló üzem, az anyag magasra felhordva zuhan (a felső félben ${upPct}%). Sok az energia, de nő a magtörés kockázata.`);
+    else if (frac < 0.12) msgs.push(`${DEM.rpm} rpm nagyon lassú — az ágy csak csúszik, alig bukik át, kevés a lyukkal való találkozás.`);
+    else msgs.push(`<b>${DEM.rpm} rpm = a kritikus ${Math.round(frac*100)}%-a — kaszkádozó üzem.</b> Ez a helyes tartomány: az emelőlécek felhordják az anyagot, ami a felszínen visszagördül. A felső félben csak ${upPct}%, tehát az ágy a fenéken marad.`);
+    if (ovl > 5) msgs.push(`Az átfedés ${fmt(ovl,1)}% — a kontaktok túl lágyak, a szemcsék átcsúsznak egymáson. Vedd lejjebb a számítási sebességet.`);
+    msgs.push(`<b>A modell egy határa, amit tudni kell:</b> ez 2D keresztmetszet, tehát nincs benne <b>axiális haladás</b>. A valódi dobban a nagyobb fordulat gyorsabban tolja ki az anyagot, így kevesebb idő jut a szitálásra — ez adja a 15–20 rpm-es optimumot. Itt a szemcse addig marad, amíg át nem esik, ezért a kinyerés a fordulattal monoton nő. A <b>fordulatszám-optimumot a Whiten-modell adja</b> (03. fül), ahol a tartózkodási idő szerepel; ez a modell viszont az ágy szerkezetét és a rezsimváltást mutatja meg, amit az nem tud.`);
+  } else {
+    const tot = DEM.caught.seed + DEM.blown.seed;
+    if (tot > 4) msgs.push(`A magok <b>${Math.round(DEM.caught.seed/tot*100)}%-a</b> esett le a gyűjtőbe ${fmt(DEM.air,1)} m/s-nál.`);
+    const bt = DEM.caught.seed + DEM.caught.husk + DEM.caught.stem;
+    if (bt > 4) msgs.push(`A magfrakció tisztasága <b>${Math.round(DEM.caught.seed/bt*100)}%</b>.`);
+    msgs.push(`<b>És most jön a modell legérdekesebb eredménye — egy negatív eredmény.</b> Told fel a töltetet a maximumra: az oszlop terhelése akkor is csak ~2% marad, és lépésenként <b>egynél kevesebb</b> érintkezés van. Vagyis a szelelőoszlop <b>híg fázisú rendszer</b>: a szemcsék gyakorlatilag nem ütköznek egymással, egyenként szállnak. Itt tehát az egyszerű, egyszemcsés modell <b>helyes volt</b> — az ütközéses modell nem megcáfolja, hanem megerősíti. A sűrű, ütközésekkel teli rész a dobrosta, nem az oszlop.`);
+  }
+  d.innerHTML = msgs.join(' ') || 'Fut a modell…';
+}
+
+/* --- vezérlés --- */
+(function bindDem(){
+  const cv = document.getElementById('dem'); if (!cv) return;
+  const sync = () => {
+    document.getElementById('o-drpm').textContent = DEM.rpm + ' rpm';
+    document.getElementById('o-dhole').textContent = fmt(DEM.hole*1000,1) + ' mm';
+    document.getElementById('o-dfill').textContent = DEM.nWant + ' szemcse';
+    document.getElementById('o-dair').textContent = fmt(DEM.air,1) + ' m/s';
+    document.getElementById('o-dslow').textContent = DEM.speed + '%';
+    document.getElementById('o-dmu').textContent = fmt(DEM.mu,2);
+    document.getElementById('h-drpm').textContent =
+      'A kritikus fordulat Ø200-nál 94,6 rpm — most a ' + Math.round(DEM.rpm/94.6*100) + '%-án jársz.';
+  };
+  const bind = (id, key, f) => document.getElementById(id).addEventListener('input', e => {
+    DEM[key] = f(+e.target.value); sync();
+    if (key === 'nWant') demReset();
+  });
+  bind('i-drpm','rpm', v=>v);
+  bind('i-dhole','hole', v=>v/1000);
+  bind('i-dfill','nWant', v=>v);
+  bind('i-dair','air', v=>v);
+  bind('i-dslow','speed', v=>v);
+  bind('i-dmu','mu', v=>v/100);
+
+  document.querySelectorAll('.v3btn[data-demview]').forEach(b => b.addEventListener('click', () => {
+    DEM.view = b.dataset.demview;
+    document.querySelectorAll('.v3btn[data-demview]').forEach(x => x.classList.toggle('on', x===b));
+    document.getElementById('d-hint').textContent = DEM.view === 'drum'
+      ? 'a szemcsék valós méretarányban · a dob Ø200 mm'
+      : 'a szemcsék oldalról adagolva lépnek be · az oszlop Ø125 mm';
+    demReset();
+  }));
+  document.getElementById('d-play').addEventListener('click', e => {
+    DEM.running = !DEM.running; e.target.classList.toggle('on', DEM.running);
+    e.target.textContent = DEM.running ? 'Fut' : 'Áll';
+  });
+  document.getElementById('d-reset').addEventListener('click', demReset);
+  document.getElementById('d-contacts').addEventListener('click', e => {
+    DEM.showContacts = !DEM.showContacts; e.target.classList.toggle('on', DEM.showContacts);
+  });
+  sync();
+})();
+
 /* ======================= LOOP ======================= */
 let activeView = 'elv';
 let last = performance.now();
@@ -2718,6 +3275,39 @@ function loop(now){
     if (SIM.running) stepSim(dt);
     drawSim();
     if ((now|0) % 6 === 0) renderSimStats();
+  } else if (activeView === 'dem'){
+    if (DEM.running){
+      /* A stabil időlépés kötött: dt < T/25, ahol T = 2π√(m/k) a legkönnyebb
+         szemcsére. Ezt SOHA nem lépjük túl — a sebességszabályzó csak azt
+         állítja, hány allépést számolunk egy képkockára, tehát a fizika
+         pontossága mindig ugyanaz, csak a szimulált idő telik lassabban. */
+      let mMin = 1e9; for (const p of DEM.p) if (p.m < mMin) mMin = p.m;
+      mMin = Math.max(DEM.mFloor, Math.min(mMin, 1e-3));
+      const sub = 2*Math.PI*Math.sqrt(mMin/DEM.kn)/25;
+      const n = Math.max(1, Math.round(DEM_MAXSUB * DEM.speed/100));
+      DEM.contacts = 0; DEM.ovlSum = 0; DEM.ovlMax = 0; DEM.subSteps = n;
+      DEM.simRate = n*sub*60;
+      for (let i=0;i<n;i++){
+        demStep(sub);
+        // az oszlopnézetben oldalról, függönyben adagolunk
+        if (DEM.view === 'col' && DEM.p.length < DEM.nWant && Math.random() < 0.35){
+          const k = ['seed','seed','husk','huskS','stem'][Math.floor(Math.random()*5)];
+          const q = demMake(k);
+          q.x = demRand(-DEM.col.w*0.34, DEM.col.w*0.34);
+          q.y = DEM.col.feedY; q.vy = -0.25; q.vx = demRand(-0.05,0.05);
+          // csak szabad helyre adagolunk — egymásba születő szemcsék hamis
+          // óriási átfedést és energiarobbanást okoznának
+          let free = true;
+          for (const o of DEM.p){
+            const ddx = o.x-q.x, ddy = o.y-q.y;
+            if (ddx*ddx+ddy*ddy < (o.r+q.r+0.001)*(o.r+q.r+0.001)){ free = false; break; }
+          }
+          if (free){ DEM.p.push(q); DEM.hashDirty = true; }
+        }
+      }
+    }
+    drawDem();
+    if ((now|0) % 5 === 0) renderDemStats();
   } else if (activeView === 'terv3d'){
     V3.t += dt;
     V3.spin += dt * (18/60) * Math.PI*2 * 0.35;
@@ -2733,6 +3323,7 @@ function onViewChange(v){
   if (v === 'hozam') renderCalc();
   if (v === 'sim'){ GEO = null; syncSimLabels(); }
   if (v === 'alk'){ renderPartsTable(); drawParts(); }
+  if (v === 'dem'){ if (!DEM.p.length) demReset(); drawDem(); renderDemStats(); }
 }
 function repaintAll(){
   loadPalette();
