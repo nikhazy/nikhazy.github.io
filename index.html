@@ -257,8 +257,9 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
       <button class="navbtn" data-v="hozam"><span class="n">02</span><span>Hozamkalkulátor</span></button>
       <button class="navbtn" data-v="sim"><span class="n">03</span><span>Szimuláció</span></button>
       <button class="navbtn" data-v="terv3d"><span class="n">04</span><span>3D gépnézet</span></button>
-      <button class="navbtn" data-v="terv"><span class="n">05</span><span>Géptervlap</span></button>
-      <button class="navbtn" data-v="forras"><span class="n">06</span><span>Adatok, források</span></button>
+      <button class="navbtn" data-v="alk"><span class="n">05</span><span>Nyomtatott alkatrészek</span></button>
+      <button class="navbtn" data-v="terv"><span class="n">06</span><span>Géptervlap</span></button>
+      <button class="navbtn" data-v="forras"><span class="n">07</span><span>Adatok, források</span></button>
     </nav>
     <div class="railfoot">
       <b>Tervezési munkapont</b><br>
@@ -605,7 +606,94 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
     </div>
   </section>
 
-  <!-- ============ 05 TERV ============ -->
+  <!-- ============ 05 NYOMTATOTT ALKATRÉSZEK ============ -->
+  <section class="view" id="v-alk">
+    <div class="vhead">
+      <div class="eyebrow">05 — Nyomtatott prototípus</div>
+      <h2 class="vh">A szeparátor alkatrészei</h2>
+      <p class="lede">Az oszlop robbantott nézete alulról felfelé. A <b>KG cső, a hordó és a ventilátor vásárolt</b>, minden más nyomtatható a P1S-en. Húzd a csúszkát a szétnyitáshoz, kattints egy sorra a táblázatban a kiemeléshez.</p>
+    </div>
+
+    <div class="stage">
+      <div class="v3dbar">
+        <div class="grp" style="align-items:center;gap:10px">
+          <span style="font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)">Szétnyitás</span>
+          <input type="range" id="i-explode" min="0" max="100" step="1" value="35" style="width:150px">
+        </div>
+        <div class="grp">
+          <button class="v3btn" data-pview="iso">Izometrikus</button>
+          <button class="v3btn" data-pview="front">Elölnézet</button>
+          <button class="v3btn on" id="b-plab">Feliratok</button>
+          <button class="v3btn" id="b-preset">Alaphelyzet</button>
+        </div>
+      </div>
+      <canvas id="vparts" height="540"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--seed)"></i>nyomtatott</span>
+        <span><i style="background:var(--ink-3)"></i>vásárolt</span>
+        <span><i style="background:var(--air)"></i>ventilátor oldal</span>
+        <span style="margin-left:auto;color:var(--ink-3)">bal gomb: forgatás · Shift+húzás: mozgatás · görgő: nagyítás</span>
+      </div>
+    </div>
+
+    <h3 class="sec">Alkatrészlista <span>minden darab 220 mm-en belül</span></h3>
+    <p class="note" style="margin-bottom:12px">A megadott 220 × 220 × 220 mm-hez terveztem, de érdemes tudni: <b>a P1S névleges építési tere 256 × 256 × 256 mm.</b> Ha tényleg ennyi a tered, a Ø200-as alkatrészeknél 28 mm helyett 56 mm a ráhagyás, és az alsó kúp akár egy darabban, biztonságosabban nyomtatható.</p>
+    <div class="tw"><table id="partsTable">
+      <thead><tr><th>#</th><th>Alkatrész</th><th>Feladat</th><th class="n">Befoglaló (mm)</th><th class="n">Fér?</th><th class="n">Idő</th></tr></thead>
+      <tbody></tbody>
+      <caption>Kattints egy sorra a kiemeléshez. A nyomtatási idő PETG-re, 0,2 mm réteg, 4 kerület mellett becsült.</caption>
+    </table></div>
+
+    <div class="grid3" style="margin-top:16px">
+      <div class="readout hi"><span class="lbl">Nyomtatott alkatrész</span><div class="val" id="p-count">—<small>db</small></div><div class="note">a szeparátorhoz</div></div>
+      <div class="readout"><span class="lbl">Nyomtatási idő</span><div class="val" id="p-time">—<small>óra</small></div><div class="note">összesen, PETG</div></div>
+      <div class="readout"><span class="lbl">Anyagszükséglet</span><div class="val" id="p-mat">—<small>kg</small></div><div class="note">~9 000 Ft/kg PETG</div></div>
+    </div>
+
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <h4 style="font-size:14px;margin-bottom:8px">Nyomtatási beállítások — PETG a P1S-en</h4>
+        <ul class="tight">
+          <li>Fúvóka <b>240–250 °C</b>, asztal <b>70–80 °C</b>, <b>textúrás PEI</b> lap (sima PEI-hez a PETG túl jól tapad).</li>
+          <li><b>Az ajtót hagyd nyitva</b> — a PETG-nek nem kell kamrahő, a melegtorlódás viszont dugulást okoz.</li>
+          <li>Tárgyhűtés <b>30–60%</b>, nem 100% — a teljes hűtés rontja a rétegtapadást.</li>
+          <li><b>4–5 kerület, 0,16–0,20 mm réteg, flow 1,02–1,05.</b> Ez a légtömörség receptje.</li>
+          <li>Nyomtatás előtt <b>szárítás 65 °C-on 8 órát</b>, különben buborékos lesz a fal.</li>
+          <li>Minden alkatrész <b>támasz nélkül</b> nyomtatható a megadott állásban.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="font-size:14px;margin-bottom:8px">Illesztések és tűrések</h4>
+        <ul class="tight">
+          <li>KG DN125 valós külső átmérője <b>125,0–125,3 mm</b>. A rácsúszó hüvely belső átmérője <b>125,7–125,8 mm</b>.</li>
+          <li>A ventilátorcsonk külső átmérője csak <b>~124 mm</b>, ahhoz a hüvely <b>124,6–124,8 mm</b>.</li>
+          <li><b>A PETG zsugorodása 0,4–0,6% — ez 125 mm-en 0,5–0,75 mm hiba.</b> Ennyi elég, hogy a kúp ne menjen fel a csőre. Kalibrálni kell.</li>
+          <li><b>Nyomtass előbb egy 20 mm magas próbagyűrűt</b>, 0,1 mm-es lépcsőkkel. Egy elrontott kúp 11 óra.</li>
+          <li>Elephant's foot kompenzáció 0,2 mm, különben az első rétegek szűkebbek lesznek.</li>
+          <li>Egységes karima: Ø160 külső, Ø145 osztókör, 4 × M4 menetes betét — <b>Ø5,6 mm furat</b>, Ø10–12 mm szemölcs, körben min. 2 mm tömör fal.</li>
+          <li>Tömítés: 3 mm szilikonzsinór horonyban, vagy 3 mm EVA hab kivágva.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>A Ø125 névleges átmérő csapdája — erre menne rá a legtöbb idő a műhelyben.</b> A KG csőnél a 125 a <b>külső</b> átmérő (125,0 mm, belül 118,6 mm), a szellőzéstechnikában viszont a <b>belső</b> (a ventilátorcsonk külső átmérője csak ~124 mm). Ez azt jelenti, hogy <b>a Ø125-ös ventilátorcsonk nem fér bele a Ø125-ös KG csőbe</b> — 118,6 mm-be nem megy be 124 mm. Átmeneti adapter nélkül a két „azonos" méret nem passzol. A P4 adapter pontosan ezt oldja meg: az egyik vége a KG csőre csúszik kívülről, a másik a ventilátorcsonkra.
+    </div>
+
+    <div class="callout">
+      <b>Légtömörség: jó hír.</b> Egy szelelőoszlop depressziója néhány száz Pa, legfeljebb 2–3 kPa — nagyságrendekkel kevesebb, mint amivel a nyomtatott alkatrészek nyomáspróbái dolgoznak. <b>4–5 kerület PETG-ben utókezelés nélkül is elég.</b> Ha mégis szivárog, az szinte biztosan a Z-varratnál lesz: tedd a varratot a nem kritikus oldalra, és emeld a flow-t. Belső epoxi bevonat csak végszükség esetén kell.
+    </div>
+
+    <div class="callout">
+      <b>A ventilátor-csatlakozás kritikus részlete.</b> A ventilátort <b>ne</b> merev nyomtatott elemmel kösd a rendszerre: a rezgése átmegy az egész oszlopon. Egy 150 mm-es <b>flexibilis alumínium toldat</b> két bilinccsel (Vents C 125 vagy CZ 125 gyorsbilincs) a nyomtatott adapter és a ventilátor közé — ez a rezgéstörés.
+    </div>
+
+    <div class="callout">
+      <b>Élelmiszer-érintkezés.</b> A PETG alapanyag élelmiszerbiztos, de <b>a nyomtatott darab nem automatikusan az</b>: a rétegvonalak mikroszkopikus réseiben szennyeződés és nedvesség marad, amit a mosogatás nem visz ki, és a PETG nem is mosogatógépálló (Tg ~80 °C). Száraz, átfolyó magnál ez elfogadható kockázat <b>élelmiszerbiztos deklarációjú filamenttel és rozsdamentes fúvókával</b> — a sárgaréz fúvóka ólmot tartalmazhat. A magot egyébként is csak az alsó kúp érinti, pár másodpercig.
+    </div>
+  </section>
+
+  <!-- ============ 06 TERV ============ -->
   <section class="view" id="v-terv">
     <div class="vhead">
       <div class="eyebrow">05 — Kivitelezés</div>
@@ -1936,27 +2024,23 @@ function addFlowMarkers(right, up){
   }
 }
 
-function draw3d(){
-  const cv = document.getElementById('v3d'); if (!cv.clientWidth) return;
+/* ============================================================
+   Közös renderelő mag: a `meshes` tömb már felépítve érkezik.
+   A kamerát a cam objektum adja (V3 vagy VP).
+   ============================================================ */
+function renderMeshes(cv, cam, tagFn){
   const {c,w,h} = fit(cv);
   c.fillStyle = PAL['surface-2']; c.fillRect(0,0,w,h);
 
-  buildScene(V3.spin, V3.fanSpin);
-
-  const ca = Math.cos(V3.az), sa = Math.sin(V3.az);
-  const ce = Math.cos(V3.el), se = Math.sin(V3.el);
-
-  // kamerabázis: ezekből épülnek a kamerára néző jelölők
-  const right = [ca, 0, -sa];
-  const up    = [-sa*se, ce, -ca*se];
-  if (V3.flow) addFlowMarkers(right, up);
+  const ca = Math.cos(cam.az), sa = Math.sin(cam.az);
+  const ce = Math.cos(cam.el), se = Math.sin(cam.el);
 
   // camera-space projection to normalised device coords (before fitting)
   const ndc = p => {
-    const x = p[0] - V3.target[0], y = p[1] - V3.target[1], z = p[2] - V3.target[2];
+    const x = p[0] - cam.target[0], y = p[1] - cam.target[1], z = p[2] - cam.target[2];
     const X = x*ca - z*sa, Z = x*sa + z*ca;
     const Y = y*ce - Z*se;
-    let Z2 = y*se + Z*ce + V3.dist;
+    let Z2 = y*se + Z*ce + cam.dist;
     if (Z2 < 0.15) Z2 = 0.15;
     return {nx: X/Z2, ny: Y/Z2, z: Z2};
   };
@@ -1970,23 +2054,23 @@ function draw3d(){
   } }
   const spanX = Math.max(1e-4, maxX - minX), spanY = Math.max(1e-4, maxY - minY);
   // az alapskála a zoomtól független, hogy a nagyítás ne "ugorjon" forgatáskor
-  const fitScale = Math.min(w/spanX, h/spanY) * 0.88 * V3.zoom;
+  const fitScale = Math.min(w/spanX, h/spanY) * (cam.fitPad || 0.88) * cam.zoom;
   const midX = (minX+maxX)/2, midY = (minY+maxY)/2;
-  V3._fitScale = fitScale;
+  cam._fitScale = fitScale;
 
   const project = p => {
     const q = ndc(p);
-    return {x: w/2 + V3.panX + (q.nx - midX)*fitScale,
-            y: h/2 + V3.panY - (q.ny - midY)*fitScale, z: q.z};
+    return {x: w/2 + cam.panX + (q.nx - midX)*fitScale,
+            y: h/2 + cam.panY - (q.ny - midY)*fitScale, z: q.z};
   };
 
   // metszet: a kamera felé eső burkolatok elrejtése, hogy belátni a gépbe
   const camDir = [-sa*ce, -se, -ca*ce];
   const faces = meshes.filter(m => {
-    if (!V3.cutaway || !m.shell) return true;
+    if (!cam.cutaway || !m.shell) return true;
     let n = 0, cxs=0, cys=0, czs=0;
     for (const v of m.v){ cxs+=v[0]; cys+=v[1]; czs+=v[2]; n++; }
-    const d = (cxs/n - V3.target[0])*camDir[0] + (cys/n - V3.target[1])*camDir[1] + (czs/n - V3.target[2])*camDir[2];
+    const d = (cxs/n - cam.target[0])*camDir[0] + (cys/n - cam.target[1])*camDir[1] + (czs/n - cam.target[2])*camDir[2];
     return d > 0;   // csak a kamerától távolabbi fél marad
   }).map(m => {
     const pts = m.v.map(project);
@@ -2006,7 +2090,7 @@ function draw3d(){
     c.beginPath();
     f.pts.forEach((p,i) => i ? c.lineTo(p.x,p.y) : c.moveTo(p.x,p.y));
     c.closePath();
-    const shade = Math.max(.45, Math.min(1, 1.35 - (f.z - V3.dist + 0.8)*0.42));
+    const shade = Math.max(.45, Math.min(1, 1.35 - (f.z - cam.dist + 0.8)*0.42));
     if (f.flow){                       // a nyomvonalak nem árnyékolódnak, hogy végig látszanak
       c.globalAlpha = f.alpha; c.fillStyle = f.col; c.fill();
     } else {
@@ -2018,39 +2102,48 @@ function draw3d(){
   }
   c.globalAlpha = 1;
 
-  if (!V3.labels) return;
-
-  // 3D-hez kötött feliratok, a méret a nagyítással együtt nő
-  const fs = Math.max(9, Math.min(15, 10 * V3.zoom));
-  c.font = fs + 'px "JetBrains Mono", monospace'; c.textAlign='center';
-  const tag = (p3, txt, col, dy) => {
-    const p = project(p3);
-    if (p.z < 0.2) return;
-    c.fillStyle = col; c.fillText(txt, p.x, p.y + (dy||0));
-  };
-  const I2 = PAL['ink-2'], A = PAL['air'], S = PAL['seed'], H = PAL['husk'];
-
-  tag([-0.80, 1.84, 0], 'BE — SZÁRAZ TÖRKÖLY', S);
-  tag([-0.31, 1.58, 0], '1 · DOBROSTA  Ø300×900', I2);
-  tag([ 0.62, 1.62, 0], '2 · SZELELŐ  Ø125×1000', I2);
-  tag([ 0.92, 2.02, 0], 'VENTILÁTOR — TISZTA OLDAL', A);
-  tag([ 0.92, 1.33, 0], 'ÜLEPÍTŐ', H);
-  tag([ 0.62, 0.22, 0], 'LEVEGŐ BE + MAG KI', A);
-  tag([ 0.62,-0.04, 0], 'MAG', S);
-  tag([ 0.92,-0.04, 0], 'HÉJ', H);
-
-  // részletfeliratok csak ránagyítva jelennek meg, hogy alapnézetben ne zsúfoljanak
-  if (V3.zoom > 1.35){
-    c.font = Math.max(9, fs-1) + 'px "JetBrains Mono", monospace';
-    c.fillStyle = PAL['ink-3'];
-    tag([-0.80, 1.42, 0], 'rögtörő henger', PAL['ink-3']);
-    tag([ 0.30, 1.12, 0], 'köztes garat + szintkapcsoló', PAL['ink-3']);
-    tag([ 0.30, 0.70, 0], 'rezgőadagoló', PAL['ink-3']);
-    tag([ 0.44, 0.96, 0], 'adagolórés', S);
-    tag([ 0.10, 1.44, 0], 'vezérlőszekrény', PAL['ink-3']);
-    tag([ 0.92, 1.62, 0], 'zsákszűrő', PAL['ink-3']);
-    tag([ 0.30, 1.32, 0], 'szíjhajtás + motor', PAL['ink-3']);
+  if (cam.labels && tagFn){
+    const fs = Math.max(9, Math.min(15, 10 * cam.zoom));
+    const tag = (p3, txt, col, font) => {
+      const p = project(p3);
+      if (p.z < 0.2) return;
+      c.font = (font || fs) + 'px "JetBrains Mono", monospace';
+      c.textAlign = 'center'; c.fillStyle = col; c.fillText(txt, p.x, p.y);
+    };
+    tagFn(tag, fs, c);
   }
+}
+
+function draw3d(){
+  const cv = document.getElementById('v3d'); if (!cv.clientWidth) return;
+  buildScene(V3.spin, V3.fanSpin);
+  const ca = Math.cos(V3.az), sa = Math.sin(V3.az);
+  const ce = Math.cos(V3.el), se = Math.sin(V3.el);
+  // kamerabázis: ezekből épülnek a kamerára néző jelölők
+  if (V3.flow) addFlowMarkers([ca, 0, -sa], [-sa*se, ce, -ca*se]);
+
+  renderMeshes(cv, V3, (tag, fs) => {
+    const I2 = PAL['ink-2'], A = PAL['air'], S = PAL['seed'], H = PAL['husk'], I3 = PAL['ink-3'];
+    tag([-0.80, 1.84, 0], 'BE — SZÁRAZ TÖRKÖLY', S);
+    tag([-0.31, 1.58, 0], '1 · DOBROSTA  Ø200×900', I2);
+    tag([ 0.62, 1.62, 0], '2 · SZELELŐ  Ø125×1000', I2);
+    tag([ 0.92, 2.02, 0], 'VENTILÁTOR — TISZTA OLDAL', A);
+    tag([ 0.92, 1.33, 0], 'ÜLEPÍTŐ', H);
+    tag([ 0.62, 0.22, 0], 'LEVEGŐ BE + MAG KI', A);
+    tag([ 0.62,-0.04, 0], 'MAG', S);
+    tag([ 0.92,-0.04, 0], 'HÉJ', H);
+    // részletfeliratok csak ránagyítva, hogy alapnézetben ne zsúfoljanak
+    if (V3.zoom > 1.35){
+      const f2 = Math.max(9, fs-1);
+      tag([-0.80, 1.42, 0], 'rögtörő henger', I3, f2);
+      tag([ 0.30, 1.12, 0], 'köztes garat + szintkapcsoló', I3, f2);
+      tag([ 0.30, 0.70, 0], 'rezgőadagoló', I3, f2);
+      tag([ 0.44, 0.96, 0], 'adagolórés', S, f2);
+      tag([ 0.10, 1.44, 0], 'vezérlőszekrény', I3, f2);
+      tag([ 0.92, 1.62, 0], 'zsákszűrő', I3, f2);
+      tag([ 0.30, 1.32, 0], 'szíjhajtás + motor', I3, f2);
+    }
+  });
 }
 
 (function bind3d(){
@@ -2133,6 +2226,242 @@ function draw3d(){
   });
 })();
 
+/* ============================================================
+   05 — A SZEPARÁTOR NYOMTATOTT ALKATRÉSZEI
+   Robbantott nézet, alulról felfelé. Méretek méterben, valós lépték.
+   ============================================================ */
+const VP = {az:-0.55, el:0.16, dist:4.2, zoom:1, panX:0, panY:0, target:[0,0.95,0],
+            drag:null, px:0, py:0, labels:true, cutaway:false, sel:-1, fitPad:0.78};
+const VP_HOME = {az:-0.55, el:0.16, zoom:1, panX:0, panY:0};
+let EXPLODE = 0.35;
+
+/* r = sugár m-ben; a nyomtatott karima Ø160, a KG cső Ø125 */
+const R_PIPE = 0.0625, R_SOCK = 0.0629, R_FLANGE = 0.080;
+
+/* Kör keresztmetszet végigvezetve egy törtvonalon — ezzel rajzolható a könyök. */
+function addTube(path, r, seg, col, alpha, shell){
+  const norm = v => { const L = Math.hypot(v[0],v[1],v[2]) || 1; return [v[0]/L, v[1]/L, v[2]/L]; };
+  const cross = (a,b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+  const rings = path.map((p, i) => {
+    const a = path[Math.max(0,i-1)], b = path[Math.min(path.length-1,i+1)];
+    const t = norm([b[0]-a[0], b[1]-a[1], b[2]-a[2]]);
+    const up = Math.abs(t[2]) > 0.9 ? [0,1,0] : [0,0,1];
+    const n = norm(cross(t, up)), m = cross(t, n);
+    const ring = [];
+    for (let k=0;k<seg;k++){
+      const th = k/seg*Math.PI*2, cs = Math.cos(th), sn = Math.sin(th);
+      ring.push([p[0] + (n[0]*cs + m[0]*sn)*r,
+                 p[1] + (n[1]*cs + m[1]*sn)*r,
+                 p[2] + (n[2]*cs + m[2]*sn)*r]);
+    }
+    return ring;
+  });
+  for (let i=0;i<rings.length-1;i++)
+    for (let k=0;k<seg;k++){
+      const k2 = (k+1)%seg;
+      meshes.push({v:[rings[i][k], rings[i][k2], rings[i+1][k2], rings[i+1][k]],
+                   col, alpha, dbl:true, shell});
+    }
+}
+
+function addFlange(y, col, alpha){
+  addCyl(0, y, 0, R_FLANGE, 0.008, 'y', col, 20, {caps:true, alpha});
+  for (let i=0;i<4;i++){                      // 4 × M4 furat helye
+    const a = i*Math.PI/2 + Math.PI/4;
+    addCyl(Math.sin(a)*0.0725, y, Math.cos(a)*0.0725, 0.007, 0.012, 'y', PAL['ink-3'], 8, {caps:true, alpha:.9});
+  }
+}
+
+/* Az alkatrészlista: ez adja a 3D-t ÉS a táblázatot is. */
+const PARTS = [
+  {id:'—',  n:'Maggyűjtő vödör',        f:'A kész mag ide hullik; a kúp lábai tartják, körben légrés marad',
+   bbox:'Ø220 × 260', fits:'vásárolt', hrs:0, kg:0, printed:false, h:0.26,
+   build:(y)=>{ addCyl(0, y+0.13, 0, 0.11, 0.26, 'y', PAL['ink-3'], 18, {caps:true, alpha:.35, shell:true}); }},
+
+  {id:'P1', n:'Alsó kúp Ø200→125',      f:'Egyszerre légbeömlő és magkiömlő. A tágulás miatt itt 5 m/s helyett 2 m/s van, a mag kiesik ellenáramban',
+   bbox:'200 × 200 × 195', fits:true, hrs:11, kg:0.34, printed:true, h:0.25,
+   build:(y)=>{ addFrustum(0, y+0.10, 0, R_PIPE, 0.10, 0.14, PAL['seed'], 20, .55);
+     addCyl(0, y+0.20, 0, R_SOCK, 0.06, 'y', PAL['seed'], 18, {alpha:.6, shell:true});
+     addFlange(y+0.235, PAL['seed'], .75);
+     for (let i=0;i<3;i++){ const a=i*Math.PI*2/3;      // 3 láb: közte szívja be a levegőt
+       addBox(Math.sin(a)*0.098, y+0.015, Math.cos(a)*0.098, 0.018, 0.06, 0.018, PAL['seed'], .8); } }},
+
+  {id:'—',  n:'KG cső Ø125, alsó szakasz', f:'A szeparációs szakasz alsó fele — itt esik le a mag',
+   bbox:'Ø125 × 320', fits:'vásárolt', hrs:0, kg:0, printed:false, h:0.32,
+   build:(y)=>{ addCyl(0, y+0.16, 0, R_PIPE, 0.32, 'y', PAL['ink-3'], 18, {alpha:.30, shell:true}); }},
+
+  {id:'P2', n:'Adagoló T-idom',         f:'Teljes szélességű rés 45°-ban: az anyag függönyként lép a légáramba, nem kötélként',
+   bbox:'210 × 150 × 200', fits:true, hrs:9, kg:0.28, printed:true, h:0.20,
+   build:(y)=>{ addCyl(0, y+0.10, 0, R_PIPE, 0.20, 'y', PAL['seed'], 18, {alpha:.55, shell:true});
+     addFlange(y+0.004, PAL['seed'], .75); addFlange(y+0.196, PAL['seed'], .75);
+     meshes.push({v:[[-R_PIPE, y+0.12, -0.05],[-0.19, y+0.19, -0.05],[-0.19, y+0.19, 0.05],[-R_PIPE, y+0.12, 0.05]],
+                  col: PAL['seed'], alpha:.7, dbl:true});
+     addBox(-0.185, y+0.20, 0, 0.02, 0.03, 0.11, PAL['seed'], .8); }},
+
+  {id:'—',  n:'KG cső Ø125, felső szakasz', f:'A felszálló ág: itt kell a héjnak elszakadnia a magtól',
+   bbox:'Ø125 × 280', fits:'vásárolt', hrs:0, kg:0, printed:false, h:0.28,
+   build:(y)=>{ addCyl(0, y+0.14, 0, R_PIPE, 0.28, 'y', PAL['ink-3'], 18, {alpha:.30, shell:true}); }},
+
+  {id:'P8', n:'Mérőcsonk (2 db)',       f:'Anemométer és U-csöves manométer bekötése — enélkül vaktában állítasz',
+   bbox:'40 × 30 × 25', fits:true, hrs:0.5, kg:0.01, printed:true, h:0.04,
+   build:(y)=>{ addCyl(R_PIPE+0.012, y+0.012, 0, 0.010, 0.03, 'x', PAL['seed'], 10, {caps:true, alpha:.9}); }},
+
+  {id:'P3', n:'45° szegmens (2 db)',    f:'Két azonos darabból áll össze a 90°-os fejelem a KG cső tetején. Így támasz nélkül nyomtatható',
+   bbox:'180 × 130 × 130', fits:true, hrs:6, kg:0.19, printed:true, h:0.23,
+   build:(y)=>{ // két 45°-os szegmensből összeálló 90°-os könyök, 90 mm középvonal-sugárral
+     addFlange(y+0.004, PAL['seed'], .75);
+     const R = 0.09, path = [[0, y+0.01, 0], [0, y+0.05, 0]];
+     for (let k=0;k<=8;k++){ const a = k/8*Math.PI/2;
+       path.push([R*(1-Math.cos(a)), y+0.05 + R*Math.sin(a), 0]); }
+     path.push([R+0.05, y+0.05+R, 0]);
+     addTube(path, R_PIPE, 16, PAL['seed'], .55, true);
+     // a két szegmens találkozásánál a csavarozott karima
+     addCyl(R*(1-Math.cos(Math.PI/4)), y+0.05+R*Math.sin(Math.PI/4), 0, R_FLANGE, 0.008, 'z',
+            PAL['seed'], 16, {caps:true, alpha:.7});
+     // tisztítónyílás a külső hajlatban
+     addCyl(R+0.03, y+0.052, 0, 0.030, 0.02, 'y', PAL['seed'], 12, {caps:true, alpha:.85}); }},
+
+  {id:'P7', n:'Tisztítónyílás fedele',  f:'A könyök külső hajlatában gyűlik a héj — csavaros fedél a tisztításhoz',
+   bbox:'Ø90 × 20', fits:true, hrs:1.5, kg:0.05, printed:true, h:0.03,
+   build:(y)=>{ addCyl(0, y+0.010, 0, 0.045, 0.020, 'y', PAL['seed'], 16, {caps:true, alpha:.8}); }},
+
+  {id:'P4', n:'Ventilátor-adapter',     f:'Ez oldja fel a névleges átmérők ütközését: az egyik vége a KG csőre (Ø125,7 hüvely), a másik a ventilátorcsonkra (Ø124,7 hüvely) csúszik, bilincshoronnyal',
+   bbox:'Ø165 × 90', fits:true, hrs:4, kg:0.13, printed:true, h:0.10,
+   build:(y)=>{ addFlange(y+0.004, PAL['air'], .8);
+     addCyl(0, y+0.05, 0, R_SOCK, 0.09, 'y', PAL['air'], 18, {alpha:.55, shell:true});
+     addCyl(0, y+0.082, 0, R_SOCK+0.004, 0.012, 'y', PAL['air'], 18, {alpha:.8}); }},
+
+  {id:'—',  n:'Flexibilis toldat Ø125', f:'150 mm alumínium flexi két bilinccsel — ez töri meg a ventilátor rezgését',
+   bbox:'Ø125 × 150', fits:'vásárolt', hrs:0, kg:0, printed:false, h:0.15,
+   build:(y)=>{ for(let i=0;i<7;i++) addCyl(0, y+0.012+i*0.020, 0, R_PIPE*(i%2?1.06:1), 0.016, 'y', PAL['ink-3'], 16, {alpha:.35}); }},
+
+  {id:'—',  n:'Centrifugális ventilátor Ø125', f:'Vents VK 125 — 355 m³/h @ 320 Pa. A lánc legvégén, csak tiszta levegőt kap',
+   bbox:'Ø160 × 190', fits:'vásárolt', hrs:0, kg:0, printed:false, h:0.23,
+   build:(y)=>{ addCyl(0, y+0.075, 0, 0.082, 0.15, 'y', PAL['air'], 18, {caps:true, alpha:.5, shell:true});
+     addCyl(0, y+0.175, 0, R_PIPE, 0.05, 'y', PAL['air'], 16, {alpha:.5}); }},
+];
+
+/* Három hasábba rendezve, hogy a darabok ne zsugorodjanak egy hosszú oszlopban.
+   A hasábon belül a szerelési sorrend alulról felfelé halad. */
+const COLS = [
+  {x:-0.85, from:0, to:3,  t:'① AZ OSZLOP ALJA'},
+  {x: 0,    from:3, to:6,  t:'② ADAGOLÁS ÉS FELSZÁLLÓ ÁG'},
+  {x: 0.85, from:6, to:11, t:'③ FEJRÉSZ ÉS VENTILÁTOR'},
+];
+
+function partPos(i){
+  const cIdx = COLS.findIndex(c => i >= c.from && i < c.to);
+  const c = COLS[Math.max(0, cIdx)];
+  let y = 0;
+  for (let k=c.from; k<i; k++) y += (PARTS[k].h || 0.10) + EXPLODE;
+  return {x: c.x, y};
+}
+
+function buildParts(){
+  meshes.length = 0;
+  PARTS.forEach((p, i) => {
+    const pos = partPos(i);
+    const base = meshes.length;
+    p.build(pos.y);
+    // eltolás a hasáb helyére + kiemelés/halványítás
+    const dim = (VP.sel >= 0 && VP.sel !== i);
+    for (let k=base;k<meshes.length;k++){
+      meshes[k].v = meshes[k].v.map(v => [v[0] + pos.x, v[1], v[2]]);
+      if (dim) meshes[k].alpha *= 0.18;
+    }
+  });
+}
+
+function drawParts(){
+  const cv = document.getElementById('vparts'); if (!cv || !cv.clientWidth) return;
+  buildParts();
+  renderMeshes(cv, VP, (tag, fs) => {
+    // hasábfejlécek: a szerelési sorrend
+    let top = 0;
+    PARTS.forEach((p,i) => { const q = partPos(i); if (q.y + (p.h||0.1) > top) top = q.y + (p.h||0.1); });
+    COLS.forEach(cl => tag([cl.x, top + 0.07, 0], cl.t, PAL['ink-3'], Math.max(9, fs-1)));
+
+    PARTS.forEach((p, i) => {
+      const pos = partPos(i);
+      const dim = (VP.sel >= 0 && VP.sel !== i);
+      tag([pos.x, pos.y - 0.05, 0], (p.id !== '—' ? p.id + ' · ' : '') + p.n,
+          dim ? PAL['ink-3'] : (p.printed ? PAL['seed'] : PAL['ink-2']), dim ? fs-1 : fs);
+    });
+  });
+}
+
+function renderPartsTable(){
+  const tb = document.querySelector('#partsTable tbody');
+  tb.innerHTML = PARTS.map((p,i) => {
+    const fit = p.fits === true ? '<span class="pill ok">fér</span>'
+              : p.fits === 'vásárolt' ? '<span style="color:var(--ink-3)">vásárolt</span>'
+              : '<span class="pill bad">nem fér</span>';
+    return `<tr data-i="${i}" style="cursor:pointer${VP.sel===i?';background:var(--surface-2)':''}">
+      <td class="n">${p.id}</td><td>${p.n}</td><td style="font-size:13px;color:var(--ink-2)">${p.f}</td>
+      <td class="n">${p.bbox}</td><td class="n">${fit}</td>
+      <td class="n">${p.hrs ? fmt(p.hrs,1).replace(',0','') + ' h' : '—'}</td></tr>`;
+  }).join('');
+  const printed = PARTS.filter(p => p.printed);
+  document.getElementById('p-count').innerHTML = printed.reduce((s,p)=>s+(p.n.includes('2 db')?2:1),0) + '<small>db</small>';
+  document.getElementById('p-time').innerHTML = fmt0(printed.reduce((s,p)=>s+p.hrs,0)) + '<small>óra</small>';
+  document.getElementById('p-mat').innerHTML = fmt(printed.reduce((s,p)=>s+p.kg,0),2) + '<small>kg</small>';
+}
+
+(function bindParts(){
+  const cv = document.getElementById('vparts');
+  if (!cv) return;
+  cv.addEventListener('contextmenu', e => e.preventDefault());
+  cv.addEventListener('pointerdown', e => {
+    VP.drag = (e.button === 2 || e.shiftKey) ? 'pan' : 'orbit';
+    VP.px = e.clientX; VP.py = e.clientY; cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!VP.drag) return;
+    const dx = e.clientX - VP.px, dy = e.clientY - VP.py;
+    if (VP.drag === 'orbit'){ VP.az += dx*0.008; VP.el = Math.max(-0.4, Math.min(1.4, VP.el + dy*0.006)); }
+    else { VP.panX += dx; VP.panY += dy; }
+    VP.px = e.clientX; VP.py = e.clientY;
+    if (e.cancelable) e.preventDefault();
+    drawParts();
+  });
+  const end = e => { VP.drag = null;
+    if (e && e.pointerId != null && cv.hasPointerCapture(e.pointerId)) cv.releasePointerCapture(e.pointerId); };
+  cv.addEventListener('pointerup', end);
+  cv.addEventListener('pointercancel', end);
+  cv.addEventListener('wheel', e => {
+    const r = cv.getBoundingClientRect();
+    const mx = e.clientX - r.left - r.width/2 - VP.panX, my = e.clientY - r.top - r.height/2 - VP.panY;
+    const prev = VP.zoom;
+    VP.zoom = Math.max(0.4, Math.min(6, VP.zoom * (1 - e.deltaY*0.0014)));
+    const k = VP.zoom/prev; VP.panX -= mx*(k-1); VP.panY -= my*(k-1);
+    e.preventDefault(); drawParts();
+  }, {passive:false});
+
+  document.getElementById('i-explode').addEventListener('input', e => {
+    EXPLODE = +e.target.value/100 * 0.30; drawParts();
+  });
+  document.querySelectorAll('.v3btn[data-pview]').forEach(b => b.addEventListener('click', () => {
+    Object.assign(VP, b.dataset.pview === 'front' ? {az:0, el:0.02} : {az:-0.55, el:0.16});
+    VP.panX = 0; VP.panY = 0;
+    document.querySelectorAll('.v3btn[data-pview]').forEach(x => x.classList.toggle('on', x===b));
+    drawParts();
+  }));
+  document.getElementById('b-plab').addEventListener('click', e => {
+    VP.labels = !VP.labels; e.target.classList.toggle('on', VP.labels); drawParts();
+  });
+  document.getElementById('b-preset').addEventListener('click', () => {
+    Object.assign(VP, VP_HOME); VP.sel = -1;
+    document.querySelectorAll('.v3btn[data-pview]').forEach(x => x.classList.remove('on'));
+    renderPartsTable(); drawParts();
+  });
+  document.querySelector('#partsTable').addEventListener('click', e => {
+    const tr = e.target.closest('tr[data-i]'); if (!tr) return;
+    const i = +tr.dataset.i;
+    VP.sel = (VP.sel === i) ? -1 : i;
+    renderPartsTable(); drawParts();
+  });
+})();
+
 /* ======================= LOOP ======================= */
 let activeView = 'elv';
 let last = performance.now();
@@ -2159,11 +2488,13 @@ function onViewChange(v){
   if (v === 'elv') drawVt();
   if (v === 'hozam') renderCalc();
   if (v === 'sim'){ GEO = null; syncSimLabels(); }
+  if (v === 'alk'){ renderPartsTable(); drawParts(); }
 }
 function repaintAll(){
   loadPalette();
   SIM.parts.forEach(p => p.col = PAL[p.sp.col]);
   drawVt(); renderCalc();
+  if (activeView === 'alk') drawParts();
 }
 let rTO;
 addEventListener('resize', () => { clearTimeout(rTO); rTO = setTimeout(() => { GEO = null; repaintAll(); }, 140); });
