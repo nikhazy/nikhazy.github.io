@@ -191,6 +191,16 @@ caption{caption-side:bottom;padding:9px 13px;font-family:var(--f-mono);font-size
 .stage{position:relative;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden}
 canvas{display:block;width:100%;touch-action:none}
 .legend{display:flex;flex-wrap:wrap;gap:14px;padding:9px 14px;border-top:1px solid var(--line-soft);font-family:var(--f-mono);font-size:10.5px;color:var(--ink-2)}
+.v3dbar{display:flex;flex-wrap:wrap;gap:14px;padding:8px 12px;border-bottom:1px solid var(--line-soft);background:var(--surface)}
+.v3dbar .grp{display:flex;gap:5px;flex-wrap:wrap}
+.v3btn{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 9px;border:1px solid var(--line);background:transparent;color:var(--ink-3);
+  border-radius:2px;cursor:pointer;transition:color .13s,border-color .13s,background .13s}
+.v3btn:hover{color:var(--ink);border-color:var(--ink-3)}
+.v3btn.on{color:var(--seed);border-color:var(--seed);background:var(--surface-2)}
+.v3btn:focus-visible{outline:2px solid var(--seed);outline-offset:1px}
+#v3d{cursor:grab}
+#v3d.dragging{cursor:grabbing}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 
 /* ---------- flow diagram ---------- */
@@ -472,6 +482,8 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
       <div class="readout"><span class="lbl">Áteresztés</span><div class="val" id="s-thru">—<small>kg/h</small></div><div class="note">becsült, száraz törköly</div></div>
       <div class="readout hi"><span class="lbl">Ebből olaj</span><div class="val" id="s-oil">—<small>liter</small></div><div class="note">100 kg száraz törkölyre</div></div>
       <div class="readout"><span class="lbl">Feldolgozott</span><div class="val" id="s-tot">0<small>szem</small></div><div class="note" id="s-fps">—</div></div>
+      <div class="readout" id="ro-filter"><span class="lbl">Szűrő terheltség</span><div class="val" id="s-filt">0<small>%</small></div><div class="note" id="s-filtn">tiszta zsák</div></div>
+      <div class="readout"><span class="lbl">Tényleges légsebesség</span><div class="val" id="s-eff">5,0<small>m/s</small></div><div class="note">a szűrő ellenállásával</div></div>
     </div>
 
     <div class="grid2" style="align-items:start">
@@ -499,6 +511,7 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
           <button class="act primary" id="b-play" type="button">Szünet</button>
+          <button class="act" id="b-clean" type="button">Szűrő tisztítása</button>
           <button class="act" id="b-reset" type="button">Számlálók nullázása</button>
           <button class="act" id="b-tune" type="button">Optimumra állít</button>
         </div>
@@ -527,24 +540,42 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
   <!-- ============ 04 3D ============ -->
   <section class="view" id="v-terv3d">
     <div class="vhead">
-      <div class="eyebrow">04 — Térbeli elrendezés</div>
-      <h2 class="vh">A gépsor 3D vázlata</h2>
-      <p class="lede">Húzd az egérrel a forgatáshoz, görgess a nagyításhoz. A dob és a ventilátor a valós fordulatszám arányában forog. A modell méretarányos: a dob Ø300 × 900 mm, az oszlop Ø125 × 1000 mm.</p>
+      <div class="eyebrow">04 — Az integrált gép</div>
+      <h2 class="vh">Egy váz, bal oldalt be, jobb oldalt ki</h2>
+      <p class="lede">A rosta és a szelelő egyetlen gépben, közös vázon, automata működéssel. Balra megy be a száraz törköly, jobbra jön ki a tiszta mag és a héj. A <b>teljes légút</b> végig követhető: alul be a kúpon, fel az oszlopon, könyökön át az ülepítőbe, onnan a szűrőn keresztül a ventilátorba, és ki.</p>
     </div>
 
     <div class="stage">
-      <canvas id="v3d" height="480"></canvas>
+      <div class="v3dbar">
+        <div class="grp">
+          <button class="v3btn" data-view="iso">Izometrikus</button>
+          <button class="v3btn" data-view="front">Elölnézet</button>
+          <button class="v3btn" data-view="side">Oldalnézet</button>
+          <button class="v3btn" data-view="top">Felülnézet</button>
+        </div>
+        <div class="grp">
+          <button class="v3btn" id="b-cut">Metszet</button>
+          <button class="v3btn on" id="b-flow">Áramlás</button>
+          <button class="v3btn on" id="b-lab">Feliratok</button>
+          <button class="v3btn" id="b-reset3d">Alaphelyzet</button>
+        </div>
+      </div>
+      <canvas id="v3d" height="560"></canvas>
       <div class="legend">
-        <span><i style="background:var(--seed)"></i>magút</span>
-        <span><i style="background:var(--husk)"></i>héjút</span>
-        <span style="margin-left:auto;color:var(--ink-3)" id="v3d-hint">húzd a forgatáshoz · görgess a nagyításhoz</span>
+        <span><i style="background:var(--air)"></i>levegő</span>
+        <span><i style="background:var(--seed)"></i>mag</span>
+        <span><i style="background:var(--husk)"></i>héj, kocsány</span>
+        <span style="margin-left:auto;color:var(--ink-3)">bal gomb: forgatás · jobb gomb vagy Shift+húzás: mozgatás · görgő: nagyítás a kurzorra</span>
       </div>
     </div>
 
     <div class="grid3" style="margin-top:16px">
-      <div class="readout"><span class="lbl">Teljes szélesség</span><div class="val">2,0<small>m</small></div></div>
-      <div class="readout"><span class="lbl">Magasság</span><div class="val">1,8<small>m</small></div></div>
-      <div class="readout"><span class="lbl">Teljesítmény</span><div class="val">~0,3<small>kW</small></div></div>
+      <div class="readout"><span class="lbl">Hossz</span><div class="val">1,9<small>m</small></div><div class="note">bemenettől a kimenetig</div></div>
+      <div class="readout"><span class="lbl">Magasság</span><div class="val">1,9<small>m</small></div><div class="note">a ventilátor kifúvásáig</div></div>
+      <div class="readout"><span class="lbl">Mélység</span><div class="val">0,6<small>m</small></div><div class="note">ajtón befér</div></div>
+      <div class="readout"><span class="lbl">Összteljesítmény</span><div class="val">~0,3<small>kW</small></div><div class="note">dob 180 W + ventilátor 79 W + adagoló</div></div>
+      <div class="readout"><span class="lbl">Kezelő</span><div class="val">1<small>fő</small></div><div class="note">csak utántölt és ürít</div></div>
+      <div class="readout"><span class="lbl">Áteresztés</span><div class="val">25<small>kg/h</small></div><div class="note">száraz törköly</div></div>
     </div>
 
     <div class="grid2" style="margin-top:22px">
@@ -650,6 +681,26 @@ code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);paddi
 
     <div class="callout">
       <b>Olcsó prototípus-alternatíva.</b> A DIY szelelők ipari porszívóval mennek (12–18 kPa szívás, 150–250 m³/h). Kísérletezésre kiváló, valószínűleg már megvan, és a magas vákuum miatt a szűrő telítődése alig zavarja a légsebességet. Folyamatos üzemre viszont nem való: kollektoros motor, kefekopás, 85–95 dB.
+    </div>
+
+    <h3 class="sec">Automata működés <span>a kezelő csak utántölt és ürít</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th class="n">#</th><th>Lépés</th><th>Elem</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td><b>A ventilátor indul először</b>, teljes feszültségen, majd a TRIAC leszabályozza</td><td>ventilátor + TRIAC</td></tr>
+        <tr><td class="n">2</td><td><b>Légáram-igazolás</b> engedélyezi a többit — enélkül az anyag szeparálatlanul zúdulna át</td><td>Δp-kapcsoló vagy 10 s késleltetés</td></tr>
+        <tr><td class="n">3</td><td>Dobmotor indul</td><td>180 W + áttétel</td></tr>
+        <tr><td class="n">4</td><td>Bemeneti rögtörő henger indul, fordulata állítható — ez szabja meg az áteresztést</td><td>12 V motor + PWM</td></tr>
+        <tr><td class="n">5</td><td><b>Szintkapcsoló a köztes garatban</b>: tele → leáll a bemenet, kiürül → újraindul</td><td>forgólapátos szintkapcsoló</td></tr>
+        <tr><td class="n">6</td><td>Rezgőadagoló folyamatosan jár, függönyben ejti az anyagot</td><td>rezgőmotor</td></tr>
+        <tr><td class="n">7</td><td>Ha a szűrő Δp-je elszalad, „tisztítsd a szűrőt" lámpa</td><td>ugyanaz a Δp-kapcsoló</td></tr>
+        <tr><td class="n">8</td><td>Vészstop mindent lekapcsol</td><td>E-stop gomb</td></tr>
+      </tbody>
+      <caption>Relés alapváltozat ~25 e Ft, programozás nélkül. ESP32-vel kijelző, üzemóra és fajtánkénti beállításmentés jön hozzá.</caption>
+    </table></div>
+
+    <div class="callout">
+      <b>A két kritikus reteszelés.</b> Először a ventilátor, csak utána az adagolás — légáram nélkül a héj a magvödörbe kerül. És a szintkapcsoló védi az oszlopot: ha a rosta gyorsabban termel, mint amennyit a szelelő elbír, a köztes garat megtelik és a bemenet leáll, nem az oszlop fullad meg. A gép így magától a szelelő kapacitásához igazodik.
     </div>
 
     <h3 class="sec">Biztonság <span>nem opcionális</span></h3>
@@ -1127,6 +1178,7 @@ document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('clic
 /* ======================= 03 — PARTICLE SIM ======================= */
 const SIM = {
   air: 5.0, hole: 8.0, rpm: 18, moist: 8, feed: 5,
+  filter: 0,            // 0 = tiszta zsák, 1 = eltömődött
   running: true, parts: [], t: 0,
   stats: {total:0, seedTotal:0, seedIn:0, seedBlown:0, seedOver:0,
           binSeed:{seed:0,husk:0,stem:0,dust:0},
@@ -1171,6 +1223,45 @@ function computeGeo(w,h){
 }
 /* Az anyag az oszlop középmagasságán lép be, a héjkivezetés alatt. */
 function feedY(g){ return g.col.top + (g.col.bottom - g.col.top) * g.col.feed; }
+
+/* A teljes légút töréspontjai: kúpos beömlő → oszlop → könyök → ülepítő
+   → szűrő → ventilátor → kifúvás. Végig nyilakkal jelölve. */
+function airPath(g){
+  const cx = g.col.x, chW = Math.max(28, g.w - g.chamber.x - 12), chX = g.chamber.x + chW/2;
+  return [
+    [cx, g.col.bottom + 44],
+    [cx, g.col.bottom],
+    [cx, g.col.top + 10],
+    [cx + g.col.w/2 + 10, g.col.top + 2],
+    [chX - chW/2 - 4, g.chamber.y + 12],
+    [chX, g.chamber.y + 54],          // kitágul, lelassul: itt ülepszik a héj
+    [chX, g.chamber.y - 10],          // felszálló ág a szűrőbe
+    [chX, g.chamber.y - 40],          // ventilátor
+    [chX, g.chamber.y - 64]           // kifúvás
+  ];
+}
+function polyAt(pts, t){
+  let total = 0; const seg = [];
+  for (let i=0;i<pts.length-1;i++){
+    const d = Math.hypot(pts[i+1][0]-pts[i][0], pts[i+1][1]-pts[i][1]);
+    seg.push(d); total += d;
+  }
+  let d = ((t % 1) + 1) % 1 * total;
+  for (let i=0;i<seg.length;i++){
+    if (d <= seg[i] || i === seg.length-1){
+      const k = seg[i] ? d/seg[i] : 0, a = pts[i], b = pts[i+1];
+      return {x: a[0]+(b[0]-a[0])*k, y: a[1]+(b[1]-a[1])*k,
+              ang: Math.atan2(b[1]-a[1], b[0]-a[0])};
+    }
+    d -= seg[i];
+  }
+  const n = pts.length-1;
+  return {x: pts[n][0], y: pts[n][1], ang: 0};
+}
+
+/* A szűrő telítődésével a tényleges légsebesség csökken — ez a gép
+   legalattomosabb hibája, ezért benne van a modellben. */
+function effAir(){ return SIM.air * (1 - 0.45*SIM.filter); }
 
 function spawn(){
   const s = pickSpecies();
@@ -1269,7 +1360,7 @@ function stepSim(dt){
     } else if (p.stage === 'col'){
       // drag vs gravity:  a = g * ((v_air/v_t)^2 - 1)  (sign by relative motion)
       const G = 9.81;
-      const vAirPx = SIM.air;                  // m/s, physical
+      const vAirPx = effAir();                 // m/s, a szűrő terheltségével csökken
       const vPart = p.vy / 34;                 // px/s -> m/s (34 px per m of fall scale)
       const vrel = vAirPx - (-vPart);          // air up, vy positive = down
       const a = G * (Math.sign(vrel)*Math.pow(Math.abs(vrel)/p.vt, 2) - 1);
@@ -1291,6 +1382,8 @@ function stepSim(dt){
       if (p.x > g.chamber.x + 8){
         SIM.stats.binBlow[p.kind]++;
         if (p.kind === 'seed') SIM.stats.seedBlown++;
+        // a finom por terheli a zsákszűrőt, a nagy héj kiülepszik előtte
+        SIM.filter = Math.min(1, SIM.filter + (p.kind === 'dust' ? 0.010 : 0.0012));
         SIM.parts.splice(i,1); continue;
       }
     }
@@ -1362,9 +1455,9 @@ function drawSim(){
   const cx = g.col.x, cw = g.col.w;
   c.strokeStyle = PAL['line']; c.lineWidth=1.5;
   c.strokeRect(cx - cw/2, g.col.top, cw, g.col.bottom - g.col.top);
-  // airflow arrows, speed-dependent
-  const nA = 5, phase = (performance.now()/1000 * SIM.air * 26) % 40;
-  c.strokeStyle = PAL['air']; c.globalAlpha = Math.min(.75, .15 + SIM.air*0.08); c.lineWidth = 1;
+  // a szeparációs szakasz belső légárama (több sáv, hogy a munkatér kitűnjön)
+  const nA = 5, phase = (performance.now()/1000 * effAir() * 26) % 40;
+  c.strokeStyle = PAL['air']; c.globalAlpha = Math.min(.6, .12 + effAir()*0.07); c.lineWidth = 1;
   for (let i=0;i<nA;i++){
     const ax = cx - cw/2 + cw*(i+0.5)/nA;
     for (let yy = g.col.bottom - phase; yy > g.col.top; yy -= 40){
@@ -1421,13 +1514,17 @@ function drawSim(){
   c.beginPath(); c.moveTo(cx+cw/2, g.col.top); c.lineTo(g.chamber.x, g.chamber.y+10); c.stroke();
   c.beginPath(); c.moveTo(cx+cw/2, g.col.top+18); c.lineTo(g.chamber.x, g.chamber.y+34); c.stroke();
 
-  // szűrő + ventilátor a kamra után — a mag soha nem jut ide
+  // zsákszűrő a kamra és a ventilátor között, a telítettség kitöltéssel jelezve
   const fanX = g.chamber.x + chW/2, fanY = g.chamber.y - 42;
-  c.strokeStyle = PAL['line']; c.setLineDash([3,2]);
-  c.beginPath(); c.moveTo(fanX, g.chamber.y); c.lineTo(fanX, fanY+14); c.stroke();
-  c.setLineDash([]);
+  const filT = g.chamber.y - 26, filB = g.chamber.y - 6;
+  c.strokeStyle = SIM.filter > 0.6 ? PAL['loss'] : PAL['line']; c.lineWidth=1.5;
+  c.strokeRect(fanX-13, filT, 26, filB-filT);
+  c.fillStyle = SIM.filter > 0.6 ? PAL['loss'] : PAL['ink-3'];
+  c.globalAlpha = .30 + .5*SIM.filter;
+  c.fillRect(fanX-13, filB - (filB-filT)*SIM.filter, 26, (filB-filT)*SIM.filter);
+  c.globalAlpha = 1;
   c.fillStyle = PAL['ink-3']; c.textAlign='left';
-  c.fillText('szűrő', fanX+6, g.chamber.y-12);
+  c.fillText('szűrő', fanX+18, filB-4);
 
   c.strokeStyle = PAL['air']; c.lineWidth=1.5;
   c.beginPath(); c.arc(fanX, fanY, 13, 0, 7); c.stroke();
@@ -1440,10 +1537,32 @@ function drawSim(){
   c.fillStyle = PAL['ink-3'];
   c.fillText('tiszta oldal', fanX, fanY-19);
 
-  // ---- köztes garat útja az adagolócsúszdához
+  // ---- köztes garat útja az adagolócsúszdához, szintkapcsolóval
   c.strokeStyle = PAL['line']; c.setLineDash([2,3]);
   c.beginPath(); c.moveTo(g.hopper.x, g.tray.y+16); c.lineTo(g.hopper.x, fy-30); c.lineTo(cx-cw/2-40, fy-30); c.stroke();
   c.setLineDash([]);
+  c.fillStyle = PAL['ok'];
+  c.beginPath(); c.arc(g.hopper.x, g.tray.y+26, 3, 0, 7); c.fill();
+  c.fillStyle = PAL['ink-3']; c.textAlign='left';
+  c.fillText('szintkapcsoló', g.hopper.x+8, g.tray.y+30);
+
+  // ---- A TELJES LÉGÚT: haladó nyilak a beömlőtől a kifúvásig
+  const ap = airPath(g);
+  c.strokeStyle = PAL['air']; c.globalAlpha = .22; c.lineWidth = 9; c.lineJoin = 'round'; c.lineCap = 'round';
+  c.beginPath(); ap.forEach((p,i) => i ? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1])); c.stroke();
+  c.lineWidth = 1; c.lineJoin = 'miter'; c.lineCap = 'butt'; c.globalAlpha = 1;
+  const nMark = 16, tBase = performance.now()/1000 * effAir() * 0.028;
+  c.fillStyle = PAL['air'];
+  for (let i=0;i<nMark;i++){
+    const m = polyAt(ap, tBase + i/nMark);
+    c.save(); c.translate(m.x, m.y); c.rotate(m.ang);
+    c.globalAlpha = .85;
+    c.beginPath(); c.moveTo(5,0); c.lineTo(-3,3.2); c.lineTo(-3,-3.2); c.closePath(); c.fill();
+    c.restore();
+  }
+  c.globalAlpha = 1;
+  c.fillStyle = PAL['air']; c.textAlign='left';
+  c.fillText('kifúvás', fanX + 20, fanY - 4);
 
   // ---- particles
   for (const p of SIM.parts){
@@ -1494,6 +1613,14 @@ function renderSimStats(){
   set('s-tot', fmt0(s.total), 'szem');
   document.getElementById('s-fps').textContent = SIM.fps ? Math.round(SIM.fps) + ' fps · ' + SIM.parts.length + ' aktív' : '';
 
+  set('s-filt', fmt0(SIM.filter*100), '%');
+  const ro = document.getElementById('ro-filter');
+  ro.classList.toggle('bad', SIM.filter > 0.6);
+  ro.classList.toggle('good', SIM.filter < 0.25);
+  document.getElementById('s-filtn').textContent =
+      SIM.filter > 0.6 ? 'tisztítani kell!' : SIM.filter > 0.25 ? 'kezd telítődni' : 'tiszta zsák';
+  set('s-eff', fmt(effAir(),1), 'm/s');
+
   // fraction table
   const rows = [
     ['Magfrakció (gyűjtő)', s.binSeed, 'seed'],
@@ -1506,6 +1633,8 @@ function renderSimStats(){
   // diagnosis
   const d = document.getElementById('diag');
   let msg = [];
+  if (SIM.filter > 0.6) msg.push(`<b>A zsákszűrő eltömődött (${fmt0(SIM.filter*100)}%).</b> A légsebesség ${fmt(SIM.air,1)} m/s helyett már csak ${fmt(effAir(),1)} m/s — a héj visszahull a magok közé, miközben a gép kívülről ugyanúgy néz ki. Ez a valódi gép legalattomosabb hibája: rázd le a zsákot.`);
+  else if (SIM.filter > 0.3) msg.push(`A szűrő kezd telítődni (${fmt0(SIM.filter*100)}%), a tényleges légsebesség már csak ${fmt(effAir(),1)} m/s.`);
   if (SIM.moist > 20) msg.push(`<b>A nedvesség (${SIM.moist}%) a fő probléma.</b> A héj rátapad a magra, rögök keletkeznek (piros szemcsék), és ezek nem férnek át a rostán — a mag a felülfolyással távozik. Szárítsd 10% alá.`);
   else if (SIM.moist > 12) msg.push(`A ${SIM.moist}%-os nedvesség még mindig rögösít. 8–10% a cél.`);
   if (SIM.air > 6.2) msg.push(`<b>Túl erős a légáram (${fmt(SIM.air,1)} m/s).</b> A mag lebegési sebessége 6,3 m/s-nál kezdődik — ennyinél már magszem is elszáll.`);
@@ -1544,37 +1673,47 @@ function resetStats(){
   SIM.stats = {total:0, seedTotal:0, seedIn:0, seedBlown:0, seedOver:0,
     binSeed:{seed:0,husk:0,stem:0,dust:0}, binOver:{seed:0,husk:0,stem:0,dust:0}, binBlow:{seed:0,husk:0,stem:0,dust:0}};
 }
-document.getElementById('b-reset').addEventListener('click', () => { resetStats(); SIM.parts.length = 0; renderSimStats(); });
+document.getElementById('b-clean').addEventListener('click', () => { SIM.filter = 0; renderSimStats(); });
+document.getElementById('b-reset').addEventListener('click', () => { resetStats(); SIM.parts.length = 0; SIM.filter = 0; renderSimStats(); });
 document.getElementById('b-play').addEventListener('click', e => {
   SIM.running = !SIM.running; e.target.textContent = SIM.running ? 'Szünet' : 'Indítás';
 });
 document.getElementById('b-tune').addEventListener('click', () => {
-  Object.assign(SIM, {air:5.0, hole:8.0, rpm:18, moist:8});
+  Object.assign(SIM, {air:5.0, hole:8.0, rpm:18, moist:8, filter:0});
   document.getElementById('i-air').value = 5; document.getElementById('i-hole').value = 8;
   document.getElementById('i-rpm').value = 18; document.getElementById('i-simmoist').value = 8;
   syncSimLabels(); resetStats(); SIM.parts.length = 0;
 });
 
 /* ======================= 04 — MINI 3D ENGINE ======================= */
+const V3_HOME = {az:-0.62, el:0.26, zoom:1, panX:0, panY:0};
 const V3 = {
-  az: -0.62, el: 0.28, dist: 4.2, zoom: 1, target:[0, 0.85, 0],
-  drag:false, px:0, py:0, spin:0, fanSpin:0
+  az:-0.62, el:0.26, dist: 4.2, zoom: 1, panX:0, panY:0, target:[0.05, 0.95, 0],
+  drag:null, px:0, py:0, spin:0, fanSpin:0, t:0,
+  flow:true, labels:true, cutaway:false
+};
+const V3_VIEWS = {
+  iso:   {az:-0.62, el:0.26},
+  front: {az: 0,    el: 0.04},
+  side:  {az:-1.5708, el:0.04},
+  top:   {az:-0.62, el: 1.35},
 };
 const meshes = [];
 
-function addBox(cx,cy,cz, sx,sy,sz, col, alpha){
+function addBox(cx,cy,cz, sx,sy,sz, col, alpha, shell){
   const hx=sx/2, hy=sy/2, hz=sz/2;
   const v = [
     [cx-hx,cy-hy,cz-hz],[cx+hx,cy-hy,cz-hz],[cx+hx,cy+hy,cz-hz],[cx-hx,cy+hy,cz-hz],
     [cx-hx,cy-hy,cz+hz],[cx+hx,cy-hy,cz+hz],[cx+hx,cy+hy,cz+hz],[cx-hx,cy+hy,cz+hz]
   ];
   const f = [[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[3,2,6,7],[4,5,1,0]];
-  f.forEach(idx => meshes.push({v: idx.map(i=>v[i]), col, alpha: alpha??1}));
+  f.forEach(idx => meshes.push({v: idx.map(i=>v[i]), col, alpha: alpha??1, shell}));
 }
 /* cylinder along axis 'y' or 'x' or 'z'; skip => perforated look */
 function addCyl(cx,cy,cz, r, len, axis, col, seg, opt){
   opt = opt || {};
   const spin = opt.spin || 0, skip = opt.skip || 0, alpha = opt.alpha ?? 1, caps = opt.caps ?? false;
+  const shell = opt.shell;
   const pt = (a, t) => {
     const s = Math.sin(a)*r, c = Math.cos(a)*r, l = (t-0.5)*len;
     if (axis === 'y') return [cx + s, cy + l, cz + c];
@@ -1588,14 +1727,14 @@ function addCyl(cx,cy,cz, r, len, axis, col, seg, opt){
     for (let j=0;j<nSeg;j++){
       if (skip && ((i+j) % 2 === 1)) continue;
       const t0 = j/nSeg, t1 = (j+1)/nSeg;
-      meshes.push({v:[pt(a0,t0), pt(a1,t0), pt(a1,t1), pt(a0,t1)], col, alpha, dbl:true});
+      meshes.push({v:[pt(a0,t0), pt(a1,t0), pt(a1,t1), pt(a0,t1)], col, alpha, dbl:true, shell});
     }
   }
   if (caps){
     for (const t of [0,1]){
       const ring = [];
       for (let i=0;i<seg;i++) ring.push(pt(spin + i/seg*Math.PI*2, t));
-      meshes.push({v:ring, col:opt.capCol||col, alpha, dbl:true});
+      meshes.push({v:ring, col:opt.capCol||col, alpha, dbl:true, shell});
     }
   }
 }
@@ -1608,75 +1747,192 @@ function addFrustum(cx,cy,cz, rTop, rBot, hgt, col, seg, alpha){
   }
 }
 
+/* ---- lapos négyszög két pont közé, adott féllszélességgel (csúszdák, szalagok) ---- */
+function addRibbon(a, b, halfZ, col, alpha){
+  meshes.push({v:[[a[0],a[1],a[2]-halfZ],[b[0],b[1],b[2]-halfZ],[b[0],b[1],b[2]+halfZ],[a[0],a[1],a[2]+halfZ]],
+               col, alpha: alpha??1, dbl:true});
+}
+
+/* ============================================================
+   AZ INTEGRÁLT GÉP — közös váz, bal oldalt be, jobb oldalt ki
+   Minden méret méterben, a valós géptervlap szerint.
+   ============================================================ */
+const M = {
+  frameTop: 1.12, frameX: [-0.86, 0.10, 0.86], frameZ: 0.24,
+  drum: {x0:-0.76, x1:0.14, y:1.32, r:0.15},
+  inHopper: {x:-0.80, y:1.62, rTop:0.17, rBot:0.07, h:0.22},
+  colX: 0.62, colTop: 1.44, colBot: 0.42, colR: 0.0625, feedY: 0.88,
+  chamber: {x:0.92, y:1.33, w:0.26, h:0.38},
+  filterY: 1.62, fanY: 1.78
+};
+
+/* A három nyomvonal, amit az „Áramlás" gomb megjelenít. */
+const FLOWS = [
+  { key:'air', col:'air', speed:0.16, n:22, pts:[
+    [0.62,0.20,0],[0.62,0.42,0],[0.62,1.44,0],[0.74,1.50,0],[0.86,1.50,0],
+    [0.92,1.24,0],[0.92,1.53,0],[0.92,1.73,0],[0.92,1.94,0] ] },
+  { key:'seed', col:'seed', speed:0.085, n:16, pts:[
+    [-0.80,1.72,0],[-0.80,1.48,0],[-0.72,1.32,0],[0.10,1.26,0],[0.10,1.06,0],
+    [0.30,0.98,0],[0.34,0.86,0],[0.55,0.85,0],[0.62,0.80,0],[0.62,0.36,0],[0.62,0.16,0] ] },
+  { key:'huskA', col:'husk', speed:0.10, n:10, pts:[
+    [0.14,1.30,0.10],[0.22,1.18,0.17],[0.60,0.70,0.20],[0.88,0.36,0.12],[0.92,0.18,0] ] },
+  { key:'huskB', col:'husk', speed:0.14, n:12, pts:[
+    [0.62,0.88,0],[0.62,1.44,0],[0.78,1.50,0],[0.90,1.40,0],[0.92,1.10,0],[0.92,0.18,0] ] },
+];
+
 function buildScene(spin, fanSpin){
   meshes.length = 0;
-  const F = PAL['line'], FR = PAL['ink-3'];
+  const FR = PAL['ink-3'], LN = PAL['line'];
+  const cx = M.colX, ch = M.chamber;
 
-  // ---- ground plate
-  meshes.push({v:[[-1.0,0,-0.6],[1.0,0,-0.6],[1.0,0,0.6],[-1.0,0,0.6]], col: PAL['surface-2'], alpha:.5, dbl:true});
+  // ---- talaj (nem számít bele a képkivágásba)
+  meshes.push({v:[[-1.10,0,-0.45],[1.15,0,-0.45],[1.15,0,0.45],[-1.10,0,0.45]],
+               col: PAL['surface-2'], alpha:.45, dbl:true, noFit:true});
 
-  // ---- frame legs (machine 1)
-  [[-0.72,-0.22],[-0.72,0.22],[0.02,-0.22],[0.02,0.22]].forEach(([x,z]) => addBox(x,0.34,z, 0.035,0.68,0.035, FR));
-  addBox(-0.35,0.68,-0.22, 0.78,0.035,0.035, FR);
-  addBox(-0.35,0.68, 0.22, 0.78,0.035,0.035, FR);
+  // ---- KÖZÖS VÁZ: lábak, alsó és felső körbefutó keret
+  M.frameX.forEach(x => [-M.frameZ, M.frameZ].forEach(z => {
+    addBox(x, M.frameTop/2, z, 0.038, M.frameTop, 0.038, FR);
+  }));
+  [-M.frameZ, M.frameZ].forEach(z => {
+    addBox(0, M.frameTop, z, 1.76, 0.038, 0.038, FR);   // felső hosszanti
+    addBox(0, 0.12,       z, 1.76, 0.038, 0.038, FR);   // alsó hosszanti
+  });
+  M.frameX.forEach(x => {
+    addBox(x, M.frameTop, 0, 0.038, 0.038, M.frameZ*2, FR);
+    addBox(x, 0.12,       0, 0.038, 0.038, M.frameZ*2, FR);
+  });
+  // görgők
+  M.frameX.forEach(x => [-M.frameZ, M.frameZ].forEach(z =>
+    addCyl(x, 0.035, z, 0.035, 0.03, 'z', FR, 10, {caps:true, alpha:.9})));
 
-  // ---- trommel drum (Ø300 × 900 mm), tilted 4°
-  const tilt = 4*Math.PI/180;
-  const drumY = 0.98, drumX = -0.35;
-  // approximate tilt by offsetting ends: build along x with slight y shift via two half-cylinders
-  addCyl(drumX, drumY, 0, 0.15, 0.90, 'x', PAL['line'], 22, {spin, skip:2, lenSeg:10, alpha:.85});
-  // end discs
-  addCyl(drumX-0.45, drumY, 0, 0.15, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
-  addCyl(drumX+0.45, drumY, 0, 0.15, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
-  // shaft
-  addCyl(drumX, drumY, 0, 0.012, 1.06, 'x', FR, 8, {caps:true});
+  // ---- BE: garat + rögtörő henger
+  const H = M.inHopper;
+  addFrustum(H.x, H.y, 0, H.rTop, H.rBot, H.h, PAL['seed'], 14, .40);
+  addCyl(H.x, H.y - H.h/2 - 0.04, 0, 0.05, 0.20, 'z', FR, 10, {spin: spin*3, caps:true, alpha:.9});
+  for (let i=0;i<6;i++){                       // verőkarok a rögtörőn
+    const a = spin*3 + i*Math.PI/3;
+    addRibbon([H.x + Math.sin(a)*0.05, H.y-H.h/2-0.04 + Math.cos(a)*0.05, -0.09],
+              [H.x + Math.sin(a)*0.075, H.y-H.h/2-0.04 + Math.cos(a)*0.075, -0.09], 0.09, LN, .8);
+  }
+  addRibbon([H.x, H.y-H.h/2-0.10, 0], [M.drum.x0+0.04, M.drum.y+0.04, 0], 0.09, PAL['seed'], .35);
 
-  // ---- feed hopper above drum inlet
-  addFrustum(drumX-0.42, drumY+0.26, 0, 0.16, 0.06, 0.24, PAL['husk'], 12, .55);
+  // ---- 1. GÉP: dobrosta Ø300 × 900, perforált palásttal
+  const D = M.drum, dLen = D.x1 - D.x0, dMid = (D.x0 + D.x1)/2;
+  addCyl(dMid, D.y, 0, D.r, dLen, 'x', LN, 22, {spin, skip:2, lenSeg:11, alpha:.85, shell:true});
+  addCyl(D.x0, D.y, 0, D.r, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
+  addCyl(D.x1, D.y, 0, D.r, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
+  addCyl(dMid, D.y, 0, 0.012, dLen+0.34, 'x', FR, 8, {caps:true});
+  // csapágybakok a felső keretre
+  [D.x0-0.06, D.x1+0.06].forEach(x => {
+    addBox(x, (M.frameTop + D.y)/2, 0, 0.05, D.y - M.frameTop, 0.06, FR);
+    addCyl(x, D.y, 0, 0.032, 0.05, 'x', FR, 10, {caps:true, alpha:.95});
+  });
+  // szíjhajtás + motor
+  addCyl(D.x1+0.15, D.y, 0.20, 0.085, 0.025, 'x', FR, 14, {spin, caps:true, alpha:.9});
+  addBox(D.x1+0.16, 0.95, 0.24, 0.14, 0.14, 0.16, FR);
+  addCyl(D.x1+0.15, 1.03, 0.20, 0.030, 0.02, 'x', FR, 10, {spin:spin*3, caps:true, alpha:.9});
+  [-1,1].forEach(s => addRibbon([D.x1+0.15, D.y + s*0.085, 0.20], [D.x1+0.15, 1.03 + s*0.030, 0.20], 0.012, FR, .8));
 
-  // ---- collection tray under drum
-  meshes.push({v:[[drumX-0.5,drumY-0.24,-0.20],[drumX+0.52,drumY-0.30,-0.20],[drumX+0.52,drumY-0.30,0.20],[drumX-0.5,drumY-0.24,0.20]], col: PAL['seed'], alpha:.30, dbl:true});
+  // ---- áteső frakció tálcája, lejtve a köztes garat felé
+  meshes.push({v:[[D.x0-0.06, M.frameTop-0.02, -0.20],[0.26, 1.02, -0.20],
+                  [0.26, 1.02, 0.20],[D.x0-0.06, M.frameTop-0.02, 0.20]],
+               col: PAL['seed'], alpha:.30, dbl:true});
 
-  // ---- motor
-  addBox(drumX-0.55, drumY-0.10, 0.24, 0.13,0.13,0.16, FR);
+  // ---- felülfolyás (héj, kocsány) csúszdája hátul, a héjzsákig
+  addRibbon([D.x1+0.02, D.y-0.04, 0.14], [0.60, 0.70, 0.20], 0.075, PAL['husk'], .40);
+  addRibbon([0.60, 0.70, 0.20], [ch.x-0.02, 0.36, 0.10], 0.075, PAL['husk'], .40);
 
-  // ---- overflow bin at drum end
-  addBox(drumX+0.62, 0.12, 0, 0.20,0.24,0.20, PAL['husk'], .5);
+  // ---- köztes garat + szintkapcsoló + rezgőadagoló
+  addFrustum(0.30, 0.96, 0, 0.13, 0.045, 0.16, PAL['seed'], 12, .42);
+  addBox(0.30, 1.00, -0.14, 0.03, 0.05, 0.03, PAL['ok']);      // szintkapcsoló
+  meshes.push({v:[[0.30,0.86,-0.06],[0.56,0.845,-0.06],[0.56,0.845,0.06],[0.30,0.86,0.06]],
+               col: PAL['seed'], alpha:.5, dbl:true});
+  addBox(0.33, 0.80, 0, 0.08, 0.06, 0.08, FR);                  // rezgőmotor
 
-  // ---- machine 2: szelelőoszlop, SZÍVÓ elrendezésben
-  const colX = 0.62;
-  [[colX-0.16,-0.16],[colX-0.16,0.16],[colX+0.16,-0.16],[colX+0.16,0.16]].forEach(([x,z]) => addBox(x,0.30,z, 0.03,0.60,0.03, FR));
-
-  // köztes garat + oldalsó adagolócsúszda az oszlop középmagasságába
-  addFrustum(colX-0.30, 1.30, 0, 0.13, 0.05, 0.20, PAL['husk'], 12, .5);
-  meshes.push({v:[[colX-0.30,1.18,-0.05],[colX-0.055,1.00,-0.05],[colX-0.055,1.00,0.05],[colX-0.30,1.18,0.05]],
-               col: PAL['seed'], alpha:.45, dbl:true});
-
-  // oszlop Ø125 × 1000, a szeparációs szakasz
-  addCyl(colX, 1.10, 0, 0.0625, 1.00, 'y', PAL['air'], 16, {alpha:.30, lenSeg:8});
-
+  // ---- 2. GÉP: szelelőoszlop, SZÍVÓ elrendezésben
+  addCyl(cx, (M.colTop+M.colBot)/2, 0, M.colR, M.colTop-M.colBot, 'y', PAL['air'], 16,
+         {alpha:.26, lenSeg:9, shell:true});
+  // adagolócsonk oldalt, az oszlop középmagasságában
+  addCyl(cx-0.055, M.feedY, 0, 0.035, 0.07, 'x', PAL['seed'], 10, {caps:true, alpha:.55});
   // alsó kúpos bővítés Ø125 → Ø200: légbeömlő ÉS magkiömlő
-  addFrustum(colX, 0.53, 0, 0.0625, 0.10, 0.14, PAL['air'], 14, .35);
+  addFrustum(cx, 0.35, 0, M.colR, 0.10, 0.14, PAL['air'], 16, .30);
+  // maggyűjtő vödör — semmi nem áll az útjában
+  addCyl(cx, 0.16, 0, 0.10, 0.26, 'y', PAL['seed'], 14, {caps:true, alpha:.45, shell:true});
+  // oszloptartó bilincsek
+  [0.60, 1.05].forEach(y => addBox(cx, y, 0, 0.16, 0.03, 0.03, FR));
 
-  // maggyűjtő vödör a kúp alatt — semmi nem áll az útjában
-  addCyl(colX, 0.22, 0, 0.10, 0.28, 'y', PAL['seed'], 14, {caps:true, alpha:.5});
+  // ---- könyök az oszlop tetejéről az ülepítőbe
+  addCyl(cx, M.colTop+0.03, 0, M.colR, 0.06, 'y', PAL['air'], 12, {alpha:.4});
+  addRibbon([cx, M.colTop+0.06, 0], [ch.x-ch.w/2, ch.y+ch.h/2-0.03, 0], 0.0625, PAL['air'], .40);
 
-  // ---- tiszta oldal: ülepítőkamra → szűrő → ventilátor
-  addBox(1.06, 1.16, 0, 0.30,0.40,0.30, PAL['husk'], .38);
-  // könyök az oszlop tetejéről a kamrába
-  meshes.push({v:[[colX+0.05,1.60,-0.05],[0.94,1.32,-0.05],[0.94,1.32,0.05],[colX+0.05,1.60,0.05]],
-               col: PAL['husk'], alpha:.5, dbl:true});
-  // zsákszűrő a kamra tetején
-  addCyl(1.06, 1.46, 0, 0.075, 0.20, 'y', PAL['ink-3'], 12, {caps:true, alpha:.35});
-  // ventilátor legfelül — csak tiszta levegőt kap
-  addCyl(1.06, 1.62, 0, 0.085, 0.10, 'y', FR, 14, {caps:true, alpha:.85});
-  for (let i=0;i<4;i++){
-    const a = fanSpin + i*Math.PI/2;
-    meshes.push({v:[
-      [1.06, 1.62, 0],
-      [1.06 + Math.sin(a)*0.072, 1.635, Math.cos(a)*0.072],
-      [1.06 + Math.sin(a+0.5)*0.072, 1.605, Math.cos(a+0.5)*0.072]
-    ], col: PAL['air'], alpha:.85, dbl:true});
+  // ---- TISZTA OLDAL: ülepítő → szűrő → ventilátor → kifúvás
+  addBox(ch.x, ch.y, 0, ch.w, ch.h, ch.w, PAL['husk'], .30, true);
+  addFrustum(ch.x, ch.y - ch.h/2 - 0.06, 0, ch.w/2, 0.05, 0.12, PAL['husk'], 12, .35);
+  addCyl(ch.x, 0.16, 0, 0.10, 0.26, 'y', PAL['husk'], 14, {caps:true, alpha:.40, shell:true});
+  addCyl(ch.x, M.filterY, 0, 0.075, 0.18, 'y', PAL['ink-3'], 12, {caps:true, alpha:.30, shell:true});
+  addCyl(ch.x, M.fanY, 0, 0.085, 0.10, 'y', FR, 14, {caps:true, alpha:.85});
+  for (let i=0;i<5;i++){
+    const a = fanSpin + i*Math.PI*2/5;
+    meshes.push({v:[[ch.x, M.fanY, 0],
+      [ch.x + Math.sin(a)*0.072, M.fanY+0.018, Math.cos(a)*0.072],
+      [ch.x + Math.sin(a+0.55)*0.072, M.fanY-0.018, Math.cos(a+0.55)*0.072]],
+      col: PAL['air'], alpha:.9, dbl:true});
+  }
+  addCyl(ch.x, 1.90, 0, 0.045, 0.14, 'y', PAL['air'], 10, {alpha:.5});
+
+  // ---- vezérlőszekrény elöl
+  addBox(0.10, 1.26, -0.28, 0.18, 0.22, 0.07, FR);
+  meshes.push({v:[[0.04,1.33,-0.318],[0.16,1.33,-0.318],[0.16,1.29,-0.318],[0.04,1.29,-0.318]],
+               col: PAL['ok'], alpha:.85, dbl:true});
+  meshes.push({v:[[0.04,1.25,-0.318],[0.16,1.25,-0.318],[0.16,1.21,-0.318],[0.04,1.21,-0.318]],
+               col: PAL['seed'], alpha:.7, dbl:true});
+}
+
+/* ---- pont a törtvonalon ívhossz szerint (t = 0..1), a nyomvonal-jelölőkhöz ---- */
+function pathAt(pts, t){
+  let total = 0; const seg = [];
+  for (let i=0;i<pts.length-1;i++){
+    const a=pts[i], b=pts[i+1];
+    const d = Math.hypot(b[0]-a[0], b[1]-a[1], b[2]-a[2]);
+    seg.push(d); total += d;
+  }
+  let d = ((t % 1) + 1) % 1 * total;
+  for (let i=0;i<seg.length;i++){
+    if (d <= seg[i] || i === seg.length-1){
+      const k = seg[i] ? d/seg[i] : 0, a=pts[i], b=pts[i+1];
+      return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, a[2]+(b[2]-a[2])*k];
+    }
+    d -= seg[i];
+  }
+  return pts[pts.length-1];
+}
+
+/* ---- a nyomvonalak: halvány vezetővonal + kamerára néző jelölők ---- */
+function addFlowMarkers(right, up){
+  for (const f of FLOWS){
+    const col = PAL[f.col];
+    // vezetővonal vékony szalagként, mindig a kamera felé fordítva
+    for (let i=0;i<f.pts.length-1;i++){
+      const a = f.pts[i], b = f.pts[i+1], t = 0.006;
+      meshes.push({v:[
+        [a[0]-right[0]*t, a[1]-right[1]*t, a[2]-right[2]*t],
+        [b[0]-right[0]*t, b[1]-right[1]*t, b[2]-right[2]*t],
+        [b[0]+right[0]*t, b[1]+right[1]*t, b[2]+right[2]*t],
+        [a[0]+right[0]*t, a[1]+right[1]*t, a[2]+right[2]*t]
+      ], col, alpha:.28, dbl:true, flow:true});
+    }
+    // haladó jelölők
+    for (let i=0;i<f.n;i++){
+      const t = (V3.t * f.speed + i/f.n) % 1;
+      const p = pathAt(f.pts, t);
+      const s = f.key === 'air' ? 0.016 : 0.020;
+      meshes.push({v:[
+        [p[0]-right[0]*s-up[0]*s, p[1]-right[1]*s-up[1]*s, p[2]-right[2]*s-up[2]*s],
+        [p[0]+right[0]*s-up[0]*s, p[1]+right[1]*s-up[1]*s, p[2]+right[2]*s-up[2]*s],
+        [p[0]+right[0]*s+up[0]*s, p[1]+right[1]*s+up[1]*s, p[2]+right[2]*s+up[2]*s],
+        [p[0]-right[0]*s+up[0]*s, p[1]-right[1]*s+up[1]*s, p[2]-right[2]*s+up[2]*s]
+      ], col, alpha: f.key==='air' ? .8 : .95, dbl:true, flow:true});
+    }
   }
 }
 
@@ -1690,6 +1946,11 @@ function draw3d(){
   const ca = Math.cos(V3.az), sa = Math.sin(V3.az);
   const ce = Math.cos(V3.el), se = Math.sin(V3.el);
 
+  // kamerabázis: ezekből épülnek a kamerára néző jelölők
+  const right = [ca, 0, -sa];
+  const up    = [-sa*se, ce, -ca*se];
+  if (V3.flow) addFlowMarkers(right, up);
+
   // camera-space projection to normalised device coords (before fitting)
   const ndc = p => {
     const x = p[0] - V3.target[0], y = p[1] - V3.target[1], z = p[2] - V3.target[2];
@@ -1702,21 +1963,32 @@ function draw3d(){
 
   // auto-fit: measure the whole scene, then scale it into the canvas with a margin
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const m of meshes) for (const v of m.v){
+  for (const m of meshes) { if (m.noFit) continue; for (const v of m.v){
     const q = ndc(v);
     if (q.nx < minX) minX = q.nx; if (q.nx > maxX) maxX = q.nx;
     if (q.ny < minY) minY = q.ny; if (q.ny > maxY) maxY = q.ny;
-  }
+  } }
   const spanX = Math.max(1e-4, maxX - minX), spanY = Math.max(1e-4, maxY - minY);
-  const fitScale = Math.min(w/spanX, h/spanY) * 0.80 * V3.zoom;
+  // az alapskála a zoomtól független, hogy a nagyítás ne "ugorjon" forgatáskor
+  const fitScale = Math.min(w/spanX, h/spanY) * 0.88 * V3.zoom;
   const midX = (minX+maxX)/2, midY = (minY+maxY)/2;
+  V3._fitScale = fitScale;
 
   const project = p => {
     const q = ndc(p);
-    return {x: w/2 + (q.nx - midX)*fitScale, y: h/2 - (q.ny - midY)*fitScale, z: q.z};
+    return {x: w/2 + V3.panX + (q.nx - midX)*fitScale,
+            y: h/2 + V3.panY - (q.ny - midY)*fitScale, z: q.z};
   };
 
-  const faces = meshes.map(m => {
+  // metszet: a kamera felé eső burkolatok elrejtése, hogy belátni a gépbe
+  const camDir = [-sa*ce, -se, -ca*ce];
+  const faces = meshes.filter(m => {
+    if (!V3.cutaway || !m.shell) return true;
+    let n = 0, cxs=0, cys=0, czs=0;
+    for (const v of m.v){ cxs+=v[0]; cys+=v[1]; czs+=v[2]; n++; }
+    const d = (cxs/n - V3.target[0])*camDir[0] + (cys/n - V3.target[1])*camDir[1] + (czs/n - V3.target[2])*camDir[2];
+    return d > 0;   // csak a kamerától távolabbi fél marad
+  }).map(m => {
     const pts = m.v.map(project);
     const zAvg = pts.reduce((s,p)=>s+p.z,0)/pts.length;
     // flat shading via 2D winding as a cheap normal proxy
@@ -1725,7 +1997,7 @@ function draw3d(){
       const a = pts[i], b = pts[(i+1)%pts.length];
       area += (a.x*b.y - b.x*a.y);
     }
-    return {pts, z:zAvg, col:m.col, alpha:m.alpha, dbl:m.dbl, front: area < 0};
+    return {pts, z:zAvg, col:m.col, alpha:m.alpha, dbl:m.dbl, flow:m.flow, front: area < 0};
   }).filter(f => f.dbl || f.front);
 
   faces.sort((a,b) => b.z - a.z);
@@ -1735,48 +2007,130 @@ function draw3d(){
     f.pts.forEach((p,i) => i ? c.lineTo(p.x,p.y) : c.moveTo(p.x,p.y));
     c.closePath();
     const shade = Math.max(.45, Math.min(1, 1.35 - (f.z - V3.dist + 0.8)*0.42));
-    c.globalAlpha = f.alpha * (0.30 + 0.55*shade);
-    c.fillStyle = f.col; c.fill();
-    c.globalAlpha = Math.min(1, f.alpha * 0.85);
-    c.strokeStyle = f.col; c.lineWidth = 0.7; c.stroke();
+    if (f.flow){                       // a nyomvonalak nem árnyékolódnak, hogy végig látszanak
+      c.globalAlpha = f.alpha; c.fillStyle = f.col; c.fill();
+    } else {
+      c.globalAlpha = f.alpha * (0.42 + 0.52*shade);
+      c.fillStyle = f.col; c.fill();
+      c.globalAlpha = Math.min(1, f.alpha);
+      c.strokeStyle = f.col; c.lineWidth = 0.8; c.stroke();
+    }
   }
   c.globalAlpha = 1;
 
-  // labels anchored in 3D
-  c.font = '10px "JetBrains Mono", monospace'; c.textAlign='center';
-  const tag = (p3, txt, col) => {
+  if (!V3.labels) return;
+
+  // 3D-hez kötött feliratok, a méret a nagyítással együtt nő
+  const fs = Math.max(9, Math.min(15, 10 * V3.zoom));
+  c.font = fs + 'px "JetBrains Mono", monospace'; c.textAlign='center';
+  const tag = (p3, txt, col, dy) => {
     const p = project(p3);
     if (p.z < 0.2) return;
-    c.fillStyle = col; c.fillText(txt, p.x, p.y);
+    c.fillStyle = col; c.fillText(txt, p.x, p.y + (dy||0));
   };
-  tag([-0.35, 1.34, 0], '1 · DOBROSTA Ø300×900', PAL['ink-2']);
-  tag([0.62, 1.72, 0], '2 · SZELELŐ Ø125×1000', PAL['ink-2']);
-  tag([1.06, 1.78, 0], 'VENTILÁTOR — TISZTA OLDAL', PAL['air']);
-  tag([1.06, 0.92, 0], 'ÜLEPÍTŐ', PAL['husk']);
-  tag([0.62, 0.42, 0], 'LEVEGŐ BE', PAL['air']);
-  tag([0.62, 0.02, 0], 'MAG', PAL['seed']);
-  tag([0.27, 0.02, 0], 'HÉJ', PAL['husk']);
+  const I2 = PAL['ink-2'], A = PAL['air'], S = PAL['seed'], H = PAL['husk'];
+
+  tag([-0.80, 1.84, 0], 'BE — SZÁRAZ TÖRKÖLY', S);
+  tag([-0.31, 1.58, 0], '1 · DOBROSTA  Ø300×900', I2);
+  tag([ 0.62, 1.62, 0], '2 · SZELELŐ  Ø125×1000', I2);
+  tag([ 0.92, 2.02, 0], 'VENTILÁTOR — TISZTA OLDAL', A);
+  tag([ 0.92, 1.33, 0], 'ÜLEPÍTŐ', H);
+  tag([ 0.62, 0.22, 0], 'LEVEGŐ BE + MAG KI', A);
+  tag([ 0.62,-0.04, 0], 'MAG', S);
+  tag([ 0.92,-0.04, 0], 'HÉJ', H);
+
+  // részletfeliratok csak ránagyítva jelennek meg, hogy alapnézetben ne zsúfoljanak
+  if (V3.zoom > 1.35){
+    c.font = Math.max(9, fs-1) + 'px "JetBrains Mono", monospace';
+    c.fillStyle = PAL['ink-3'];
+    tag([-0.80, 1.42, 0], 'rögtörő henger', PAL['ink-3']);
+    tag([ 0.30, 1.12, 0], 'köztes garat + szintkapcsoló', PAL['ink-3']);
+    tag([ 0.30, 0.70, 0], 'rezgőadagoló', PAL['ink-3']);
+    tag([ 0.44, 0.96, 0], 'adagolórés', S);
+    tag([ 0.10, 1.44, 0], 'vezérlőszekrény', PAL['ink-3']);
+    tag([ 0.92, 1.62, 0], 'zsákszűrő', PAL['ink-3']);
+    tag([ 0.30, 1.32, 0], 'szíjhajtás + motor', PAL['ink-3']);
+  }
 }
 
 (function bind3d(){
   const cv = document.getElementById('v3d');
-  const down = e => { V3.drag = true; V3.px = (e.touches?e.touches[0]:e).clientX; V3.py = (e.touches?e.touches[0]:e).clientY; };
-  const move = e => {
+
+  cv.addEventListener('contextmenu', e => e.preventDefault());
+
+  cv.addEventListener('pointerdown', e => {
+    // bal gomb = forgatás, jobb gomb vagy Shift = mozgatás
+    V3.drag = (e.button === 2 || e.shiftKey) ? 'pan' : 'orbit';
+    V3.px = e.clientX; V3.py = e.clientY;
+    cv.classList.add('dragging');
+    cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener('pointermove', e => {
     if (!V3.drag) return;
-    const t = e.touches ? e.touches[0] : e;
-    V3.az += (t.clientX - V3.px)*0.008;
-    V3.el = Math.max(-0.25, Math.min(1.25, V3.el + (t.clientY - V3.py)*0.006));
-    V3.px = t.clientX; V3.py = t.clientY;
+    const dx = e.clientX - V3.px, dy = e.clientY - V3.py;
+    if (V3.drag === 'orbit'){
+      V3.az += dx*0.008;
+      V3.el = Math.max(-0.35, Math.min(1.45, V3.el + dy*0.006));
+    } else {
+      V3.panX += dx; V3.panY += dy;
+    }
+    V3.px = e.clientX; V3.py = e.clientY;
     if (e.cancelable) e.preventDefault();
-  };
-  const up = () => V3.drag = false;
-  cv.addEventListener('pointerdown', down);
-  window.addEventListener('pointermove', move);
-  window.addEventListener('pointerup', up);
+  });
+  const endDrag = e => { V3.drag = null; cv.classList.remove('dragging');
+    if (e && e.pointerId != null && cv.hasPointerCapture(e.pointerId)) cv.releasePointerCapture(e.pointerId); };
+  cv.addEventListener('pointerup', endDrag);
+  cv.addEventListener('pointercancel', endDrag);
+
+  // görgő: nagyítás a kurzor pozíciójára
   cv.addEventListener('wheel', e => {
-    V3.zoom = Math.max(0.55, Math.min(3.2, V3.zoom * (1 - e.deltaY*0.0012)));
+    const r = cv.getBoundingClientRect();
+    const mx = e.clientX - r.left - r.width/2 - V3.panX;
+    const my = e.clientY - r.top  - r.height/2 - V3.panY;
+    const prev = V3.zoom;
+    V3.zoom = Math.max(0.4, Math.min(6, V3.zoom * (1 - e.deltaY*0.0014)));
+    const k = V3.zoom / prev;
+    V3.panX -= mx*(k-1);
+    V3.panY -= my*(k-1);
     e.preventDefault();
   }, {passive:false});
+
+  // két ujjal csippentés érintőn
+  let pinch = null;
+  cv.addEventListener('touchstart', e => {
+    if (e.touches.length === 2){
+      pinch = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    }
+  }, {passive:true});
+  cv.addEventListener('touchmove', e => {
+    if (e.touches.length === 2 && pinch){
+      const d = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      V3.zoom = Math.max(0.4, Math.min(6, V3.zoom * d/pinch));
+      pinch = d;
+      if (e.cancelable) e.preventDefault();
+    }
+  }, {passive:false});
+  cv.addEventListener('touchend', () => pinch = null);
+
+  // nézetgombok
+  document.querySelectorAll('.v3btn[data-view]').forEach(b => b.addEventListener('click', () => {
+    Object.assign(V3, V3_VIEWS[b.dataset.view]);
+    V3.panX = 0; V3.panY = 0;
+    document.querySelectorAll('.v3btn[data-view]').forEach(x => x.classList.toggle('on', x === b));
+    draw3d();
+  }));
+  const toggle = (id, key) => {
+    const b = document.getElementById(id);
+    b.addEventListener('click', () => { V3[key] = !V3[key]; b.classList.toggle('on', V3[key]); draw3d(); });
+  };
+  toggle('b-cut', 'cutaway');
+  toggle('b-flow', 'flow');
+  toggle('b-lab', 'labels');
+  document.getElementById('b-reset3d').addEventListener('click', () => {
+    Object.assign(V3, V3_HOME);
+    document.querySelectorAll('.v3btn[data-view]').forEach(x => x.classList.remove('on'));
+    draw3d();
+  });
 })();
 
 /* ======================= LOOP ======================= */
@@ -1792,6 +2146,7 @@ function loop(now){
     drawSim();
     if ((now|0) % 6 === 0) renderSimStats();
   } else if (activeView === 'terv3d'){
+    V3.t += dt;
     V3.spin += dt * (18/60) * Math.PI*2 * 0.35;
     V3.fanSpin += dt * 6;
     draw3d();
