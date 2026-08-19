@@ -1,17 +1,1642 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="hu">
 <head>
-<title>MyStackOverFlow</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magszelelő Műhely</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* ============================================================
+   TOKENS — light is the base; dark redefined for both the
+   un-stamped (system) state and the explicit [data-theme] state
+   ============================================================ */
+:root{
+  --ground:#e9e7df;
+  --surface:#f6f5f0;
+  --surface-2:#dedbd1;
+  --line:#c6c2b4;
+  --line-soft:#d6d3c7;
+  --ink:#191713;
+  --ink-2:#4f4a3f;
+  --ink-3:#7d7767;
+
+  --seed:#b8801a;         /* aszú arany — a mag */
+  --seed-bright:#d9a233;
+  --husk:#7b5583;         /* héjlila — a törköly */
+  --stem:#5f7048;         /* kocsány zöld */
+  --air:#2f7f8c;          /* légáram */
+  --loss:#8d2540;         /* veszteség, burgundi */
+  --ok:#3f7a4e;
+
+  --shadow:0 1px 2px rgba(25,23,19,.08), 0 8px 24px -12px rgba(25,23,19,.22);
+
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --r:4px;
+  --maxw:1180px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#131512;
+    --surface:#1b1e1a;
+    --surface-2:#252923;
+    --line:#3a3f36;
+    --line-soft:#2c312a;
+    --ink:#eae7dd;
+    --ink-2:#b3ae9f;
+    --ink-3:#847f70;
+
+    --seed:#e0ad3f;
+    --seed-bright:#f0c661;
+    --husk:#b58ac0;
+    --stem:#8fa872;
+    --air:#5fc0cf;
+    --loss:#e06a86;
+    --ok:#79c08c;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131512;
+  --surface:#1b1e1a;
+  --surface-2:#252923;
+  --line:#3a3f36;
+  --line-soft:#2c312a;
+  --ink:#eae7dd;
+  --ink-2:#b3ae9f;
+  --ink-3:#847f70;
+
+  --seed:#e0ad3f;
+  --seed-bright:#f0c661;
+  --husk:#b58ac0;
+  --stem:#8fa872;
+  --air:#5fc0cf;
+  --loss:#e06a86;
+  --ok:#79c08c;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.6;
+  font-optical-sizing:auto;
+}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.12;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:inherit}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:0;min-height:100vh;max-width:var(--maxw);margin:0 auto;background:var(--surface);border-inline:1px solid var(--line-soft)}
+.rail{border-right:1px solid var(--line-soft);padding:26px 0 40px;position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;background:var(--surface)}
+.brand{padding:0 22px 22px;border-bottom:1px solid var(--line-soft);margin-bottom:6px}
+.brand .mark{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.brand h1{font-size:23px;margin-top:7px;letter-spacing:-.018em}
+.brand .sub{font-size:13.5px;color:var(--ink-2);margin-top:6px;line-height:1.42}
+
+nav{display:flex;flex-direction:column;padding:10px 12px 0}
+.navbtn{
+  display:grid;grid-template-columns:22px 1fr;gap:9px;align-items:baseline;
+  text-align:left;background:none;border:0;color:var(--ink-2);
+  font-family:var(--f-display);font-size:14.5px;font-weight:500;
+  padding:9px 10px;border-radius:var(--r);cursor:pointer;transition:background .13s,color .13s;
+}
+.navbtn .n{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.04em}
+.navbtn:hover{background:var(--surface-2);color:var(--ink)}
+.navbtn[aria-current="true"]{background:var(--surface-2);color:var(--ink);font-weight:700}
+.navbtn[aria-current="true"] .n{color:var(--seed)}
+.navbtn:focus-visible{outline:2px solid var(--seed);outline-offset:1px}
+
+.railfoot{padding:22px 22px 0;margin-top:20px;border-top:1px solid var(--line-soft);font-family:var(--f-mono);font-size:10.5px;line-height:1.75;color:var(--ink-3)}
+.railfoot b{color:var(--ink-2);font-weight:500}
+
+main{padding:34px 40px 80px;min-width:0}
+.view{display:none;animation:fade .22s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}}
+
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--seed);margin-bottom:9px}
+.vh{font-size:clamp(26px,3.4vw,36px);letter-spacing:-.024em;margin-bottom:10px}
+.lede{font-size:17.5px;color:var(--ink-2);max-width:63ch;line-height:1.55}
+.vhead{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--line-soft)}
+
+h3.sec{font-size:15px;letter-spacing:-.005em;margin:32px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+h3.sec span{font-family:var(--f-mono);font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- cards, panels ---------- */
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:18px 20px}
+.panel{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+
+/* ---------- readouts (instrument feel) ---------- */
+.readout{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);padding:13px 15px 14px}
+.readout .lbl{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:5px}
+.readout .val{font-family:var(--f-display);font-size:29px;font-weight:700;letter-spacing:-.028em;font-variant-numeric:tabular-nums;line-height:1}
+.readout .val small{font-size:13.5px;font-weight:500;color:var(--ink-2);margin-left:3px;letter-spacing:0}
+.readout .note{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);margin-top:6px}
+.readout.hi .val{color:var(--seed)}
+.readout.bad .val{color:var(--loss)}
+.readout.good .val{color:var(--ok)}
+
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--seed)} .pill.bad{color:var(--loss)}
+
+/* ---------- controls ---------- */
+.ctrl{display:block;margin-bottom:15px}
+.ctrl .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.ctrl .name{font-family:var(--f-display);font-size:13.5px;font-weight:500}
+.ctrl .num{font-family:var(--f-mono);font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--seed);font-weight:500}
+.ctrl .hint{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);margin-top:4px;line-height:1.5}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;height:18px;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--seed);margin-top:-5.5px;border:2px solid var(--surface)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--seed);border:2px solid var(--surface)}
+input[type=range]:focus-visible{outline:2px solid var(--seed);outline-offset:3px;border-radius:3px}
+button.act{font-family:var(--f-display);font-weight:500;font-size:13px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .13s,border-color .13s}
+button.act:hover{background:var(--surface-2);border-color:var(--ink-3)}
+button.act:focus-visible{outline:2px solid var(--seed);outline-offset:2px}
+button.act.primary{background:var(--seed);border-color:var(--seed);color:#fff}
+:root[data-theme="dark"] button.act.primary,
+:root:not([data-theme="light"]) button.act.primary{color:#171512}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) button.act.primary{color:#fff}}
+button.act.primary:hover{filter:brightness(1.06)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line-soft);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:440px}
+th,td{text-align:left;padding:8px 13px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+thead th{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:400;background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:13px;white-space:nowrap}
+tbody tr:hover{background:var(--surface-2)}
+caption{caption-side:bottom;padding:9px 13px;font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);text-align:left}
+
+/* ---------- canvas ---------- */
+.stage{position:relative;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden}
+canvas{display:block;width:100%;touch-action:none}
+.legend{display:flex;flex-wrap:wrap;gap:14px;padding:9px 14px;border-top:1px solid var(--line-soft);font-family:var(--f-mono);font-size:10.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+
+/* ---------- flow diagram ---------- */
+.flow{display:grid;gap:10px}
+.step{display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;padding:14px 16px;border:1px solid var(--line-soft);border-radius:var(--r);background:var(--surface-2)}
+.step .k{font-family:var(--f-mono);font-size:11px;font-weight:700;color:var(--seed);border:1px solid var(--line);border-radius:2px;text-align:center;padding:3px 0;background:var(--surface)}
+.step h4{font-size:15px;margin-bottom:4px}
+.step p{font-size:14px;color:var(--ink-2);line-height:1.5}
+.step .meta{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);margin-top:7px;display:flex;flex-wrap:wrap;gap:6px 16px}
+.step.passive{border-style:dashed;background:transparent}
+.arrow{text-align:center;color:var(--ink-3);font-family:var(--f-mono);font-size:13px;line-height:1}
+
+/* ---------- misc ---------- */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:13.5px}
+.kv dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.note{font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.callout{border-left:2px solid var(--seed);padding:11px 0 11px 15px;margin:16px 0;font-size:14.5px;color:var(--ink-2);line-height:1.55}
+.callout b{color:var(--ink);font-weight:500}
+ul.tight{margin:8px 0;padding-left:19px;font-size:14px;color:var(--ink-2);line-height:1.6}
+ul.tight li{margin-bottom:4px}
+ul.tight li::marker{color:var(--ink-3)}
+code{font-family:var(--f-mono);font-size:.87em;background:var(--surface-2);padding:1px 5px;border-radius:2px}
+.srcs{font-family:var(--f-mono);font-size:11px;line-height:1.85;color:var(--ink-3);word-break:break-word}
+.srcs a{color:var(--ink-2);text-decoration-color:var(--line)}
+
+.themebtn{position:fixed;top:14px;right:16px;z-index:20;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:var(--r);cursor:pointer}
+.themebtn:hover{color:var(--ink);border-color:var(--ink-3)}
+
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line-soft);padding-bottom:14px}
+  nav{flex-direction:row;flex-wrap:wrap}
+  .navbtn{grid-template-columns:auto auto}
+  .railfoot{display:none}
+  main{padding:26px 20px 60px}
+  .themebtn{top:auto;bottom:14px}
+}
+</style>
 </head>
 <body>
 
-	
-	
-https://www.leagueoflegends.com/static/open-graph-2e582ae9fae8b0b396ca46ff21fd47a8.jpg
+<button class="themebtn" id="themebtn" type="button">téma</button>
 
-	
-	
-	
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">tokaj-oil · kísérleti gépsor</div>
+      <h1>Magszelelő Műhely</h1>
+      <div class="sub">Háztáji szőlőmag-szeparátor terve és szimulációja</div>
+    </div>
+    <nav id="nav">
+      <button class="navbtn" data-v="elv" aria-current="true"><span class="n">01</span><span>Az elv</span></button>
+      <button class="navbtn" data-v="hozam"><span class="n">02</span><span>Hozamkalkulátor</span></button>
+      <button class="navbtn" data-v="sim"><span class="n">03</span><span>Szimuláció</span></button>
+      <button class="navbtn" data-v="terv3d"><span class="n">04</span><span>3D gépnézet</span></button>
+      <button class="navbtn" data-v="terv"><span class="n">05</span><span>Géptervlap</span></button>
+      <button class="navbtn" data-v="forras"><span class="n">06</span><span>Adatok, források</span></button>
+    </nav>
+    <div class="railfoot">
+      <b>Tervezési munkapont</b><br>
+      rosta 8 mm · 18 rpm<br>
+      szelelés 5,0 m/s<br>
+      kapacitás 25 kg/h<br><br>
+      <b>Ökölszabály</b><br>
+      100 kg törköly<br>→ ~14 kg mag<br>→ ~1,3 L olaj
+    </div>
+  </aside>
 
+  <main>
+
+  <!-- ============ 01 ELV ============ -->
+  <section class="view on" id="v-elv">
+    <div class="vhead">
+      <div class="eyebrow">01 — A szétválasztás elve</div>
+      <h2 class="vh">Két tulajdonság, amiben a mag és a héj elárulja magát</h2>
+      <p class="lede">A szőlőmag és a héjdarab mérete átfed, ezért méret szerint egyedül nem lehet szétválasztani őket. Amiben viszont élesen különböznek: a <b>sűrűség</b>, és emiatt a <b>lebegési sebességük</b>. Erre épül az egész gépsor.</p>
+    </div>
+
+    <h3 class="sec">A szeparálási ablak <span>terminál­sebesség, m/s</span></h3>
+    <div class="stage">
+      <canvas id="vtChart" height="230"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--seed)"></i>szőlőmag 6,3–8,8 m/s</span>
+        <span><i style="background:var(--husk)"></i>héjlemez 3,4–5,9 m/s</span>
+        <span><i style="background:var(--stem)"></i>kocsány ~4–6 m/s</span>
+        <span><i style="background:var(--air)"></i>munkapont 4,5–5,5 m/s</span>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">A függőleges légoszlopban a részecske akkor repül el, ha a levegő sebessége nagyobb a saját lebegési sebességénél. 5 m/s-nál a héj már felszáll, a mag még leesik — ez a rés, amiben a gép dolgozik. Fölötte a mag is elmegy, alatta a héj is visszahull.</p>
+
+    <h3 class="sec">A folyamat <span>3 lépés, 2 aktív gép</span></h3>
+    <div class="flow">
+      <div class="step passive">
+        <div class="k">0</div>
+        <div>
+          <h4>Szárítás — nem gép, de a legfontosabb lépés</h4>
+          <p>Friss törkölyön a héj rátapad a magra és rögöket képez. Szárazon a rostálás ~90%-ot ad vissza, nedvesen 40% alattit — a különbség az olajhozam több mint kétszerese.</p>
+          <div class="meta"><span>50–70% → &lt;10% nedvesség</span><span>napon 4–6 nap / aszalón 45–60 °C</span><span>plafon 65 °C</span><span>préselés után 6–24 órán belül indítani</span></div>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="step">
+        <div class="k">1</div>
+        <div>
+          <h4>Dobrosta — méret szerinti előválogatás</h4>
+          <p>Lassan forgó, döntött perforált dob. A mag és az apró törmelék átesik a 8 mm-es lyukakon, a nagy héjlemez és a kocsány a dob végén távozik. Nem tisztít tökéletesen — a dolga az, hogy a szelelőnek fele annyi és egyenletesebb anyagot adjon.</p>
+          <div class="meta"><span>Ø300 × 900 mm</span><span>8 mm perforáció</span><span>15–20 rpm</span><span>3–5° dőlés</span><span>~180 W</span></div>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="step">
+        <div class="k">2</div>
+        <div>
+          <h4>Szelelőoszlop — sűrűség szerinti tisztítás</h4>
+          <p>Függőleges csőben felfelé áramló levegő. A héjtörmelék kihordódik az ülepítőkamrába, a nehéz mag lehullik a gyűjtőbe. A ventilátor fordulatszáma a gép egyetlen igazán érzékeny beállítása.</p>
+          <div class="meta"><span>Ø125 mm oszlop</span><span>250–350 m³/h</span><span>4,5–5,5 m/s</span><span>fordulatszám-szabályzó kötelező</span></div>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="step passive">
+        <div class="k">3</div>
+        <div>
+          <h4>Opcionális: vizes utótisztítás</h4>
+          <p>A mag sűrűsége 1050–1105 kg/m³, tehát vízben lesüllyed, a héj felúszik. Vödörben elvégezhető, de a magot utána újra kell szárítani — csak prémium tisztasághoz éri meg.</p>
+          <div class="meta"><span>vödrös dekantálás</span><span>+1 nap szárítás</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>Miért nem elég a rosta önmagában?</b> Egy amerikai szabadalom mérése szerint a dobrosta egyedül csak ~50% magtisztaságot ad, mert a héjdarabok mérete átfed a magéval. Az ipari sorok (Herbas, PCM) ezért mindig <b>rosta + pneumatikus szelelés</b> párost használnak — pontosan ezt másoljuk le kicsiben.
+    </div>
+
+    <h3 class="sec">Mit hagytunk ki, és miért <span>elvetett alternatívák</span></h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Ipari elv</th><th>Miért nem ezt választottuk</th></tr></thead>
+        <tbody>
+          <tr><td>Centrifugális dobszeparátor friss törkölyre (2–2,5 mm perforáció, 480 rpm)</td><td>Friss törkölyön is ~90%-ot ad és megspórolja a nagy tömegű szárítást, de a szűk lapátrés (8,5–10 mm) és a magtörés-küszöb precíz gépészetet kíván. Elvi tartalék marad.</td></tr>
+          <tr><td>Densimetrikus (gravitációs) asztal</td><td>Kiváló tisztaság, de a vibrációs dekk és a légkamra kisüzemben aránytalanul drága.</td></tr>
+          <tr><td>Fluidágyas szárítás + szeparálás egy lépésben</td><td>Elegáns (3,4–5,9 m/s ablak), de fűtött levegő és szabályzás kell hozzá — a passzív napszárítás ingyen van.</td></tr>
+          <tr><td>Vizes flotáció fő lépésként</td><td>Működik, de kimossa a cukrot/polifenolt és újraszárítást igényel.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 02 HOZAM ============ -->
+  <section class="view" id="v-hozam">
+    <div class="vhead">
+      <div class="eyebrow">02 — Tömeg- és olajmérleg</div>
+      <h2 class="vh">Mennyi olaj lesz a törkölyből?</h2>
+      <p class="lede">Állítsd be a saját alapanyagodat és a gép várható hatásfokát. A lánc minden lépése irodalmi tartományon belül mozog; a kiindulási értékek a tervezési munkapontot mutatják.</p>
+    </div>
+
+    <div class="grid2" style="align-items:start">
+      <div>
+        <h3 class="sec">Alapanyag <span>bemenet</span></h3>
+        <label class="ctrl"><span class="row"><span class="name">Friss törköly</span><span class="num" id="o-input">100 kg</span></span>
+          <input type="range" id="i-input" min="0" max="1000" step="1" value="333">
+          <span class="hint" id="h-input">Egy 500 kg-os háztáji szüret ~100 kg törkölyt ad. A csúszka logaritmikus: 10 kg-tól 10 tonnáig.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Nedvességtartalom</span><span class="num" id="o-moist">55%</span></span>
+          <input type="range" id="i-moist" min="40" max="70" step="1" value="55">
+          <span class="hint">Friss törköly 50–70%. Ennyi vizet kell elpárologtatni 8%-ig.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Mag a száraz törkölyben</span><span class="num" id="o-seedfrac">40%</span></span>
+          <input type="range" id="i-seedfrac" min="25" max="55" step="1" value="40">
+          <span class="hint">Irodalom: 38–52%. Bogyózott törkölyben több, kocsányossal hígul.</span></label>
+
+        <h3 class="sec">Gép <span>amit mi befolyásolunk</span></h3>
+        <label class="ctrl"><span class="row"><span class="name">Szeparálási hatásfok</span><span class="num" id="o-sep">75%</span></span>
+          <input type="range" id="i-sep" min="30" max="95" step="1" value="75">
+          <span class="hint" id="h-sep">A rosta + szelelő páros célja. Nedvesen rostálva 40% alatt, jól hangolva szárazon 90%.</span></label>
+
+        <h3 class="sec">Sajtolás <span>kész gép</span></h3>
+        <label class="ctrl"><span class="row"><span class="name">Mag olajtartalma</span><span class="num" id="o-oil">14%</span></span>
+          <input type="range" id="i-oil" min="8" max="20" step="1" value="14">
+          <span class="hint">Fajta- és évjáratfüggő, 8–20%. Nem befolyásolható.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Sajtolási visszanyerés</span><span class="num" id="o-press">58%</span></span>
+          <input type="range" id="i-press" min="40" max="75" step="1" value="58">
+          <span class="hint">Hidegsajtolás csigapréssel: 50–65% (Rombaut 2015). A többi a pogácsában marad.</span></label>
+
+        <h3 class="sec">Értékesítés <span>amiért eladod</span></h3>
+        <label class="ctrl"><span class="row"><span class="name">Szőlőmagolaj ára</span><span class="num" id="o-price">9 000 Ft/L</span></span>
+          <input type="range" id="i-price" min="1500" max="40000" step="250" value="9000">
+          <span class="hint" id="h-price">Palackozva, helyi piacon.</span></label>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <button class="act" type="button" data-preset="konzerv">Konzervatív</button>
+          <button class="act primary" type="button" data-preset="tipikus">Tipikus</button>
+          <button class="act" type="button" data-preset="optim">Optimista</button>
+          <button class="act" type="button" data-preset="magyar">Magyar üzemi referencia</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="sec">Eredmény <span>kimenet</span></h3>
+        <div class="grid3" style="margin-bottom:16px">
+          <div class="readout hi"><span class="lbl">Kinyert olaj</span><div class="val" id="r-oil">1,3<small>liter</small></div><div class="note" id="r-oilkg">1,16 kg</div></div>
+          <div class="readout"><span class="lbl">Tiszta mag</span><div class="val" id="r-seed">14,3<small>kg</small></div><div class="note" id="r-seedlost">veszteség: 4,8 kg</div></div>
+          <div class="readout"><span class="lbl">Feldolgozási idő</span><div class="val" id="r-time">1,9<small>óra</small></div><div class="note" id="r-timenote">25 kg/h száraz törköly</div></div>
+        </div>
+
+        <div class="stage" style="margin-bottom:16px">
+          <canvas id="flowChart" height="300"></canvas>
+          <div class="legend">
+            <span><i style="background:var(--seed)"></i>mag / olaj</span>
+            <span><i style="background:var(--husk)"></i>héj, kocsány</span>
+            <span><i style="background:var(--air)"></i>elpárolgó víz</span>
+            <span><i style="background:var(--loss)"></i>veszteség</span>
+          </div>
+        </div>
+
+        <div class="tw">
+          <table id="balanceTable">
+            <thead><tr><th>Lépés</th><th class="n">Tömeg</th><th class="n">Marad</th></tr></thead>
+            <tbody></tbody>
+            <caption>A lánc szorzói irodalmi tartományon belül; részletek a Források fülön.</caption>
+          </table>
+        </div>
+
+        <h3 class="sec">Bevétel <span>a beállított áron</span></h3>
+        <div class="grid3" style="margin-bottom:14px">
+          <div class="readout hi"><span class="lbl">Bruttó bevétel</span><div class="val" id="r-rev">11 700<small>Ft</small></div><div class="note" id="r-bottles">5 db 250 ml-es palack</div></div>
+          <div class="readout"><span class="lbl">Fajlagos érték</span><div class="val" id="r-perkg">117<small>Ft/kg</small></div><div class="note">friss törkölyre vetítve</div></div>
+          <div class="readout"><span class="lbl">Órabér</span><div class="val" id="r-perhour">6 100<small>Ft/h</small></div><div class="note">szeparálásra fordított időre</div></div>
+        </div>
+        <p class="note" id="r-payback">—</p>
+
+        <h3 class="sec">Visszafelé <span>1 liter olajhoz kell</span></h3>
+        <div class="grid3">
+          <div class="readout"><span class="lbl">száraz mag</span><div class="val" id="r-b-seed">11<small>kg</small></div></div>
+          <div class="readout"><span class="lbl">friss törköly</span><div class="val" id="r-b-pom">79<small>kg</small></div></div>
+          <div class="readout"><span class="lbl">szőlő</span><div class="val" id="r-b-grape">395<small>kg</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 SZIMULÁCIÓ ============ -->
+  <section class="view" id="v-sim">
+    <div class="vhead">
+      <div class="eyebrow">03 — Részecske-szimuláció</div>
+      <h2 class="vh">A gépsor működés közben</h2>
+      <p class="lede">Minden szemcse valódi fizikai adatokkal indul: méret, tömeg és lebegési sebesség a mért tartományokból sorsolva. A rostán a méret dönt, a szelelőoszlopban a légellenállás és a gravitáció versenye — <code>a = g·((v/v<sub>t</sub>)² − 1)</code>.</p>
+    </div>
+
+    <div class="stage">
+      <canvas id="sim" height="430"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--seed)"></i>mag</span>
+        <span><i style="background:var(--husk)"></i>héj</span>
+        <span><i style="background:var(--stem)"></i>kocsány</span>
+        <span><i style="background:var(--ink-3)"></i>por</span>
+        <span style="margin-left:auto;color:var(--ink-3)">a rögök nedves törkölyben keletkeznek — a magot magukkal viszik a hulladékba</span>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin:16px 0">
+      <div class="readout good"><span class="lbl">Magkinyerés</span><div class="val" id="s-rec">—<small>%</small></div><div class="note" id="s-recn">0 / 0 szem</div></div>
+      <div class="readout"><span class="lbl">Magtisztaság</span><div class="val" id="s-pur">—<small>%</small></div><div class="note" id="s-purn">a gyűjtőben</div></div>
+      <div class="readout bad"><span class="lbl">Elszállt mag</span><div class="val" id="s-blow">—<small>%</small></div><div class="note">a szelelőben túl nagy légáram</div></div>
+      <div class="readout"><span class="lbl">Áteresztés</span><div class="val" id="s-thru">—<small>kg/h</small></div><div class="note">becsült, száraz törköly</div></div>
+      <div class="readout hi"><span class="lbl">Ebből olaj</span><div class="val" id="s-oil">—<small>liter</small></div><div class="note">100 kg száraz törkölyre</div></div>
+      <div class="readout"><span class="lbl">Feldolgozott</span><div class="val" id="s-tot">0<small>szem</small></div><div class="note" id="s-fps">—</div></div>
+    </div>
+
+    <div class="grid2" style="align-items:start">
+      <div>
+        <h3 class="sec">Beállítások <span>élőben hat</span></h3>
+        <label class="ctrl"><span class="row"><span class="name">Légsebesség a szelelőben</span><span class="num" id="o-air">5,0 m/s</span></span>
+          <input type="range" id="i-air" min="2" max="9" step="0.1" value="5">
+          <span class="hint" id="h-air">Munkapont 4,5–5,5 m/s.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Rosta lyukmérete</span><span class="num" id="o-hole">8,0 mm</span></span>
+          <input type="range" id="i-hole" min="4" max="14" step="0.5" value="8">
+          <span class="hint">A mag legnagyobb mérete 8,3 mm. Kisebb lyuk = tisztább, de kevesebb mag.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Dob fordulatszáma</span><span class="num" id="o-rpm">18 rpm</span></span>
+          <input type="range" id="i-rpm" min="4" max="45" step="1" value="18">
+          <span class="hint" id="h-rpm">15–20 rpm az ideális. 30 fölött a centrifugális erő a falhoz szorítja az anyagot.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Törköly nedvessége</span><span class="num" id="o-simmoist">8%</span></span>
+          <input type="range" id="i-simmoist" min="5" max="60" step="1" value="8">
+          <span class="hint" id="h-simmoist">Ez a legdurvább kapcsoló az egész gépen. Húzd fel 30%-ra, és nézd, mi történik.</span></label>
+
+        <label class="ctrl"><span class="row"><span class="name">Adagolás</span><span class="num" id="o-feed">közepes</span></span>
+          <input type="range" id="i-feed" min="1" max="10" step="1" value="5">
+          <span class="hint">Túl sűrű függöny esetén a szemcsék egymást takarják a légáramban.</span></label>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="act primary" id="b-play" type="button">Szünet</button>
+          <button class="act" id="b-reset" type="button">Számlálók nullázása</button>
+          <button class="act" id="b-tune" type="button">Optimumra állít</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="sec">Mit mutat a szimuláció <span>olvasat</span></h3>
+        <div class="card">
+          <p class="note" id="diag">—</p>
+        </div>
+        <h3 class="sec">Frakciók <span>hova megy az anyag</span></h3>
+        <div class="tw">
+          <table id="fracTable">
+            <thead><tr><th>Frakció</th><th class="n">mag</th><th class="n">héj</th><th class="n">kocsány</th><th class="n">por</th></tr></thead>
+            <tbody></tbody>
+            <caption>Szemcseszám szerint. A rosta felülfolyását érdemes egyszer visszaforgatni.</caption>
+          </table>
+        </div>
+        <div class="callout" style="margin-top:18px">
+          <b>Kísérleti tipp.</b> Állítsd a nedvességet 8%-ra, a lyukat 8 mm-re, a dobot 18 rpm-re, majd a légsebességet emeld lassan 3-ról. Figyeld, mikor kezd magszem is elszállni — pontosan ott van a valódi gép beállítási határa.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 3D ============ -->
+  <section class="view" id="v-terv3d">
+    <div class="vhead">
+      <div class="eyebrow">04 — Térbeli elrendezés</div>
+      <h2 class="vh">A gépsor 3D vázlata</h2>
+      <p class="lede">Húzd az egérrel a forgatáshoz, görgess a nagyításhoz. A dob és a ventilátor a valós fordulatszám arányában forog. A modell méretarányos: a dob Ø300 × 900 mm, az oszlop Ø125 × 1000 mm.</p>
+    </div>
+
+    <div class="stage">
+      <canvas id="v3d" height="480"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--seed)"></i>magút</span>
+        <span><i style="background:var(--husk)"></i>héjút</span>
+        <span style="margin-left:auto;color:var(--ink-3)" id="v3d-hint">húzd a forgatáshoz · görgess a nagyításhoz</span>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-top:16px">
+      <div class="readout"><span class="lbl">Teljes szélesség</span><div class="val">1,6<small>m</small></div></div>
+      <div class="readout"><span class="lbl">Magasság</span><div class="val">1,9<small>m</small></div></div>
+      <div class="readout"><span class="lbl">Teljesítmény</span><div class="val">~0,3<small>kW</small></div></div>
+    </div>
+
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <h4 style="font-size:14px;margin-bottom:8px">Anyagút</h4>
+        <ul class="tight">
+          <li>Garatból a rögtörő hengeren át a dob felső végébe</li>
+          <li>A dobban 3–5°-os lejtőn végiggördül, ~1–2 perc alatt</li>
+          <li>Az áteső frakció a dob alatti tálcába, onnan a köztes garatba</li>
+          <li>A garat adagolója vékony függönyben ejti a szelelőoszlopba</li>
+          <li>A mag alul kihullik, a héj felül az ülepítőkamrába</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="font-size:14px;margin-bottom:8px">Építési sorrend</h4>
+        <ul class="tight">
+          <li>Váz zártszelvényből, a dob tengelye vízszinteshez képest állítható</li>
+          <li>Dob: perforált lemez hengerré hajlítva, két végén tárcsa és tengelycsonk</li>
+          <li>Belül 3 hosszanti emelőléc — enélkül az anyag csak csúszik, nem forog át</li>
+          <li>Oszlop KG csőből, a ventilátor a <b>tiszta</b> oldalon (porrobbanás!)</li>
+          <li>Ülepítőkamra műanyag hordóból, kilépésen szúnyoghálós zsák</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 TERV ============ -->
+  <section class="view" id="v-terv">
+    <div class="vhead">
+      <div class="eyebrow">05 — Kivitelezés</div>
+      <h2 class="vh">Géptervlap és anyagköltség</h2>
+      <p class="lede">Két gép, hazai boltban beszerezhető alkatrészekből, saját munkával. Összehasonlításul: használt szelelőrosta a magyar piacon 85–200 e Ft, kínai vibrációs szita 500 e Ft fölött.</p>
+    </div>
+
+    <h3 class="sec">1. gép — Dobrosta <span>trommel</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Paraméter</th><th>Érték</th><th>Indoklás</th></tr></thead>
+      <tbody>
+        <tr><td>Dob átmérő × hossz</td><td class="n">Ø300 × 900 mm</td><td>Irodalmi prototípus-méret; rövidebb dobban nő a magveszteség</td></tr>
+        <tr><td>Perforáció</td><td class="n">8 mm / 12 mm osztás</td><td>A mag max. mérete 8,3 mm — átfér; a nagy héjlemez nem</td></tr>
+        <tr><td>Dőlésszög</td><td class="n">3–5°</td><td>~1–2 perc tartózkodási idő</td></tr>
+        <tr><td>Fordulatszám</td><td class="n">15–20 rpm</td><td>30 fölött a fal felé centrifugál, az anyag nem bukik át</td></tr>
+        <tr><td>Hajtás</td><td class="n">180 W, 1:75 áttétel</td><td>Bontott motor + ékszíj, vagy 12 V ablaktörlő motor 1:3-mal</td></tr>
+        <tr><td>Belső emelőléc</td><td class="n">3 db hosszanti</td><td>Enélkül az anyag csúszik, nem forog át — ez a leggyakoribb hiba</td></tr>
+        <tr><td>Előkészítés</td><td>rögtörő henger</td><td>A szárított törköly összeáll; a rögbe zárt mag különben elmegy</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sec">2. gép — Szelelőoszlop <span>vertikális aspirátor</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Paraméter</th><th>Érték</th><th>Indoklás</th></tr></thead>
+      <tbody>
+        <tr><td>Oszlop</td><td class="n">Ø125 × 1000 mm</td><td>KG cső; 0,0123 m² keresztmetszet</td></tr>
+        <tr><td>Légszállítás</td><td class="n">250–350 m³/h</td><td>5 m/s-hoz ~220 m³/h kell, felül tartalék</td></tr>
+        <tr><td>Munkapont</td><td class="n">4,5–5,5 m/s</td><td>Héj 3,4–5,9 m/s fölött elszáll, mag 6,3 m/s alatt marad</td></tr>
+        <tr><td>Szabályzás</td><td>fordulatszám + résszelep</td><td>A szelep finomabb, mint a triak — mindkettő kell</td></tr>
+        <tr><td>Adagolás</td><td>rezgőtálca / állítható rés</td><td>Egyenletes, vékony függöny nélkül nincs szétválás</td></tr>
+        <tr><td>Ülepítőkamra</td><td class="n">~40 l</td><td>Itt a sebesség 1 m/s alá esik, a héj kiülepszik</td></tr>
+        <tr><td>Beszabályozás</td><td>anemométer</td><td>~7 e Ft-os szélmérő a cső kilépésénél — enélkül vaktában állítasz</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sec">Anyagköltség <span>becslés, 2026-os hazai árak</span></h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <thead><tr><th>1. gép — dobrosta</th><th class="n">Ft</th></tr></thead>
+        <tbody>
+          <tr><td>Perforált lemez 8 mm, ~1 m²</td><td class="n">15 000</td></tr>
+          <tr><td>Váz, 30×30 zártszelvény 8 fm</td><td class="n">8 000</td></tr>
+          <tr><td>Csapágyak + tengely</td><td class="n">12 000</td></tr>
+          <tr><td>Motor (bontott)</td><td class="n">5–15 000</td></tr>
+          <tr><td>Szíjtárcsa + ékszíj</td><td class="n">8 000</td></tr>
+          <tr><td>Garat, kifolyók, lemezmunka</td><td class="n">10 000</td></tr>
+          <tr><td>Kötőelem, festék</td><td class="n">5 000</td></tr>
+          <tr><td><b>Összesen</b></td><td class="n"><b>~65–75 e</b></td></tr>
+        </tbody>
+      </table></div>
+      <div class="tw"><table>
+        <thead><tr><th>2. gép — szelelő</th><th class="n">Ft</th></tr></thead>
+        <tbody>
+          <tr><td>KG cső Ø125 + idomok</td><td class="n">6 000</td></tr>
+          <tr><td>Csatornaventilátor Ø125</td><td class="n">15 000</td></tr>
+          <tr><td>Fordulatszám-szabályzó</td><td class="n">5 000</td></tr>
+          <tr><td>Ülepítőkamra (hordó)</td><td class="n">6 000</td></tr>
+          <tr><td>Adagoló garat</td><td class="n">8 000</td></tr>
+          <tr><td>Váz, tartók</td><td class="n">6 000</td></tr>
+          <tr><td>Anemométer</td><td class="n">7 000</td></tr>
+          <tr><td><b>Összesen</b></td><td class="n"><b>~45–55 e</b></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <p class="note" style="margin-top:12px"><b>Teljes gépsor: ~110–130 e Ft anyagköltség.</b></p>
+
+    <h3 class="sec">Biztonság <span>nem opcionális</span></h3>
+    <ul class="tight">
+      <li>Minden 230 V-os rész áram-védőkapcsoló (RCD) mögé, IP54 doboz, vészstop gomb</li>
+      <li>A dobrostát burkolni kell — a forgó dob és a garat becsípi a kezet</li>
+      <li>A szőlőmagpor belélegezve irritál: FFP2 maszk, a szelelő kimenete kültérre vagy zsákba</li>
+      <li>Finom szerves por robbanásveszélyes lehet — a ventilátormotor a tiszta oldalon legyen, ne a poros áramban, és ne legyen szikraforrás a portérben</li>
+    </ul>
+
+    <h3 class="sec">Tesztterv az első kísérlethez <span>ezekből kalibrálható a modell</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th class="n">#</th><th>Mérés</th><th>Mit rögzíts</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Szárítás</td><td>Kezdő és végső tömeg → tényleges nedvességtartalom</td></tr>
+        <tr><td class="n">2</td><td>Rosta kimenet</td><td>3 frakció tömege; 100 g kézi szétválogatása → tényleges maghányad</td></tr>
+        <tr><td class="n">3</td><td>Rosta felülfolyás</td><td>100 g-ból kiválogatott mag → magveszteség %</td></tr>
+        <tr><td class="n">4</td><td>Szelelés 4,0 / 5,0 / 6,0 m/s-on</td><td>Magfrakció tisztasága és a héjban maradt mag → optimális munkapont</td></tr>
+        <tr><td class="n">5</td><td>Végmérleg</td><td>Kinyert mag / elméleti mag → szeparálási hatásfok</td></tr>
+        <tr><td class="n">6</td><td>Sajtolás</td><td>Mag be, olaj ki, pogácsa → sajtolási visszanyerés</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- ============ 06 FORRÁSOK ============ -->
+  <section class="view" id="v-forras">
+    <div class="vhead">
+      <div class="eyebrow">06 — Adatháttér</div>
+      <h2 class="vh">Számok és források</h2>
+      <p class="lede">A szimuláció és a kalkulátor minden konstansa mért irodalmi adatból származik. Itt van, melyik honnan.</p>
+    </div>
+
+    <h3 class="sec">Fizikai adatok <span>a szimuláció bemenetei</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Mennyiség</th><th class="n">Érték</th><th>Forrás</th></tr></thead>
+      <tbody>
+        <tr><td>Mag hossz / szélesség / vastagság</td><td class="n">5,7–8,3 / 3,5–4,5 / 2,6–3,3 mm</td><td>Kiliçkan et al. 2019</td></tr>
+        <tr><td>Egyedi magtömeg</td><td class="n">25–50 mg</td><td>ezermagtömeg 23–33 g</td></tr>
+        <tr><td>Mag valódi sűrűsége</td><td class="n">1050–1105 kg/m³</td><td>Kiliçkan et al. 2019</td></tr>
+        <tr><td>Mag halmazsűrűsége</td><td class="n">470–630 kg/m³</td><td>uo.</td></tr>
+        <tr><td>Mag lebegési sebessége</td><td class="n">6,3–8,8 m/s</td><td>több fajtán mérve</td></tr>
+        <tr><td>Héj kihordási sebessége</td><td class="n">3,4–5,9 m/s</td><td>fluidágyas kísérlet</td></tr>
+        <tr><td>Mag kisebbik átmérőjének eloszlása</td><td class="n">76% a 4–6 mm sávban</td><td>Tamborrino et al. 2019</td></tr>
+        <tr><td>Rostálás hatásfoka szárazon / nedvesen</td><td class="n">~90% / &lt;40%</td><td>Romaniello et al. 2019, Heliyon</td></tr>
+        <tr><td>Dobrosta tisztasága önmagában</td><td class="n">~50%</td><td>US12137721B2</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sec">Hozamlánc <span>a kalkulátor szorzói</span></h3>
+    <div class="tw"><table>
+      <thead><tr><th>Lépés</th><th class="n">Tartomány</th><th class="n">Alapérték</th></tr></thead>
+      <tbody>
+        <tr><td>Törköly a szőlőből</td><td class="n">13–25%</td><td class="n">20%</td></tr>
+        <tr><td>Friss törköly nedvessége</td><td class="n">45–70%</td><td class="n">55%</td></tr>
+        <tr><td>Mag a száraz törkölyben</td><td class="n">30–52%</td><td class="n">40%</td></tr>
+        <tr><td>Szeparálási hatásfok</td><td class="n">40–90%</td><td class="n">75%</td></tr>
+        <tr><td>Mag olajtartalma</td><td class="n">8–20%</td><td class="n">14%</td></tr>
+        <tr><td>Hidegsajtolási visszanyerés</td><td class="n">50–65%</td><td class="n">58%</td></tr>
+        <tr><td>Olaj sűrűsége</td><td class="n">0,92 kg/L</td><td class="n">—</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sec">Hivatkozások</h3>
+    <div class="srcs">
+      Romaniello, Tamborrino, Leone (2019), <i>Heliyon</i> — centrifugális szeparátor; száraz 90% vs friss &lt;40%<br>
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6411499/">pmc.ncbi.nlm.nih.gov/articles/PMC6411499/</a><br><br>
+      Tamborrino et al. (2019), <i>Chem. Eng. Trans.</i> 75 — törkölyösszetétel, magméret-eloszlás, szeparátorparaméterek<br>
+      <a href="https://www.aidic.it/cet/19/75/004.pdf">aidic.it/cet/19/75/004.pdf</a><br><br>
+      Kiliçkan et al. (2019) — szőlőmag fizikai tulajdonságai: méret, sűrűség, terminálsebesség, súrlódás<br>
+      <a href="https://www.internationalscholarsjournals.com/articles/moisturedependent-physical-properties-of-black-grape-vitis-vinifera-l-seedc.pdf">internationalscholarsjournals.com — Moisture-dependent physical properties of black grape seed</a><br><br>
+      Fluidágyas szárítás és szeparálás — héj elutriáció 3,4–5,9 m/s<br>
+      <a href="https://www.academia.edu/5815626/">academia.edu/5815626</a><br><br>
+      US12137721B2 — debearder + aspirátor; dobrosta önmagában ~50% tisztaság<br>
+      <a href="https://patents.google.com/patent/US12137721B2/en">patents.google.com/patent/US12137721B2</a><br><br>
+      US9011952 — vizes flotációs magszeparálás<br>
+      <a href="https://patents.google.com/patent/US9011952">patents.google.com/patent/US9011952</a><br><br>
+      Rombaut et al. (2015), <i>Ind. Crops Prod.</i> — hidegsajtolási olaj-visszanyerés 57–64%<br>
+      <a href="https://www.sciencedirect.com/science/article/abs/pii/S0926669014006062">sciencedirect.com — Grape seed oil extraction</a><br><br>
+      Feedipedia — törkölyösszetétel: 17% mag frissen, 38–52% szárazanyagra<br>
+      <a href="https://www.feedipedia.org/node/692">feedipedia.org/node/692</a><br><br>
+      Borászportál (2022) — magyar üzemi adat: 200 kg törköly → 15 kg mag → ~1 L olaj<br>
+      <a href="https://www.boraszportal.hu/hirszuret/szolomagolaj-torkolybol-alternativ-felhasznalas-2022">boraszportal.hu — Szőlőmagolaj törkölyből</a><br><br>
+      Herbas d.o.o. — ipari törkölyvonal: dobszeparátor + pneumatikus szelelés, 800–1500 kg/h<br>
+      <a href="https://herbas.hr/processing-line-for-grape-pomace/?lang=en">herbas.hr</a><br><br>
+      Real Seeds — nyílt forrású DIY mag-aspirátor tervrajz<br>
+      <a href="https://realseeds.co.uk/seedcleaner.html">realseeds.co.uk/seedcleaner.html</a><br><br>
+      Chocolate Alchemy — DIY winnower ~50 USD PVC-ből (az elv 1:1 átvihető)<br>
+      <a href="https://chocolatealchemy.com/blog/2011/07/11/chocolate-alchemys-diy-winnower">chocolatealchemy.com — DIY winnower</a>
+    </div>
+
+    <div class="callout" style="margin-top:26px">
+      <b>Bizonytalanságok, amikkel számolni kell.</b> A maghányad és az olajtartalom erősen fajta-, évjárat- és technológiafüggő. Az irodalmi (kézi szeparálású, laboratóriumi) maghányad és a valós üzemi kinyerhető maghányad között kétszeres különbség is lehet — ez a szeparálási veszteség, és pont ezt méri a tesztterv.
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<script>
+"use strict";
+
+/* ======================= NAV ======================= */
+const nav = document.getElementById('nav');
+const views = [...document.querySelectorAll('.view')];
+nav.addEventListener('click', e => {
+  const b = e.target.closest('.navbtn'); if (!b) return;
+  [...nav.children].forEach(x => x.setAttribute('aria-current', x === b ? 'true' : 'false'));
+  views.forEach(v => v.classList.toggle('on', v.id === 'v-' + b.dataset.v));
+  window.scrollTo({top: 0, behavior: 'instant'});
+  onViewChange(b.dataset.v);
+});
+
+/* ======================= THEME ======================= */
+const themebtn = document.getElementById('themebtn');
+themebtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const now = cur ? cur : (sysDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', now === 'dark' ? 'light' : 'dark');
+  repaintAll();
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaintAll);
+
+function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+const PAL = {};
+function loadPalette(){
+  ['--ink','--ink-2','--ink-3','--line','--line-soft','--surface','--surface-2','--ground',
+   '--seed','--seed-bright','--husk','--stem','--air','--loss','--ok'].forEach(k => PAL[k.slice(2)] = css(k));
+}
+loadPalette();
+
+/* HiDPI canvas setup.
+   The intended CSS height is cached on first call — writing cv.height would
+   otherwise overwrite the attribute and the canvas would grow every frame. */
+function fit(cv){
+  if (!cv.dataset.baseH){
+    cv.dataset.baseH = cv.getAttribute('height') || '400';
+    cv.style.height = cv.dataset.baseH + 'px';
+  }
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const w = cv.clientWidth || 800;
+  const h = +cv.dataset.baseH;
+  const pw = Math.round(w*dpr), ph = Math.round(h*dpr);
+  if (cv.width !== pw || cv.height !== ph){ cv.width = pw; cv.height = ph; }
+  const c = cv.getContext('2d');
+  c.setTransform(dpr,0,0,dpr,0,0);
+  c.clearRect(0,0,w,h);
+  return {c, w, h};
+}
+
+/* ======================= 01 — vt CHART ======================= */
+function drawVt(){
+  const cv = document.getElementById('vtChart'); if (!cv.clientWidth) return;
+  const {c,w,h} = fit(cv);
+  const padL = 18, padR = 18, padT = 26, padB = 34;
+  const vmin = 0, vmax = 10;
+  const X = v => padL + (v - vmin)/(vmax - vmin) * (w - padL - padR);
+
+  // axis
+  c.strokeStyle = PAL['line']; c.lineWidth = 1;
+  c.beginPath(); c.moveTo(padL, h-padB+.5); c.lineTo(w-padR, h-padB+.5); c.stroke();
+  c.font = '10px "JetBrains Mono", monospace'; c.fillStyle = PAL['ink-3']; c.textAlign='center';
+  for (let v=0; v<=10; v++){
+    const x = X(v);
+    c.beginPath(); c.moveTo(x, h-padB); c.lineTo(x, h-padB + (v%2?3:6)); c.stroke();
+    if (v%2===0 && v<10) c.fillText(v, x, h-padB+18);
+  }
+  c.textAlign='right';
+  c.fillText('10 m/s', w-padR, h-padB+18);
+  c.textAlign='center';
+
+  // working window band
+  const wx1 = X(4.5), wx2 = X(5.5);
+  const g = c.createLinearGradient(wx1,0,wx2,0);
+  c.fillStyle = PAL['air'];
+  c.globalAlpha = .13; c.fillRect(wx1, padT-8, wx2-wx1, h-padB-padT+8); c.globalAlpha = 1;
+  c.strokeStyle = PAL['air']; c.setLineDash([3,3]);
+  c.beginPath(); c.moveTo(X(5), padT-10); c.lineTo(X(5), h-padB); c.stroke(); c.setLineDash([]);
+  c.textAlign='center'; c.fillStyle = PAL['air'];
+  c.fillText('munkapont 5,0', X(5), padT-14);
+
+  const bars = [
+    {label:'szőlőmag',   a:6.3, b:8.8, col:'seed'},
+    {label:'kocsány',    a:4.0, b:6.0, col:'stem'},
+    {label:'héjlemez',   a:3.4, b:5.9, col:'husk'},
+    {label:'por, apró héj', a:0.4, b:2.4, col:'ink-3'},
+  ];
+  const bh = 22, gap = 12;
+  const y0 = padT + 4;
+  bars.forEach((b,i) => {
+    const y = y0 + i*(bh+gap);
+    c.fillStyle = PAL[b.col]; c.globalAlpha = .82;
+    const x1 = X(b.a), x2 = X(b.b);
+    c.fillRect(x1, y, x2-x1, bh);
+    c.globalAlpha = 1;
+    c.textAlign = 'left';
+    c.font = '600 11.5px "Bricolage Grotesque", sans-serif';
+    c.fillStyle = PAL['ink'];
+    c.fillText(b.label, x1 + 7, y + bh/2 + 4);
+    c.font = '10px "JetBrains Mono", monospace';
+    c.fillStyle = PAL['ink-3'];
+    c.fillText(b.a.toFixed(1).replace('.',',') + '–' + b.b.toFixed(1).replace('.',','), x2 + 8, y + bh/2 + 4);
+  });
+}
+
+/* ======================= 02 — YIELD CALC ======================= */
+const CALC = {input:100, moist:55, seedfrac:40, sep:75, oil:14, press:58, price:9000};
+const BUILD_COST = 120000;   // anyagköltség a géptervlapról, Ft
+const PRESETS = {
+  konzerv: {moist:70, seedfrac:30, sep:45, oil:9,  press:50},
+  tipikus: {moist:55, seedfrac:40, sep:75, oil:14, press:58},
+  optim:   {moist:45, seedfrac:52, sep:90, oil:19, press:65},
+  magyar:  {moist:55, seedfrac:40, sep:42, oil:12, press:52},
+};
+const fmt = (x, d=1) => x.toLocaleString('hu-HU', {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmt0 = x => Math.round(x).toLocaleString('hu-HU');
+
+function calc(){
+  const dry = CALC.input * (100 - CALC.moist)/100 / (1 - 0.08);   // to 8% moisture
+  const seedTheor = dry * CALC.seedfrac/100;
+  const seed = seedTheor * CALC.sep/100;
+  const seedLost = seedTheor - seed;
+  const oilIn = seed * CALC.oil/100;
+  const oilKg = oilIn * CALC.press/100;
+  const oilL = oilKg / 0.92;
+  const water = CALC.input - dry;
+  const husk = dry - seedTheor;
+  const hours = dry/25;
+  const revenue = oilL * CALC.price;
+  return {dry, seedTheor, seed, seedLost, oilIn, oilKg, oilL, water, husk, hours,
+          revenue, perKg: revenue/CALC.input, perHour: hours > 0 ? revenue/hours : 0};
+}
+
+/* Forint formatting: millions get their own unit so the readout stays legible */
+function huf(x){
+  if (x >= 1e6) return {v: fmt(x/1e6, 2), u: 'M Ft'};
+  return {v: fmt0(x), u: 'Ft'};
+}
+
+function renderCalc(){
+  const r = calc();
+  document.getElementById('o-input').textContent = fmt0(CALC.input) + ' kg';
+  document.getElementById('o-moist').textContent = CALC.moist + '%';
+  document.getElementById('o-seedfrac').textContent = CALC.seedfrac + '%';
+  document.getElementById('o-sep').textContent = CALC.sep + '%';
+  document.getElementById('o-oil').textContent = CALC.oil + '%';
+  document.getElementById('o-press').textContent = CALC.press + '%';
+  document.getElementById('o-price').textContent = fmt0(CALC.price) + ' Ft/L';
+
+  const hp = document.getElementById('h-price');
+  hp.textContent = CALC.price < 4000 ? 'Ömlesztett, palackozatlan átadási ár nagyságrendje.'
+    : CALC.price < 9000 ? 'Bolti tömegtermék sávja.'
+    : CALC.price < 18000 ? 'Palackozva, helyi piacon vagy saját webshopban.'
+    : 'Prémium bio / kozmetikai minőség, kis kiszerelésben.';
+
+  const hs = document.getElementById('h-sep');
+  hs.textContent = CALC.sep < 45 ? 'Ez a nedvesen rostált eset — a mag több mint fele elmegy.'
+    : CALC.sep < 70 ? 'Elfogadható, de van benne tartalék: szárazabb anyag, visszaforgatott felülfolyás.'
+    : CALC.sep < 88 ? 'A tervezési munkapont. Reális jól hangolt, száraz anyaggal.'
+    : 'Ipari szintű érték — csak gondos szárítással és visszaforgatással érhető el.';
+
+  document.getElementById('r-oil').innerHTML = fmt(r.oilL, r.oilL<10?2:1) + '<small>liter</small>';
+  document.getElementById('r-oilkg').textContent = fmt(r.oilKg,2) + ' kg olaj';
+  document.getElementById('r-seed').innerHTML = fmt(r.seed, r.seed<10?2:1) + '<small>kg</small>';
+  document.getElementById('r-seedlost').textContent = 'a gépben marad: ' + fmt(r.seedLost,1) + ' kg';
+  document.getElementById('r-time').innerHTML = fmt(r.hours, r.hours<100?1:0) + '<small>óra</small>';
+  document.getElementById('r-timenote').textContent = r.hours > 16
+    ? '25 kg/h mellett ' + fmt(r.hours/8,1) + ' munkanap'
+    : '25 kg/h száraz törköly';
+  document.getElementById('h-input').textContent =
+    'Logaritmikus csúszka 10 kg és 10 tonna között. Ennyi törköly kb. '
+    + fmt0(CALC.input/0.20) + ' kg szőlő feldolgozásából marad vissza.';
+
+  const tb = document.querySelector('#balanceTable tbody');
+  const rows = [
+    ['Friss törköly', CALC.input, 100],
+    ['Szárítás után (8%)', r.dry, r.dry/CALC.input*100],
+    ['Ebből mag (elméleti)', r.seedTheor, r.seedTheor/CALC.input*100],
+    ['Kinyert tiszta mag', r.seed, r.seed/CALC.input*100],
+    ['Olaj a magban', r.oilIn, r.oilIn/CALC.input*100],
+    ['Kisajtolt olaj', r.oilKg, r.oilKg/CALC.input*100],
+  ];
+  tb.innerHTML = rows.map(([k,v,p]) =>
+    `<tr><td>${k}</td><td class="n">${fmt(v, v<10?2:1)} kg</td><td class="n">${fmt(p,1)}%</td></tr>`).join('');
+
+  // revenue block
+  const rev = huf(r.revenue);
+  document.getElementById('r-rev').innerHTML = rev.v + '<small>' + rev.u + '</small>';
+  document.getElementById('r-bottles').textContent = fmt0(r.oilL/0.25) + ' db 250 ml-es palack';
+  const pk = huf(r.perKg);
+  document.getElementById('r-perkg').innerHTML = (r.perKg >= 1e6 ? pk.v : fmt0(r.perKg)) + '<small>Ft/kg</small>';
+  const ph = huf(r.perHour);
+  document.getElementById('r-perhour').innerHTML = ph.v + '<small>' + ph.u + '/h</small>';
+
+  const pay = document.getElementById('r-payback');
+  const kgForPayback = r.perKg > 0 ? BUILD_COST / r.perKg : Infinity;
+  if (r.revenue >= BUILD_COST){
+    pay.innerHTML = `Ez az egy tétel <b>kitermeli a gépsor ~${fmt0(BUILD_COST)} Ft-os anyagköltségét</b> — ${fmt(r.revenue/BUILD_COST,1)}× fedezi.`;
+  } else {
+    pay.innerHTML = `A gépsor ~${fmt0(BUILD_COST)} Ft-os anyagköltsége <b>${fmt0(kgForPayback)} kg friss törköly</b> feldolgozásából jön vissza (${fmt(kgForPayback/CALC.input,1)}× ennyi tétel).`;
+  }
+
+  // backwards: per 1 L
+  const perL = r.oilL > 0 ? CALC.input / r.oilL : 0;
+  const seedPerL = r.oilL > 0 ? r.seed / r.oilL : 0;
+  document.getElementById('r-b-seed').innerHTML = fmt(seedPerL,1) + '<small>kg</small>';
+  document.getElementById('r-b-pom').innerHTML = fmt0(perL) + '<small>kg</small>';
+  document.getElementById('r-b-grape').innerHTML = fmt0(perL/0.20) + '<small>kg</small>';
+
+  drawFlow(r);
+}
+
+function drawFlow(r){
+  const cv = document.getElementById('flowChart'); if (!cv.clientWidth) return;
+  const {c,w,h} = fit(cv);
+  const total = CALC.input;
+  const padT = 30, padB = 22, padX = 16;
+  const trackH = 30, gapY = (h - padT - padB - trackH*5) / 4;
+  const S = (w - padX*2) / total;   // px per kg
+
+  const stages = [
+    {name:'friss törköly', segs:[['seed', r.seedTheor],['husk', r.husk],['air', r.water]]},
+    {name:'szárítás után', segs:[['seed', r.seedTheor],['husk', r.husk]]},
+    {name:'szeparálás',    segs:[['seed', r.seed],['loss', r.seedLost],['husk', r.husk]]},
+    {name:'tiszta mag',    segs:[['seed', r.seed]]},
+    {name:'kisajtolt olaj',segs:[['seed', r.oilKg],['loss', r.seed - r.oilKg]]},
+  ];
+
+  c.font = '10px "JetBrains Mono", monospace';
+  stages.forEach((st, i) => {
+    const y = padT + i*(trackH+gapY);
+    let x = padX;
+    c.fillStyle = PAL['ink-3']; c.textAlign = 'left';
+    c.fillText(st.name.toUpperCase(), padX, y - 6);
+    st.segs.forEach(([col, val]) => {
+      const bw = Math.max(0, val * S);
+      c.fillStyle = PAL[col];
+      c.globalAlpha = col === 'air' ? .3 : (col === 'loss' ? .55 : .85);
+      c.fillRect(x, y, bw, trackH);
+      c.globalAlpha = 1;
+      if (bw > 46){
+        c.fillStyle = col === 'air' ? PAL['ink-2'] : PAL['surface'];
+        c.textAlign = 'left';
+        c.font = '10px "JetBrains Mono", monospace';
+        c.fillText(fmt(val, val<10?1:0) + ' kg', x + 6, y + trackH/2 + 4);
+      }
+      x += bw;
+    });
+    // outline of the full original width for scale reference
+    c.strokeStyle = PAL['line-soft']; c.lineWidth = 1;
+    c.strokeRect(padX+.5, y+.5, w - padX*2 - 1, trackH - 1);
+  });
+}
+
+/* The pomace input spans three orders of magnitude (10 kg … 10 t), so the
+   slider carries a log position and snaps to a round figure for its decade. */
+function sliderToKg(pos){
+  const kg = 10 * Math.pow(1000, pos/1000);
+  if (kg < 100) return Math.round(kg/5)*5;
+  if (kg < 1000) return Math.round(kg/10)*10;
+  return Math.round(kg/50)*50;
+}
+
+['moist','seedfrac','sep','oil','press','price'].forEach(k => {
+  const el = document.getElementById('i-' + k);
+  el.addEventListener('input', () => { CALC[k] = +el.value; renderCalc(); });
+});
+document.getElementById('i-input').addEventListener('input', e => {
+  CALC.input = sliderToKg(+e.target.value); renderCalc();
+});
+document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
+  Object.assign(CALC, PRESETS[b.dataset.preset]);
+  ['moist','seedfrac','sep','oil','press'].forEach(k => document.getElementById('i-'+k).value = CALC[k]);
+  renderCalc();
+}));
+
+/* ======================= 03 — PARTICLE SIM ======================= */
+const SIM = {
+  air: 5.0, hole: 8.0, rpm: 18, moist: 8, feed: 5,
+  running: true, parts: [], t: 0,
+  stats: {total:0, seedTotal:0, seedIn:0, seedBlown:0, seedOver:0,
+          binSeed:{seed:0,husk:0,stem:0,dust:0},
+          binOver:{seed:0,husk:0,stem:0,dust:0},
+          binBlow:{seed:0,husk:0,stem:0,dust:0}},
+  fps: 0, lastT: 0, frames: 0, fpsT: 0
+};
+const rnd = (a,b) => a + Math.random()*(b-a);
+
+/* Particle species with real physical ranges */
+const SPECIES = [
+  {k:'seed',  p:0.34, d:[3.5,8.3],  vt:[6.3,8.8], col:'seed'},
+  {k:'husk',  p:0.30, d:[6,22],     vt:[3.4,5.9], col:'husk'},   // large husk sheets
+  {k:'huskS', p:0.22, d:[2,7],      vt:[2.2,4.4], col:'husk'},   // small husk bits
+  {k:'stem',  p:0.06, d:[12,40],    vt:[4.0,6.0], col:'stem'},
+  {k:'dust',  p:0.08, d:[0.4,2],    vt:[0.4,2.0], col:'ink-3'},
+];
+function pickSpecies(){
+  let r = Math.random(), acc = 0;
+  for (const s of SPECIES){ acc += s.p; if (r <= acc) return s; }
+  return SPECIES[SPECIES.length-1];
+}
+const kindOf = s => s.k === 'huskS' ? 'husk' : s.k;
+
+/* Geometry, in canvas units — recomputed on resize */
+let GEO = null;
+function computeGeo(w,h){
+  const R = 32;
+  const drumX0 = 30, drumX1 = w*0.50;
+  const drumY0 = 62, drumY1 = drumY0 + (drumX1-drumX0)*Math.tan(4*Math.PI/180)*2.2;
+  const drumBottom = drumY1 + R*2;          // lowest point of the drum on screen
+  return {
+    w, h,
+    drum: {x0:drumX0, x1:drumX1, y0:drumY0, y1:drumY1, r: R},
+    tray: {y: drumBottom + 30},
+    hopper: {x: w*0.545, y: drumBottom + 46},
+    col: {x: w*0.72, w: 78, top: 52, bottom: h - 84},
+    binSeed: {x: w*0.72, y: h - 80},
+    binOver: {x: drumX1 + 14, y: drumY1 + R*2 - 34},   // sits at the drum's discharge end, above the tray
+    chamber: {x: w*0.885, y: 52}
+  };
+}
+
+function spawn(){
+  const s = pickSpecies();
+  const d = rnd(s.d[0], s.d[1]);
+  // calibrated so dry (8%) sieving recovers ~80% and fresh pomace (55%) drops below 40%
+  const clumpP = Math.max(0, Math.min(1, (SIM.moist - 8) / 72));
+  const clumped = Math.random() < clumpP;
+  const g = GEO;
+  const p = {
+    sp: s, kind: kindOf(s), d,
+    vt: rnd(s.vt[0], s.vt[1]),
+    clumped,
+    stage: 'drum',
+    u: 0,                                  // 0..1 along drum axis
+    wob: Math.random()*Math.PI*2,
+    x: g.drum.x0, y: g.drum.y0,
+    vx: 0, vy: 0,
+    rad: Math.max(1.4, Math.min(6, d*0.42)),
+    col: PAL[s.col],
+    life: 0
+  };
+  SIM.parts.push(p);
+  SIM.stats.total++;
+  if (p.kind === 'seed') SIM.stats.seedTotal++;
+  return p;
+}
+
+function passProbability(p){
+  // size gate: effective size is inflated when clumped (husk sticks to seed)
+  const eff = p.clumped ? p.d * rnd(2.2, 3.4) : p.d;
+  if (eff > SIM.hole) return 0;
+  // tumbling: too slow = few presentations to holes; too fast = centrifuged to wall
+  const rpm = SIM.rpm;
+  const tumble = rpm <= 20 ? rpm/20 : Math.max(0.12, 1 - (rpm-20)/26);
+  // near-hole-size particles pass less readily
+  const margin = Math.min(1, (SIM.hole - eff) / 3);
+  return Math.min(1, 0.55 * tumble * (0.35 + 0.65*margin));
+}
+
+function stepSim(dt){
+  const g = GEO; if (!g) return;
+  // feed
+  const rate = SIM.feed * 2.2;
+  SIM.t += dt;
+  const want = Math.floor(SIM.t * rate) - SIM.spawned0;
+  if (want > 0){ for (let i=0;i<Math.min(want,14);i++) spawn(); SIM.spawned0 += want; }
+
+  const drumLen = g.drum.x1 - g.drum.x0;
+  const axialSpeed = 0.20 + SIM.rpm*0.006;      // fraction of drum per second (~3 s residence at 18 rpm)
+
+  for (let i = SIM.parts.length-1; i >= 0; i--){
+    const p = SIM.parts[i];
+    p.life += dt;
+
+    if (p.stage === 'drum'){
+      p.u += axialSpeed * dt;
+      p.wob += dt * (2 + SIM.rpm*0.16);
+      const t = p.u;
+      p.x = g.drum.x0 + t*drumLen;
+      const cy = g.drum.y0 + t*(g.drum.y1 - g.drum.y0);
+      // tumbling motion inside drum
+      const amp = SIM.rpm <= 30 ? g.drum.r*0.62 : g.drum.r*0.82;
+      p.y = cy + g.drum.r*0.45 + Math.sin(p.wob)*amp*0.45 - Math.abs(Math.cos(p.wob*0.7))*4;
+
+      // chance to fall through, evaluated per second of residence
+      if (Math.random() < passProbability(p) * dt * 1.5){
+        p.stage = 'fall'; p.vy = 10; p.vx = rnd(-6,6);
+      } else if (p.u >= 1){
+        p.stage = 'over'; p.vy = 20; p.vx = rnd(4,26);
+      }
+
+    } else if (p.stage === 'fall'){
+      p.vy += 420*dt; p.y += p.vy*dt; p.x += p.vx*dt;
+      if (p.y > g.tray.y){
+        // slide along tray to hopper, then teleport into column feed
+        p.stage = 'toHopper'; p.y = g.tray.y; p.vx = rnd(70,130); p.vy = 0;
+      }
+    } else if (p.stage === 'toHopper'){
+      p.x += p.vx*dt;
+      const t0 = g.drum.x0 - 6, t1 = g.hopper.x;
+      p.y = g.tray.y + 16 * Math.max(0, Math.min(1, (p.x - t0)/(t1 - t0))) - 2;
+      if (p.x >= g.hopper.x){
+        p.stage = 'col';
+        p.x = g.col.x + rnd(-g.col.w*0.3, g.col.w*0.3);
+        p.y = g.col.top + 16;
+        p.vy = 30; p.vx = 0;
+      }
+    } else if (p.stage === 'over'){
+      p.vy += 420*dt; p.y += p.vy*dt; p.x += p.vx*dt;
+      if (p.y > g.binOver.y + 32){
+        SIM.stats.binOver[p.kind]++;
+        if (p.kind === 'seed') SIM.stats.seedOver++;
+        SIM.parts.splice(i,1); continue;
+      }
+    } else if (p.stage === 'col'){
+      // drag vs gravity:  a = g * ((v_air/v_t)^2 - 1)  (sign by relative motion)
+      const G = 9.81;
+      const vAirPx = SIM.air;                  // m/s, physical
+      const vPart = p.vy / 34;                 // px/s -> m/s (34 px per m of fall scale)
+      const vrel = vAirPx - (-vPart);          // air up, vy positive = down
+      const a = G * (Math.sign(vrel)*Math.pow(Math.abs(vrel)/p.vt, 2) - 1);
+      p.vy += (-a) * 34 * dt;                  // convert back to px
+      p.vy = Math.max(-260, Math.min(320, p.vy));
+      p.y += p.vy*dt;
+      p.x += Math.sin(p.life*7 + p.wob)*10*dt;
+
+      if (p.y > g.col.bottom){
+        SIM.stats.binSeed[p.kind]++;
+        if (p.kind === 'seed') SIM.stats.seedIn++;
+        SIM.parts.splice(i,1); continue;
+      }
+      if (p.y < g.col.top - 4){
+        p.stage = 'blow'; p.vx = rnd(60,110); p.vy = rnd(-18,6);
+      }
+    } else if (p.stage === 'blow'){
+      p.x += p.vx*dt; p.y += p.vy*dt; p.vy += 40*dt;
+      if (p.x > g.chamber.x + 8){
+        SIM.stats.binBlow[p.kind]++;
+        if (p.kind === 'seed') SIM.stats.seedBlown++;
+        SIM.parts.splice(i,1); continue;
+      }
+    }
+
+    if (p.life > 40 || p.y > g.h + 60){ SIM.parts.splice(i,1); }
+  }
+  if (SIM.parts.length > 900) SIM.parts.splice(0, SIM.parts.length - 900);
+}
+SIM.spawned0 = 0;
+
+function drawSim(){
+  const cv = document.getElementById('sim'); if (!cv.clientWidth) return;
+  const {c,w,h} = fit(cv);
+  if (!GEO || GEO.w !== w) GEO = computeGeo(w,h);
+  const g = GEO;
+
+  c.fillStyle = PAL['surface-2']; c.fillRect(0,0,w,h);
+  c.font = '10px "JetBrains Mono", monospace';
+
+  // ---- stage labels
+  const lab = (x,y,t,sub) => {
+    c.textAlign='left'; c.fillStyle = PAL['ink-3'];
+    c.fillText(t.toUpperCase(), x, y);
+    if (sub){ c.fillStyle = PAL['ink-3']; c.globalAlpha=.7; c.fillText(sub, x, y+13); c.globalAlpha=1; }
+  };
+  lab(g.drum.x0, 26, '1 · dobrosta', SIM.hole.toFixed(1).replace('.',',') + ' mm · ' + SIM.rpm + ' rpm');
+  lab(g.col.x - g.col.w/2, 26, '2 · szelelőoszlop', SIM.air.toFixed(1).replace('.',',') + ' m/s');
+
+  // ---- drum body
+  const dx = g.drum.x1 - g.drum.x0, dy = g.drum.y1 - g.drum.y0;
+  const ang = Math.atan2(dy, dx);
+  c.save();
+  c.translate(g.drum.x0, g.drum.y0); c.rotate(ang);
+  const L = Math.hypot(dx,dy), R = g.drum.r;
+  c.strokeStyle = PAL['line']; c.lineWidth = 1.5;
+  c.strokeRect(0, 0, L, R*2);
+  // perforation dots, density tied to hole size
+  const step = 13;
+  c.fillStyle = PAL['line'];
+  for (let x = step*0.6; x < L-4; x += step){
+    for (let y = 4; y < R*2-2; y += step*0.62){
+      c.globalAlpha = .55;
+      c.beginPath(); c.arc(x, y, Math.max(0.9, SIM.hole*0.22), 0, 7); c.fill();
+    }
+  }
+  c.globalAlpha = 1;
+  // lifter bars
+  c.strokeStyle = PAL['line-soft'];
+  for (let k=1;k<=2;k++){
+    const yy = R*2*k/3;
+    c.beginPath(); c.moveTo(0,yy); c.lineTo(L,yy); c.stroke();
+  }
+  c.restore();
+
+  // ---- tray under drum, sloping toward the intermediate hopper
+  c.strokeStyle = PAL['seed']; c.globalAlpha = .55; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(g.drum.x0-6, g.tray.y); c.lineTo(g.hopper.x, g.tray.y+16); c.stroke();
+  c.globalAlpha = 1;
+
+  // ---- overflow bin at the drum's low end
+  c.strokeStyle = PAL['husk']; c.globalAlpha=.75; c.lineWidth=1.5;
+  c.strokeRect(g.binOver.x, g.binOver.y, 62, 42); c.globalAlpha=1;
+  c.fillStyle = PAL['husk']; c.textAlign='center';
+  c.fillText('FELÜLFOLYÁS', g.binOver.x+31, g.binOver.y-14);
+  c.fillStyle = PAL['ink-3'];
+  c.fillText('héj, kocsány', g.binOver.x+31, g.binOver.y-3);
+
+  // ---- column
+  const cx = g.col.x, cw = g.col.w;
+  c.strokeStyle = PAL['line']; c.lineWidth=1.5;
+  c.strokeRect(cx - cw/2, g.col.top, cw, g.col.bottom - g.col.top);
+  // airflow arrows, speed-dependent
+  const nA = 5, phase = (performance.now()/1000 * SIM.air * 26) % 40;
+  c.strokeStyle = PAL['air']; c.globalAlpha = Math.min(.75, .15 + SIM.air*0.08); c.lineWidth = 1;
+  for (let i=0;i<nA;i++){
+    const ax = cx - cw/2 + cw*(i+0.5)/nA;
+    for (let yy = g.col.bottom - phase; yy > g.col.top; yy -= 40){
+      c.beginPath(); c.moveTo(ax, yy); c.lineTo(ax, yy-14); c.stroke();
+      c.beginPath(); c.moveTo(ax-2.5, yy-10); c.lineTo(ax, yy-14); c.lineTo(ax+2.5, yy-10); c.stroke();
+    }
+  }
+  c.globalAlpha = 1;
+
+  // fan at bottom
+  c.strokeStyle = PAL['air']; c.lineWidth=1.5;
+  c.beginPath(); c.arc(cx, g.col.bottom + 26, 15, 0, 7); c.stroke();
+  const fa = performance.now()/1000 * SIM.air * 2.4;
+  c.save(); c.translate(cx, g.col.bottom+26); c.rotate(fa);
+  for (let i=0;i<3;i++){ c.rotate(Math.PI*2/3); c.beginPath(); c.moveTo(0,0); c.lineTo(11,4); c.stroke(); }
+  c.restore();
+
+  // seed bin
+  c.strokeStyle = PAL['seed']; c.lineWidth=1.5;
+  c.beginPath();
+  c.moveTo(cx-34, g.col.bottom+4); c.lineTo(cx-24, g.col.bottom+42);
+  c.lineTo(cx+24, g.col.bottom+42); c.lineTo(cx+34, g.col.bottom+4);
+  c.stroke();
+  c.fillStyle = PAL['seed']; c.textAlign='center';
+  c.fillText('MAG', cx, g.col.bottom+58);
+
+  // settling chamber
+  c.strokeStyle = PAL['husk']; c.lineWidth=1.5;
+  c.strokeRect(g.chamber.x, g.chamber.y, Math.max(28, w - g.chamber.x - 12), 84);
+  c.fillStyle = PAL['husk']; c.textAlign='center';
+  c.fillText('HÉJ', g.chamber.x + Math.max(28, w-g.chamber.x-12)/2, g.chamber.y + 98);
+
+  // duct from column top to chamber
+  c.strokeStyle = PAL['line']; c.lineWidth=1.5;
+  c.beginPath(); c.moveTo(cx+cw/2, g.col.top); c.lineTo(g.chamber.x, g.chamber.y+14); c.stroke();
+  c.beginPath(); c.moveTo(cx+cw/2, g.col.top+18); c.lineTo(g.chamber.x, g.chamber.y+40); c.stroke();
+
+  // hopper marker
+  c.strokeStyle = PAL['line']; c.setLineDash([2,3]);
+  c.beginPath(); c.moveTo(g.hopper.x, g.tray.y+16); c.lineTo(g.hopper.x, g.col.top+16); c.lineTo(cx - cw/2, g.col.top+16); c.stroke();
+  c.setLineDash([]);
+
+  // ---- particles
+  for (const p of SIM.parts){
+    c.fillStyle = p.col;
+    c.globalAlpha = p.kind === 'dust' ? .5 : .9;
+    if (p.clumped && p.stage === 'drum'){
+      c.globalAlpha = .95;
+      c.fillStyle = PAL['loss'];
+      c.beginPath(); c.arc(p.x, p.y, p.rad*1.7, 0, 7); c.fill();
+      c.fillStyle = PAL['seed'];
+      c.beginPath(); c.arc(p.x, p.y, p.rad*0.7, 0, 7); c.fill();
+    } else if (p.kind === 'husk' || p.kind === 'stem'){
+      c.save(); c.translate(p.x,p.y); c.rotate(p.life*3 + p.wob);
+      c.fillRect(-p.rad*1.5, -p.rad*0.42, p.rad*3, p.rad*0.84);
+      c.restore();
+    } else {
+      c.beginPath(); c.arc(p.x, p.y, p.rad, 0, 7); c.fill();
+    }
+    c.globalAlpha = 1;
+  }
+}
+
+function renderSimStats(){
+  const s = SIM.stats;
+  const collected = s.seedIn;
+  const denom = s.seedIn + s.seedOver + s.seedBlown;
+  const rec = denom ? collected/denom*100 : 0;
+  const bin = s.binSeed;
+  const binTot = bin.seed + bin.husk + bin.stem + bin.dust;
+  const pur = binTot ? bin.seed/binTot*100 : 0;
+  const blow = denom ? s.seedBlown/denom*100 : 0;
+
+  const set = (id, v, unit) => { document.getElementById(id).innerHTML = v + (unit?`<small>${unit}</small>`:''); };
+  set('s-rec', denom ? fmt(rec,1) : '—', '%');
+  set('s-pur', binTot ? fmt(pur,1) : '—', '%');
+  set('s-blow', denom ? fmt(blow,1) : '—', '%');
+  document.getElementById('s-recn').textContent = collected + ' / ' + denom + ' magszem';
+  document.getElementById('s-purn').textContent = binTot + ' szem a gyűjtőben';
+
+  // throughput estimate: feed slider -> kg/h (calibrated: feed 5 ≈ 25 kg/h)
+  const thru = SIM.feed * 5;
+  set('s-thru', fmt0(thru), 'kg/h');
+
+  // oil per 100 kg dry pomace at this separation efficiency & purity
+  const sepEff = rec/100;
+  const oilL = 100 * 0.40 * sepEff * 0.14 * 0.58 / 0.92;
+  set('s-oil', denom ? fmt(oilL,2) : '—', 'liter');
+  set('s-tot', fmt0(s.total), 'szem');
+  document.getElementById('s-fps').textContent = SIM.fps ? Math.round(SIM.fps) + ' fps · ' + SIM.parts.length + ' aktív' : '';
+
+  // fraction table
+  const rows = [
+    ['Magfrakció (gyűjtő)', s.binSeed, 'seed'],
+    ['Felülfolyás (rosta vége)', s.binOver, 'husk'],
+    ['Elszállt (ülepítő)', s.binBlow, 'husk'],
+  ];
+  document.querySelector('#fracTable tbody').innerHTML = rows.map(([n,b]) =>
+    `<tr><td>${n}</td><td class="n">${b.seed}</td><td class="n">${b.husk}</td><td class="n">${b.stem}</td><td class="n">${b.dust}</td></tr>`).join('');
+
+  // diagnosis
+  const d = document.getElementById('diag');
+  let msg = [];
+  if (SIM.moist > 20) msg.push(`<b>A nedvesség (${SIM.moist}%) a fő probléma.</b> A héj rátapad a magra, rögök keletkeznek (piros szemcsék), és ezek nem férnek át a rostán — a mag a felülfolyással távozik. Szárítsd 10% alá.`);
+  else if (SIM.moist > 12) msg.push(`A ${SIM.moist}%-os nedvesség még mindig rögösít. 8–10% a cél.`);
+  if (SIM.air > 6.2) msg.push(`<b>Túl erős a légáram (${fmt(SIM.air,1)} m/s).</b> A mag lebegési sebessége 6,3 m/s-nál kezdődik — ennyinél már magszem is elszáll.`);
+  else if (SIM.air < 3.6) msg.push(`<b>Gyenge a légáram (${fmt(SIM.air,1)} m/s).</b> A héj nem hordódik ki, a magfrakció szennyezett marad.`);
+  if (SIM.hole < 6) msg.push(`A ${fmt(SIM.hole,1)} mm-es lyuk kisebb a magok jó részénél — a nagyobb szemek a felülfolyásba mennek.`);
+  else if (SIM.hole > 11) msg.push(`A ${fmt(SIM.hole,1)} mm-es lyukon a nagy héjlemez is átfér — a szelelőnek kell mindent megoldania.`);
+  if (SIM.rpm > 30) msg.push(`${SIM.rpm} rpm-nél a centrifugális erő a dob falához szorítja az anyagot, nem bukik át a lyukak fölött.`);
+  else if (SIM.rpm < 10) msg.push(`${SIM.rpm} rpm-nél kevés az átbukás, a szemcsék nem találkoznak elég lyukkal.`);
+  if (!msg.length) msg.push(`<b>Jó munkapont.</b> ${denom ? fmt(rec,1)+'% magkinyerés, '+fmt(pur,1)+'% tisztaság' : 'Fut a gép'} — ez a beállítás ~${fmt(oilL,2)} liter olajat ad 100 kg száraz törkölyből.`);
+  d.innerHTML = msg.join(' ');
+}
+
+['air','hole','rpm','feed'].forEach(k => {
+  const el = document.getElementById('i-' + k);
+  el.addEventListener('input', () => { SIM[k] = +el.value; syncSimLabels(); });
+});
+document.getElementById('i-simmoist').addEventListener('input', e => { SIM.moist = +e.target.value; syncSimLabels(); });
+
+function syncSimLabels(){
+  document.getElementById('o-air').textContent = fmt(SIM.air,1) + ' m/s';
+  document.getElementById('o-hole').textContent = fmt(SIM.hole,1) + ' mm';
+  document.getElementById('o-rpm').textContent = SIM.rpm + ' rpm';
+  document.getElementById('o-simmoist').textContent = SIM.moist + '%';
+  document.getElementById('o-feed').textContent = ['nagyon lassú','nagyon lassú','lassú','lassú','mérsékelt','közepes','élénk','élénk','gyors','gyors','maximum'][SIM.feed] || 'közepes';
+  const ha = document.getElementById('h-air');
+  ha.textContent = SIM.air > 6.2 ? 'Ennél a magok is elszállnak — nézd az „Elszállt mag” mérőt.'
+    : SIM.air < 3.6 ? 'A héj nagy része visszahull a magok közé.' : 'A munkapont sávjában vagy (4,5–5,5 m/s).';
+  const hr = document.getElementById('h-rpm');
+  hr.textContent = SIM.rpm > 30 ? 'Túl gyors: az anyag a falhoz centrifugálódik.'
+    : SIM.rpm < 10 ? 'Túl lassú: kevés az átbukás.' : '15–20 rpm az ideális.';
+  const hm = document.getElementById('h-simmoist');
+  hm.textContent = SIM.moist > 20 ? 'Rögösödik — a mag nagy része a hulladékba megy.'
+    : SIM.moist > 12 ? 'Még mindig ragad. 8–10% a cél.' : 'Jól szárított anyag.';
+}
+function resetStats(){
+  SIM.stats = {total:0, seedTotal:0, seedIn:0, seedBlown:0, seedOver:0,
+    binSeed:{seed:0,husk:0,stem:0,dust:0}, binOver:{seed:0,husk:0,stem:0,dust:0}, binBlow:{seed:0,husk:0,stem:0,dust:0}};
+}
+document.getElementById('b-reset').addEventListener('click', () => { resetStats(); SIM.parts.length = 0; renderSimStats(); });
+document.getElementById('b-play').addEventListener('click', e => {
+  SIM.running = !SIM.running; e.target.textContent = SIM.running ? 'Szünet' : 'Indítás';
+});
+document.getElementById('b-tune').addEventListener('click', () => {
+  Object.assign(SIM, {air:5.0, hole:8.0, rpm:18, moist:8});
+  document.getElementById('i-air').value = 5; document.getElementById('i-hole').value = 8;
+  document.getElementById('i-rpm').value = 18; document.getElementById('i-simmoist').value = 8;
+  syncSimLabels(); resetStats(); SIM.parts.length = 0;
+});
+
+/* ======================= 04 — MINI 3D ENGINE ======================= */
+const V3 = {
+  az: -0.62, el: 0.28, dist: 4.2, zoom: 1, target:[0, 0.85, 0],
+  drag:false, px:0, py:0, spin:0, fanSpin:0
+};
+const meshes = [];
+
+function addBox(cx,cy,cz, sx,sy,sz, col, alpha){
+  const hx=sx/2, hy=sy/2, hz=sz/2;
+  const v = [
+    [cx-hx,cy-hy,cz-hz],[cx+hx,cy-hy,cz-hz],[cx+hx,cy+hy,cz-hz],[cx-hx,cy+hy,cz-hz],
+    [cx-hx,cy-hy,cz+hz],[cx+hx,cy-hy,cz+hz],[cx+hx,cy+hy,cz+hz],[cx-hx,cy+hy,cz+hz]
+  ];
+  const f = [[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[3,2,6,7],[4,5,1,0]];
+  f.forEach(idx => meshes.push({v: idx.map(i=>v[i]), col, alpha: alpha??1}));
+}
+/* cylinder along axis 'y' or 'x' or 'z'; skip => perforated look */
+function addCyl(cx,cy,cz, r, len, axis, col, seg, opt){
+  opt = opt || {};
+  const spin = opt.spin || 0, skip = opt.skip || 0, alpha = opt.alpha ?? 1, caps = opt.caps ?? false;
+  const pt = (a, t) => {
+    const s = Math.sin(a)*r, c = Math.cos(a)*r, l = (t-0.5)*len;
+    if (axis === 'y') return [cx + s, cy + l, cz + c];
+    if (axis === 'x') return [cx + l, cy + s, cz + c];
+    return [cx + s, cy + c, cz + l];
+  };
+  const nSeg = opt.lenSeg || 1;
+  for (let i=0;i<seg;i++){
+    if (skip && (i % skip === skip-1)) continue;
+    const a0 = spin + i/seg*Math.PI*2, a1 = spin + (i+1)/seg*Math.PI*2;
+    for (let j=0;j<nSeg;j++){
+      if (skip && ((i+j) % 2 === 1)) continue;
+      const t0 = j/nSeg, t1 = (j+1)/nSeg;
+      meshes.push({v:[pt(a0,t0), pt(a1,t0), pt(a1,t1), pt(a0,t1)], col, alpha, dbl:true});
+    }
+  }
+  if (caps){
+    for (const t of [0,1]){
+      const ring = [];
+      for (let i=0;i<seg;i++) ring.push(pt(spin + i/seg*Math.PI*2, t));
+      meshes.push({v:ring, col:opt.capCol||col, alpha, dbl:true});
+    }
+  }
+}
+/* frustum (hopper) */
+function addFrustum(cx,cy,cz, rTop, rBot, hgt, col, seg, alpha){
+  for (let i=0;i<seg;i++){
+    const a0 = i/seg*Math.PI*2, a1 = (i+1)/seg*Math.PI*2;
+    const p = (a,r,y) => [cx + Math.sin(a)*r, cy + y, cz + Math.cos(a)*r];
+    meshes.push({v:[p(a0,rTop,hgt/2), p(a1,rTop,hgt/2), p(a1,rBot,-hgt/2), p(a0,rBot,-hgt/2)], col, alpha: alpha??1, dbl:true});
+  }
+}
+
+function buildScene(spin, fanSpin){
+  meshes.length = 0;
+  const F = PAL['line'], FR = PAL['ink-3'];
+
+  // ---- ground plate
+  meshes.push({v:[[-1.0,0,-0.6],[1.0,0,-0.6],[1.0,0,0.6],[-1.0,0,0.6]], col: PAL['surface-2'], alpha:.5, dbl:true});
+
+  // ---- frame legs (machine 1)
+  [[-0.72,-0.22],[-0.72,0.22],[0.02,-0.22],[0.02,0.22]].forEach(([x,z]) => addBox(x,0.34,z, 0.035,0.68,0.035, FR));
+  addBox(-0.35,0.68,-0.22, 0.78,0.035,0.035, FR);
+  addBox(-0.35,0.68, 0.22, 0.78,0.035,0.035, FR);
+
+  // ---- trommel drum (Ø300 × 900 mm), tilted 4°
+  const tilt = 4*Math.PI/180;
+  const drumY = 0.98, drumX = -0.35;
+  // approximate tilt by offsetting ends: build along x with slight y shift via two half-cylinders
+  addCyl(drumX, drumY, 0, 0.15, 0.90, 'x', PAL['line'], 22, {spin, skip:2, lenSeg:10, alpha:.85});
+  // end discs
+  addCyl(drumX-0.45, drumY, 0, 0.15, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
+  addCyl(drumX+0.45, drumY, 0, 0.15, 0.02, 'x', FR, 22, {spin, caps:true, alpha:.9});
+  // shaft
+  addCyl(drumX, drumY, 0, 0.012, 1.06, 'x', FR, 8, {caps:true});
+
+  // ---- feed hopper above drum inlet
+  addFrustum(drumX-0.42, drumY+0.26, 0, 0.16, 0.06, 0.24, PAL['husk'], 12, .55);
+
+  // ---- collection tray under drum
+  meshes.push({v:[[drumX-0.5,drumY-0.24,-0.20],[drumX+0.52,drumY-0.30,-0.20],[drumX+0.52,drumY-0.30,0.20],[drumX-0.5,drumY-0.24,0.20]], col: PAL['seed'], alpha:.30, dbl:true});
+
+  // ---- motor
+  addBox(drumX-0.55, drumY-0.10, 0.24, 0.13,0.13,0.16, FR);
+
+  // ---- overflow bin at drum end
+  addBox(drumX+0.62, 0.12, 0, 0.20,0.24,0.20, PAL['husk'], .5);
+
+  // ---- machine 2: column
+  const colX = 0.62;
+  [[colX-0.16,-0.16],[colX-0.16,0.16],[colX+0.16,-0.16],[colX+0.16,0.16]].forEach(([x,z]) => addBox(x,0.22,z, 0.03,0.44,0.03, FR));
+  // intermediate hopper feeding the column
+  addFrustum(colX, 1.34, 0, 0.14, 0.05, 0.20, PAL['husk'], 12, .5);
+  // column tube Ø125 × 1000
+  addCyl(colX, 0.90, 0, 0.0625, 1.00, 'y', PAL['air'], 16, {alpha:.30, lenSeg:8});
+  // fan housing at base
+  addCyl(colX, 0.36, 0, 0.10, 0.09, 'y', FR, 14, {caps:true, alpha:.8});
+  // fan blades
+  for (let i=0;i<4;i++){
+    const a = fanSpin + i*Math.PI/2;
+    meshes.push({v:[
+      [colX, 0.36, 0],
+      [colX + Math.sin(a)*0.085, 0.375, 0 + Math.cos(a)*0.085],
+      [colX + Math.sin(a+0.5)*0.085, 0.345, 0 + Math.cos(a+0.5)*0.085]
+    ], col: PAL['air'], alpha:.85, dbl:true});
+  }
+  // seed jar
+  addCyl(colX, 0.10, 0, 0.09, 0.20, 'y', PAL['seed'], 14, {caps:true, alpha:.55});
+
+  // ---- settling chamber
+  addBox(1.02, 1.18, 0, 0.30,0.36,0.30, PAL['husk'], .40);
+  // duct column-top -> chamber
+  meshes.push({v:[[colX+0.05,1.40,-0.05],[0.90,1.30,-0.05],[0.90,1.30,0.05],[colX+0.05,1.40,0.05]], col: PAL['husk'], alpha:.5, dbl:true});
+}
+
+function draw3d(){
+  const cv = document.getElementById('v3d'); if (!cv.clientWidth) return;
+  const {c,w,h} = fit(cv);
+  c.fillStyle = PAL['surface-2']; c.fillRect(0,0,w,h);
+
+  buildScene(V3.spin, V3.fanSpin);
+
+  const ca = Math.cos(V3.az), sa = Math.sin(V3.az);
+  const ce = Math.cos(V3.el), se = Math.sin(V3.el);
+
+  // camera-space projection to normalised device coords (before fitting)
+  const ndc = p => {
+    const x = p[0] - V3.target[0], y = p[1] - V3.target[1], z = p[2] - V3.target[2];
+    const X = x*ca - z*sa, Z = x*sa + z*ca;
+    const Y = y*ce - Z*se;
+    let Z2 = y*se + Z*ce + V3.dist;
+    if (Z2 < 0.15) Z2 = 0.15;
+    return {nx: X/Z2, ny: Y/Z2, z: Z2};
+  };
+
+  // auto-fit: measure the whole scene, then scale it into the canvas with a margin
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const m of meshes) for (const v of m.v){
+    const q = ndc(v);
+    if (q.nx < minX) minX = q.nx; if (q.nx > maxX) maxX = q.nx;
+    if (q.ny < minY) minY = q.ny; if (q.ny > maxY) maxY = q.ny;
+  }
+  const spanX = Math.max(1e-4, maxX - minX), spanY = Math.max(1e-4, maxY - minY);
+  const fitScale = Math.min(w/spanX, h/spanY) * 0.80 * V3.zoom;
+  const midX = (minX+maxX)/2, midY = (minY+maxY)/2;
+
+  const project = p => {
+    const q = ndc(p);
+    return {x: w/2 + (q.nx - midX)*fitScale, y: h/2 - (q.ny - midY)*fitScale, z: q.z};
+  };
+
+  const faces = meshes.map(m => {
+    const pts = m.v.map(project);
+    const zAvg = pts.reduce((s,p)=>s+p.z,0)/pts.length;
+    // flat shading via 2D winding as a cheap normal proxy
+    let area = 0;
+    for (let i=0;i<pts.length;i++){
+      const a = pts[i], b = pts[(i+1)%pts.length];
+      area += (a.x*b.y - b.x*a.y);
+    }
+    return {pts, z:zAvg, col:m.col, alpha:m.alpha, dbl:m.dbl, front: area < 0};
+  }).filter(f => f.dbl || f.front);
+
+  faces.sort((a,b) => b.z - a.z);
+
+  for (const f of faces){
+    c.beginPath();
+    f.pts.forEach((p,i) => i ? c.lineTo(p.x,p.y) : c.moveTo(p.x,p.y));
+    c.closePath();
+    const shade = Math.max(.45, Math.min(1, 1.35 - (f.z - V3.dist + 0.8)*0.42));
+    c.globalAlpha = f.alpha * (0.30 + 0.55*shade);
+    c.fillStyle = f.col; c.fill();
+    c.globalAlpha = Math.min(1, f.alpha * 0.85);
+    c.strokeStyle = f.col; c.lineWidth = 0.7; c.stroke();
+  }
+  c.globalAlpha = 1;
+
+  // labels anchored in 3D
+  c.font = '10px "JetBrains Mono", monospace'; c.textAlign='center';
+  const tag = (p3, txt, col) => {
+    const p = project(p3);
+    if (p.z < 0.2) return;
+    c.fillStyle = col; c.fillText(txt, p.x, p.y);
+  };
+  tag([-0.35, 1.34, 0], '1 · DOBROSTA Ø300×900', PAL['ink-2']);
+  tag([0.62, 1.74, 0], '2 · SZELELŐ Ø125×1000', PAL['ink-2']);
+  tag([1.02, 1.44, 0], 'ÜLEPÍTŐ', PAL['husk']);
+  tag([0.62, -0.06, 0], 'MAG', PAL['seed']);
+  tag([0.27, 0.02, 0], 'HÉJ', PAL['husk']);
+}
+
+(function bind3d(){
+  const cv = document.getElementById('v3d');
+  const down = e => { V3.drag = true; V3.px = (e.touches?e.touches[0]:e).clientX; V3.py = (e.touches?e.touches[0]:e).clientY; };
+  const move = e => {
+    if (!V3.drag) return;
+    const t = e.touches ? e.touches[0] : e;
+    V3.az += (t.clientX - V3.px)*0.008;
+    V3.el = Math.max(-0.25, Math.min(1.25, V3.el + (t.clientY - V3.py)*0.006));
+    V3.px = t.clientX; V3.py = t.clientY;
+    if (e.cancelable) e.preventDefault();
+  };
+  const up = () => V3.drag = false;
+  cv.addEventListener('pointerdown', down);
+  window.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', up);
+  cv.addEventListener('wheel', e => {
+    V3.zoom = Math.max(0.55, Math.min(3.2, V3.zoom * (1 - e.deltaY*0.0012)));
+    e.preventDefault();
+  }, {passive:false});
+})();
+
+/* ======================= LOOP ======================= */
+let activeView = 'elv';
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - last)/1000); last = now;
+  SIM.frames++; SIM.fpsT += dt;
+  if (SIM.fpsT > 0.5){ SIM.fps = SIM.frames/SIM.fpsT; SIM.frames = 0; SIM.fpsT = 0; }
+
+  if (activeView === 'sim'){
+    if (SIM.running) stepSim(dt);
+    drawSim();
+    if ((now|0) % 6 === 0) renderSimStats();
+  } else if (activeView === 'terv3d'){
+    V3.spin += dt * (18/60) * Math.PI*2 * 0.35;
+    V3.fanSpin += dt * 6;
+    draw3d();
+  }
+  requestAnimationFrame(loop);
+}
+
+function onViewChange(v){
+  activeView = v;
+  if (v === 'elv') drawVt();
+  if (v === 'hozam') renderCalc();
+  if (v === 'sim'){ GEO = null; syncSimLabels(); }
+}
+function repaintAll(){
+  loadPalette();
+  SIM.parts.forEach(p => p.col = PAL[p.sp.col]);
+  drawVt(); renderCalc();
+}
+let rTO;
+addEventListener('resize', () => { clearTimeout(rTO); rTO = setTimeout(() => { GEO = null; repaintAll(); }, 140); });
+
+/* boot */
+syncSimLabels();
+renderCalc();
+drawVt();
+renderSimStats();
+requestAnimationFrame(loop);
+</script>
 </body>
 </html>
