@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 600" width="440" height="600" role="img" aria-label="Botee, a tanuló robot: 3 colos arckijelzővel a fején és 6 colos feladatkijelzővel a hasán">
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9C8CFF"/><stop offset="1" stop-color="#6C5CE7"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EFEBFF"/><stop offset="1" stop-color="#D8D0FF"/>
+    </linearGradient>
+    <linearGradient id="limb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8A7BFF"/><stop offset="1" stop-color="#5C4CD6"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22D3A6"/><stop offset="1" stop-color="#FFC93C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#6C5CE7" stop-opacity=".22"/><stop offset="1" stop-color="#6C5CE7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="220" cy="300" rx="220" ry="290" fill="url(#glow)"/>
+  <ellipse cx="220" cy="545" rx="120" ry="20" fill="#4C3CBE" opacity=".16"/>
+
+  <!-- antenna -->
+  <rect x="216" y="26" width="8" height="34" rx="4" fill="#5C4CD6"/>
+  <circle cx="220" cy="22" r="13" fill="#FFC93C"/>
+
+  <!-- fülek -->
+  <rect x="104" y="104" width="22" height="56" rx="11" fill="url(#limb)"/>
+  <rect x="314" y="104" width="22" height="56" rx="11" fill="url(#limb)"/>
+
+  <!-- fej + 3 colos arckijelző -->
+  <rect x="122" y="54" width="196" height="150" rx="48" fill="url(#head)"/>
+  <rect x="146" y="76" width="148" height="106" rx="30" fill="#14142B"/>
+  <rect x="146" y="76" width="148" height="106" rx="30" fill="none" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="2"/>
+  <ellipse cx="190" cy="122" rx="14" ry="16" fill="#22D3A6"/>
+  <ellipse cx="250" cy="122" rx="14" ry="16" fill="#22D3A6"/>
+  <path d="M196 150 q24 22 48 0" stroke="#FFC93C" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <circle cx="168" cy="152" r="7" fill="#FF6B6B" opacity=".55"/>
+  <circle cx="272" cy="152" r="7" fill="#FF6B6B" opacity=".55"/>
+
+  <!-- nyak -->
+  <rect x="196" y="196" width="48" height="30" rx="12" fill="#5C4CD6"/>
+
+  <!-- karok -->
+  <rect x="42" y="268" width="38" height="132" rx="19" fill="url(#limb)"/>
+  <rect x="360" y="268" width="38" height="132" rx="19" fill="url(#limb)"/>
+
+  <!-- test -->
+  <rect x="62" y="216" width="316" height="278" rx="66" fill="url(#body)" stroke="#C9BFFF" stroke-width="3"/>
+
+  <!-- 6 colos haskijelző -->
+  <rect x="92" y="246" width="256" height="200" rx="32" fill="#0F0F22"/>
+  <rect x="92" y="246" width="256" height="200" rx="32" fill="none" stroke="#6C5CE7" stroke-opacity=".5" stroke-width="3"/>
+  <g font-family="Baloo 2, Nunito, sans-serif" text-anchor="middle">
+    <text x="220" y="292" fill="#22D3A6" font-size="15" letter-spacing="2">SZORZÓTÁBLA</text>
+    <text x="220" y="352" fill="#FFFFFF" font-size="46" font-weight="800">7 × 8 = ?</text>
+    <rect x="130" y="378" width="80" height="40" rx="14" fill="#FFFFFF" fill-opacity=".1"/>
+    <text x="170" y="405" fill="#FFFFFF" font-size="22" font-weight="700">54</text>
+    <rect x="230" y="378" width="80" height="40" rx="14" fill="#22D3A6" fill-opacity=".25" stroke="#22D3A6" stroke-width="2"/>
+    <text x="270" y="405" fill="#22D3A6" font-size="22" font-weight="700">56</text>
+  </g>
+  <rect x="120" y="424" width="200" height="8" rx="4" fill="#FFFFFF" fill-opacity=".12"/>
+  <rect x="120" y="424" width="128" height="8" rx="4" fill="url(#bar)"/>
+
+  <!-- lábak -->
+  <rect x="126" y="486" width="76" height="34" rx="17" fill="url(#limb)"/>
+  <rect x="238" y="486" width="76" height="34" rx="17" fill="url(#limb)"/>
+</svg>

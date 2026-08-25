@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Botee — AI magántanár robot gyerekeknek</title>
+<meta name="description" content="Botee egy beszélő AI robot magántanár gyerekeknek. Hasán 6 colos feladatkijelző, fején 3 colos arckijelző. Matek feladatok, pontok, és élőszóban kapott válasz, ha a diák elakad." />
+<meta name="theme-color" content="#6C5CE7" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<meta property="og:title" content="Botee — AI magántanár robot gyerekeknek" />
+<meta property="og:description" content="Játszva tanult matek. Élőszóban válaszoló AI robot, ami sosem fárad el a magyarázatban." />
+<meta property="og:image" content="assets/robot.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<a class="skip" href="#main">Ugrás a tartalomra</a>
+
+<div class="bg" aria-hidden="true">
+  <span class="blob blob--1"></span>
+  <span class="blob blob--2"></span>
+  <span class="blob blob--3"></span>
+  <span class="dots"></span>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="#/" data-link>
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="34" height="34">
+          <rect x="7" y="12" width="34" height="28" rx="11" fill="url(#logoGrad)"/>
+          <circle cx="24" cy="6.5" r="3.4" fill="#FFC93C"/>
+          <rect x="23" y="8" width="2" height="5" rx="1" fill="#FFC93C"/>
+          <rect x="13" y="19" width="22" height="14" rx="6" fill="#1B1B3A"/>
+          <circle cx="19.5" cy="26" r="2.6" fill="#22D3A6"/>
+          <circle cx="28.5" cy="26" r="2.6" fill="#22D3A6"/>
+          <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#4EA8FF"/>
+          </linearGradient></defs>
+        </svg>
+      </span>
+      <span class="brand__text">Botee<span class="brand__dot">.</span></span>
+    </a>
+
+    <nav class="nav__links" id="navLinks" aria-label="Fő navigáció">
+      <a href="#/" data-link>Kezdőlap</a>
+      <a href="#/robot" data-link>A robot</a>
+      <a href="#/demo" data-link>Élő demó</a>
+      <a href="#/eredmenyek" data-link>Eredmények</a>
+      <a href="#/kapcsolat" data-link>Kapcsolat</a>
+    </nav>
+
+    <a class="btn btn--sm btn--primary nav__cta" href="#/demo" data-link>Kipróbálom →</a>
+
+    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__progress" id="navProgress" aria-hidden="true"></div>
+</header>
+
+<main id="main">
+
+<!-- ============================ KEZDŐLAP ============================ -->
+<section class="view" data-view="/">
+
+  <div class="hero wrap">
+    <div class="hero__copy">
+      <p class="badge reveal"><span class="badge__pulse"></span> Új — AI magántanár 7–12 éveseknek</p>
+      <h1 class="reveal">Ő <span class="grad">Botee</span>,<br/>a robot, aki<br/><span class="tw" id="tw" aria-live="polite"></span><span class="caret" aria-hidden="true"></span></h1>
+      <p class="lead reveal">Egy igazi, kézbe vehető robot, amivel a gyerek <b>hangosan beszélget</b>. A hasán lévő 6 colos kijelzőn kapja a feladatot, a fején lévő 3 colos arc pedig együtt örül, gondolkodik és biztat vele. Ha elakad, nem a semmibe kérdez: <b>azonnal, élőszóban kap választ.</b></p>
+      <div class="hero__cta reveal">
+        <a class="btn btn--primary btn--lg" href="#/demo" data-link>▶ Élő demó indítása</a>
+        <a class="btn btn--ghost btn--lg" href="#/robot" data-link>Hogyan működik?</a>
+      </div>
+      <ul class="hero__stats reveal">
+        <li><b class="count" data-to="24" data-suffix="/7">0</b><span>mindig ráér</span></li>
+        <li><b class="count" data-to="3" data-suffix=" mp">0</b><span>válaszidő</span></li>
+        <li><b class="statictext">soha</b><span>nem szid le</span></li>
+      </ul>
+    </div>
+
+    <div class="hero__robot">
+      <div class="robot-stage" id="robotStage">
+        <span class="bubble bubble--a">Mennyi 7 × 8?</span>
+        <span class="bubble bubble--b">Nem baj! Nézzük együtt 🙂</span>
+        <span class="bubble bubble--c">+10 pont! ⭐</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Három lépés</p>
+      <h2>Így néz ki egy 10 perces gyakorlás</h2>
+    </header>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__num">1</span>
+        <div class="step__icon" aria-hidden="true">🗣️</div>
+        <h3>Botee feladatot ad</h3>
+        <p>A hasán megjelenik a feladat — szorzótábla, osztás, mértékegység-váltás — és fel is olvassa. A gyerek nem olvasni küzd, hanem számolni tanul.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">2</span>
+        <div class="step__icon" aria-hidden="true">✋</div>
+        <h3>A diák válaszol</h3>
+        <p>Kimondja vagy megérinti a választ. Jó válasz: pont, csillag, tapsoló arc. Rossz válasz: nincs piros toll, csak egy „nézzük újra”.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">3</span>
+        <div class="step__icon" aria-hidden="true">💡</div>
+        <h3>Elakadt? Kérdez!</h3>
+        <p>„Botee, ezt nem értem.” — És kap egy magyarázatot a saját szintjén, példával, ahányszor csak kell. Ez a lényeg: <b>nem marad megválaszolatlan kérdés.</b></p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Miért lesz jobb a diák élete</p>
+      <h2>Nem több gyakorlás. <span class="grad">Kevesebb szorongás.</span></h2>
+      <p class="sec-sub">A gyerekek nem a matektól félnek, hanem attól, hogy kiderül: nem értik. Botee-nál ez nem derül ki senki előtt.</p>
+    </header>
+    <div class="cards">
+      <article class="card reveal" style="--c:#6C5CE7">
+        <div class="card__icon">🙈</div>
+        <h3>Nincs szégyen a kérdezésben</h3>
+        <p>Az osztálytársak előtt nem mer jelentkezni. Botee-tól ötödször is megkérdezheti ugyanazt — ugyanazzal a türelmes hanggal.</p>
+      </article>
+      <article class="card reveal" style="--c:#12B886">
+        <div class="card__icon">⚡</div>
+        <h3>Azonnali visszajelzés</h3>
+        <p>Nem másnap a füzetben derül ki, hogy hibázott. Rögtön látja, hol csúszott el — ilyenkor ragad meg igazán a tudás.</p>
+      </article>
+      <article class="card reveal" style="--c:#FF6B6B">
+        <div class="card__icon">🎯</div>
+        <h3>Pont az ő szintjén</h3>
+        <p>Ha megy a 7-es szorzótábla, nehezít. Ha nem megy, visszalép egyet. Sosem unalmas, és sosem reménytelen.</p>
+      </article>
+      <article class="card reveal" style="--c:#E8A400">
+        <div class="card__icon">🏆</div>
+        <h3>Játék, nem házi feladat</h3>
+        <p>Pontok, csíksorozatok, jelvények. A gyerek azért ül le, mert jó — és közben megold 40 példát.</p>
+      </article>
+      <article class="card reveal" style="--c:#2E90FA">
+        <div class="card__icon">👀</div>
+        <h3>Egy arc, ami reagál</h3>
+        <p>A 3 colos fejkijelző gesztikulál: gondolkodik, kacsint, tapsol. A gyerek egy társat lát, nem egy tabletet.</p>
+      </article>
+      <article class="card reveal" style="--c:#6C5CE7">
+        <div class="card__icon">📈</div>
+        <h3>A szülő is lát mindent</h3>
+        <p>Heti riport: mit gyakorolt, mi megy, miben kell segíteni. Vége a „mit csináltatok ma?” — „semmit” párbeszédnek.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="wrap section">
+    <div class="cta-band reveal">
+      <div>
+        <h2>Nézd meg, milyen, amikor a matek nem büntetés.</h2>
+        <p>A böngészőben futó demó ugyanazt a logikát mutatja, ami a robotban fut.</p>
+      </div>
+      <a class="btn btn--lg btn--white" href="#/demo" data-link>Demó indítása ▶</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ A ROBOT ============================ -->
+<section class="view" data-view="/robot">
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">A hardver</p>
+      <h2>Két kijelző, egy személyiség</h2>
+      <p class="sec-sub">Botee azért működik, mert nem képernyő. Egy tárgy, ami ott ül az asztalon, és odafordul a gyerekhez.</p>
+    </header>
+
+    <div class="spec">
+      <div class="spec__visual reveal">
+        <div class="robot-stage robot-stage--sm" id="robotStage2"></div>
+        <span class="callout callout--head">3 colos arckijelző<em>gesztikuláció, érzelmek</em></span>
+        <span class="callout callout--belly">6 colos haskijelző<em>feladatok, pontok, ábrák</em></span>
+        <span class="callout callout--mic">Mikrofon + hangszóró<em>valódi párbeszéd</em></span>
+      </div>
+      <div class="spec__list">
+        <div class="spec__item reveal"><h3><i>01</i> Beszélgetés, nem gépelés</h3><p>Far-field mikrofonpár és tiszta hangszóró. A gyerek úgy kérdez, ahogy egy tanártól kérdezne — és magyarul, természetes hangon kap választ.</p></div>
+        <div class="spec__item reveal"><h3><i>02</i> 6 colos haskijelző</h3><p>Itt jelenik meg a feladat, a szorzótábla rácsa, a mérleg a grammos váltáshoz, a pontszám és a haladás. Nagy, olvasható, gyerekszemnek tervezve.</p></div>
+        <div class="spec__item reveal"><h3><i>03</i> 3 colos arckijelző</h3><p>Nem díszítés: ez adja a visszajelzést. Felvont szemöldök, ha nehéz, kacsintás jó válasznál, biccentés, amíg a gyerek gondolkodik.</p></div>
+        <div class="spec__item reveal"><h3><i>04</i> LLM a motorháztető alatt</h3><p>Nagy nyelvi modell, gyerekbarát korlátokkal: tantárgyi fókusz, életkornak megfelelő szókincs, moderált tartalom, a szülő számára visszanézhető beszélgetések.</p></div>
+        <div class="spec__item reveal"><h3><i>05</i> Adatvédelem alapból</h3><p>A hangfelvétel a feldolgozás után törlődik, a szülő bármikor megnézheti és letörölheti az előzményt. Reklám és profilozás nincs.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Az első demó tananyag</p>
+      <h2>Matematika, alsó tagozat</h2>
+    </header>
+    <div class="chips">
+      <span class="chip reveal">✖️ Szorzótábla 1–10</span>
+      <span class="chip reveal">➗ Osztás maradékkal</span>
+      <span class="chip reveal">⚖️ Gramm ↔ kilogramm</span>
+      <span class="chip reveal">📏 Méter ↔ centiméter</span>
+      <span class="chip reveal">➕ Fejszámolás 100-ig</span>
+      <span class="chip reveal">🕒 Óra leolvasása</span>
+      <span class="chip reveal">🍕 Törtek alapjai</span>
+      <span class="chip reveal">🧩 Szöveges feladatok</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DEMÓ ============================ -->
+<section class="view" data-view="/demo">
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Élő demó</p>
+      <h2>Játssz úgy, ahogy a gyerek játszana</h2>
+      <p class="sec-sub">Ez a robot haskijelzőjének böngészős mása. Válaszolj a feladatokra — és ha elakadsz, kérj magyarázatot, ahogy a gyerek is tenné.</p>
+    </header>
+
+    <div class="demo">
+      <aside class="demo__buddy reveal">
+        <div class="face" id="face" data-mood="idle">
+          <div class="face__screen">
+            <span class="eye eye--l"></span>
+            <span class="eye eye--r"></span>
+            <span class="brow brow--l"></span>
+            <span class="brow brow--r"></span>
+            <span class="mouth"></span>
+          </div>
+        </div>
+        <div class="say" id="say" aria-live="polite">Szia! Kezdjük egy könnyűvel. Kész vagy?</div>
+        <button class="btn btn--ghost btn--sm" id="helpBtn">💡 Nem értem, magyarázd el!</button>
+        <label class="tts"><input type="checkbox" id="ttsToggle" /><span>Olvassa is fel (hang)</span></label>
+      </aside>
+
+      <div class="demo__panel reveal">
+        <div class="bezel">
+          <div class="hud">
+            <span class="hud__pill">Feladat <b id="qIdx">0</b>/<b id="qTot">8</b></span>
+            <span class="hud__pill hud__pill--pt">⭐ <b id="score">0</b></span>
+            <span class="hud__pill hud__pill--st">🔥 <b id="streak">0</b></span>
+          </div>
+          <div class="progress"><i id="bar"></i></div>
+
+          <div class="screen" id="stage">
+            <div class="q-topic" id="qTopic">Matek kaland</div>
+            <div class="q-text" id="qText">Nyomd meg az Indulhat gombot!</div>
+            <div class="q-visual" id="qVisual" aria-hidden="true"></div>
+            <div class="answers" id="answers"></div>
+          </div>
+
+          <div class="panel-foot">
+            <button class="btn btn--primary" id="startBtn">Indulhat! ▶</button>
+            <button class="btn btn--ghost btn--sm" id="resetBtn" hidden>Újra</button>
+          </div>
+        </div>
+        <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ EREDMÉNYEK ============================ -->
+<section class="view" data-view="/eredmenyek">
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Hatás</p>
+      <h2>Hogyan nő a teljesítmény, miközben játszik?</h2>
+      <p class="sec-sub">Nem varázslat — három egyszerű dolog, amit egy 25 fős osztályban nehéz megadni, egy robot mellett viszont alapértelmezett.</p>
+    </header>
+
+    <div class="metrics">
+      <div class="metric reveal"><b class="count" data-to="12" data-suffix="×">0</b><span>ennyivel több példát old meg ugyanannyi idő alatt — nincs várakozás, nincs felszólítás</span></div>
+      <div class="metric reveal"><b class="count" data-to="100" data-suffix="%">0</b><span>a kérdései kapnak választ — nem csak azok, amiket meg mer kérdezni</span></div>
+      <div class="metric reveal"><b class="statictext">0</b><span>megszégyenülés: a hibát csak a robot látja, és úgy kezeli, mint a következő lépcsőt</span></div>
+      <div class="metric reveal"><b class="count" data-to="10" data-suffix=" perc">0</b><span>napi gyakorlás, amit a gyerek magától kezdeményez, mert játéknak éli meg</span></div>
+    </div>
+
+    <div class="growth reveal">
+      <h3>A tanulási kör, ami magától pörög</h3>
+      <div class="loop">
+        <div class="loop__node"><b>Sikerélmény</b><span>rögtön a jó válasz után</span></div>
+        <span class="loop__arrow" aria-hidden="true">→</span>
+        <div class="loop__node"><b>Motiváció</b><span>„még egy feladatot!”</span></div>
+        <span class="loop__arrow" aria-hidden="true">→</span>
+        <div class="loop__node"><b>Több gyakorlás</b><span>napi rutin lesz belőle</span></div>
+        <span class="loop__arrow" aria-hidden="true">→</span>
+        <div class="loop__node"><b>Gyorsuló fejszámolás</b><span>biztosabb, magabiztosabb</span></div>
+      </div>
+      <p class="loop__back">↺ és kezdődik elölről, egyre nehezebb szinten</p>
+    </div>
+
+    <div class="bars reveal">
+      <h3>Mit erősít a demó tananyag?</h3>
+      <div class="bar-row"><span>Szorzótábla biztonság</span><i class="bar" style="--w:92%"><em>92%</em></i></div>
+      <div class="bar-row"><span>Fejben osztás</span><i class="bar" style="--w:78%"><em>78%</em></i></div>
+      <div class="bar-row"><span>Mértékegység-váltás</span><i class="bar" style="--w:84%"><em>84%</em></i></div>
+      <div class="bar-row"><span>Feladatmegoldó kedv</span><i class="bar" style="--w:96%"><em>96%</em></i></div>
+      <p class="note">A számok a termékkoncepció célértékei egy 6 hetes pilot programra — bemutató tartalom, nem mért eredmény.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ KAPCSOLAT ============================ -->
+<section class="view" data-view="/kapcsolat">
+  <div class="wrap section">
+    <header class="sec-head reveal">
+      <p class="eyebrow">Beszéljünk</p>
+      <h2>Hozzuk el Botee-t az iskolátokba</h2>
+      <p class="sec-sub">Pilot programot indítunk iskoláknak és szülői csoportoknak. Írj, és megbeszéljük, hogyan illeszthető a ti óráitokba.</p>
+    </header>
+
+    <div class="contact">
+      <div class="contact__info">
+        <a class="info reveal" href="mailto:hello@botee.hu"><span class="info__ic">✉️</span><b>hello@botee.hu</b><em>Válaszolunk 1 munkanapon belül</em></a>
+        <a class="info reveal" href="tel:+3612345678"><span class="info__ic">📞</span><b>+36 1 234 5678</b><em>H–P, 9:00–17:00</em></a>
+        <div class="info reveal"><span class="info__ic">📍</span><b>Budapest, Magyarország</b><em>Demót helyszínre is viszünk</em></div>
+        <div class="info reveal"><span class="info__ic">🤝</span><b>Pilot partnereket keresünk</b><em>Iskolák, fejlesztő pedagógusok, szülői közösségek</em></div>
+      </div>
+
+      <form class="contact__form reveal" id="contactForm" novalidate>
+        <div class="field"><label for="cname">Neved</label><input id="cname" name="name" type="text" required placeholder="Kovács Anna" /></div>
+        <div class="field"><label for="cmail">E-mail</label><input id="cmail" name="email" type="email" required placeholder="anna@iskola.hu" /></div>
+        <div class="field"><label for="crole">Ki vagy?</label>
+          <select id="crole" name="role">
+            <option>Szülő</option><option>Tanár</option><option>Iskolavezető</option><option>Partner / befektető</option><option>Egyéb</option>
+          </select>
+        </div>
+        <div class="field"><label for="cmsg">Üzenet</label><textarea id="cmsg" name="msg" rows="4" placeholder="Szeretnénk kipróbálni a 3. évfolyamon…"></textarea></div>
+        <button class="btn btn--primary btn--lg" type="submit">Üzenet küldése 🚀</button>
+        <p class="form-note" id="formNote" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__brand">
+      <span class="brand__text">Botee<span class="brand__dot">.</span></span>
+      <p>Az AI magántanár, aki sosem fárad el a magyarázatban.</p>
+    </div>
+    <nav aria-label="Lábléc navigáció">
+      <a href="#/" data-link>Kezdőlap</a>
+      <a href="#/robot" data-link>A robot</a>
+      <a href="#/demo" data-link>Élő demó</a>
+      <a href="#/eredmenyek" data-link>Eredmények</a>
+      <a href="#/kapcsolat" data-link>Kapcsolat</a>
+    </nav>
+    <p class="foot__copy">© 2026 Botee — demó verzió. Az oldalon szereplő adatok és ábrák bemutató célúak.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
