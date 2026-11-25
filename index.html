@@ -6,7 +6,7 @@
 <title>Nikházy Márk · Portfólió</title>
 <meta name="description" content="Nikházy Márk fejlesztői portfóliója: ipari AI, RF tesztműszerek, beágyazott eszközök, webes SaaS és oktatási alkalmazások.">
 <meta property="og:title" content="Nikházy Márk · Portfólió">
-<meta property="og:description" content="ESP32-P4-től a YOLOv8-ig: amit eddig építettem.">
+<meta property="og:description" content="RF test instruments, industrial AI, ESP32 devices and web systems: a selection of my work.">
 <meta property="og:image" content="https://nikhazy.github.io/images/portfolio/sentinel-roi.webp">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b2a6b'/%3E%3Cpath d='M5 18h5l3-8 4 14 3-9 2 3h5' fill='none' stroke='%23e8a23a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,12 +91,7 @@ p{margin:0}
 .scope path{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .scope .t1{stroke:var(--copper)}
 .scope .t2{stroke:var(--cobalt);opacity:.55}
-.tagcard{position:absolute;z-index:2;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;box-shadow:var(--shadow);font:500 .78rem/1.3 var(--f-mono);color:var(--ink-2);white-space:nowrap}
-.tagcard b{display:block;font:700 .9rem var(--f-display);color:var(--ink)}
-.tagcard.a{left:-24px;top:14%}
-.tagcard.b{right:-18px;bottom:16%}
-@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.portrait{width:min(78%,320px)}.tagcard.a{left:-12px}.tagcard.b{right:-8px}}
-
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.portrait{width:min(78%,320px)}}
 /* load sequence */
 .js .hero [data-in]{opacity:0;transform:translateY(14px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards}
 .js .hero [data-in="1"]{animation-delay:.05s}.js .hero [data-in="2"]{animation-delay:.15s}
@@ -217,9 +212,7 @@ section.block{padding-block:clamp(48px,7vw,88px) 0}
 .plan text{font:500 9px var(--f-mono);fill:var(--ink-3)}
 /* device frame */
 .device{background:linear-gradient(160deg,var(--panel-2),var(--bg))}
-.bezel{width:84%;background:#1a1d20;border-radius:14px;padding:3.2%;box-shadow:0 18px 30px -16px rgba(0,0,0,.6);position:relative}
-.bezel img{border-radius:4px;aspect-ratio:1024/600;object-fit:cover;width:100%}
-.bezel .call{position:absolute;right:6%;top:9%;background:#26a85f;color:#fff;font:700 .72rem var(--f-display);padding:6px 11px;border-radius:999px;box-shadow:0 0 0 0 rgba(38,168,95,.7);animation:ring 1.8s infinite}
+.bezel{width:72%;background:#1a1d20;border-radius:14px;padding:3.2%;box-shadow:0 18px 30px -16px rgba(0,0,0,.6);position:relative}
 @keyframes ring{0%{box-shadow:0 0 0 0 rgba(38,168,95,.6)}70%{box-shadow:0 0 0 12px rgba(38,168,95,0)}100%{box-shadow:0 0 0 0 rgba(38,168,95,0)}}
 .contain{background:var(--white-tile)}
 .contain>img{object-fit:contain!important;padding:4%}
@@ -252,10 +245,28 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
   .scope path{stroke-dashoffset:0}
   html{scroll-behavior:auto}
 }
+
+/* v2 additions */
+.lang-btn{border:1px solid var(--line);background:var(--panel);color:var(--ink-2);border-radius:999px;height:34px;padding:0 12px;font:600 .78rem var(--f-mono);letter-spacing:.06em;cursor:pointer;margin-left:6px}
+.lang-btn:hover,.theme-btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.device{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:10px}
+.slides{position:relative;aspect-ratio:1024/600;border-radius:4px;overflow:hidden;background:#000}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
+.slides img.on{opacity:1}
+.dev-cap{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dev-cap button{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink-3);font:500 .68rem var(--f-mono);border-radius:999px;padding:3px 8px;cursor:pointer}
+.dev-cap button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card.more{background:transparent;border:1.5px dashed var(--line);justify-content:center}
+.card.more:hover{transform:none;box-shadow:none}
+.card.more .body{justify-content:center;gap:14px;padding:28px}
+.card.more h3{font-size:1.6rem}
+.more-list{display:flex;flex-wrap:wrap;gap:6px}
+.more-list span{font:400 .78rem/1 var(--f-mono);background:var(--panel-2);border-radius:5px;padding:6px 8px;color:var(--ink-2)}
+.note-line{margin-top:14px;font-size:.95rem;color:var(--ink-3)}
 </style>
 </head>
 <body>
-<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>(function(){var r=document.documentElement;r.classList.add('js');try{var t=localStorage.getItem('theme');if(t)r.dataset.theme=t}catch(e){}})()</script>
 
 <header class="top" id="top">
   <div class="wrap">
@@ -263,12 +274,13 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
       <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--ink)"/><path d="M5 18h5l3-8 4 14 3-9 2 3h5" fill="none" stroke="var(--copper)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Nikházy Márk
     </a>
-    <nav aria-label="Fő navigáció">
-      <a href="#kiemelt" class="hide-sm">Kiemelt</a>
-      <a href="#projektek">Projektek</a>
-      <a href="#rolam" class="hide-sm">Rólam</a>
-      <a href="#kapcsolat">Kapcsolat</a>
-      <button class="theme-btn" id="themeBtn" type="button" aria-label="Világos/sötét téma váltása">
+    <nav aria-label="Navigation">
+      <a href="#kiemelt" class="hide-sm" data-i18n="nav1">Kiemelt</a>
+      <a href="#projektek" data-i18n="nav2">Projektek</a>
+      <a href="#rolam" class="hide-sm" data-i18n="nav3">Rólam</a>
+      <a href="#kapcsolat" class="hide-sm" data-i18n="nav4">Kapcsolat</a>
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Switch language">EN</button>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Light / dark theme">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
     </nav>
@@ -279,13 +291,14 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow" data-in="1">Gépészmérnök · szoftver- és hardverfejlesztő</div>
-      <h1 data-in="2">Nikházy Márk<span class="thin">a forrasztópákától a felhőig.</span></h1>
-      <p class="lede" data-in="3">Olyan eszközöket építek, amelyek valódi problémát oldanak meg: <b>RF tesztműszereket</b> gyártósorokra, <b>ipari AI képfeldolgozást</b> minőségellenőrzéshez, <b>ESP32 és Raspberry Pi alapú eszközöket</b> a saját NYÁK-jukkal, és <b>webes rendszereket</b> könyvelőknek, bútorgyártóknak, rendezvényhelyszíneknek. Ezen az oldalon az eddigi munkáim egy része látható.</p>
+      <div class="eyebrow" data-in="1" data-i18n="h_eyebrow">Gépészmérnök · szoftver- és hardverfejlesztő</div>
+      <h1 data-in="2"><span data-i18n="h_name">Nikházy Márk</span><span class="thin" data-i18n="h_thin">a forrasztópákától a felhőig.</span></h1>
+      <p class="lede" data-in="3" data-i18n="h_lede">Olyan eszközöket építek, amelyek valódi problémát oldanak meg: <b>RF tesztműszereket</b> gyártósorokra, <b>ipari AI képfeldolgozást</b> minőségellenőrzéshez, <b>ESP32 és Raspberry Pi alapú eszközöket</b> a saját NYÁK-jukkal, és <b>webes rendszereket</b> könyvelőknek, bútorgyártóknak, rendezvényhelyszíneknek.</p>
+      <p class="note-line" data-in="3" data-i18n="h_note">Ez az oldal csak egy válogatás: az itt bemutatottaknál jóval több eszközt és projektet fejlesztettem.</p>
       <div class="hero-meta" data-in="4">
-        <div><strong>12</strong><span>bemutatott projekt</span></div>
-        <div><strong>5</strong><span>szakterület</span></div>
-        <div><strong>C · C# · Python · TS</strong><span>napi nyelvek</span></div>
+        <div><strong>14+</strong><span data-i18n="h_m1">projekt ezen az oldalon</span></div>
+        <div><strong>5</strong><span data-i18n="h_m2">szakterület</span></div>
+        <div><strong>C · C# · Python · TS</strong><span data-i18n="h_m3">napi nyelvek</span></div>
       </div>
     </div>
     <div class="portrait" data-in="5">
@@ -293,22 +306,20 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
         <path class="t2" d="M0 70 C40 70 60 40 100 40 S160 100 200 100 260 30 300 30 360 90 400 90 460 50 500 50 560 80 600 80 660 45 700 45 760 70 800 70"/>
         <path class="t1" d="M0 60 H170 L185 60 L195 20 L210 105 L222 35 L232 60 H360 L372 60 L380 28 L392 98 L402 45 L410 60 H560 L572 60 L582 18 L596 108 L608 30 L618 60 H800"/>
       </svg>
-      <div class="photo"><img src="images/portfolio/mark.webp" alt="Nikházy Márk portréja" width="500" height="500"></div>
-      <div class="tagcard a" data-in="6"><b>ESP32-P4</b>H.264 · 1080p · 25 Mbit/s</div>
-      <div class="tagcard b" data-in="6"><b>YOLOv8 · EfficientAD</b>hibakeresés hőtérképpel</div>
+      <div class="photo"><img src="images/portfolio/mark.webp" alt="Nikházy Márk" width="500" height="500"></div>
     </div>
   </div>
 </section>
 
 <div class="wrap board">
-  <div class="board-inner" role="group" aria-label="Szűrés szakterület szerint">
-    <span class="eyebrow">Terület</span>
-    <button class="chip" type="button" data-filter="all" aria-pressed="true">Mind <span class="n" data-count="all"></span></button>
-    <button class="chip" type="button" data-filter="hw" aria-pressed="false">Hardver &amp; beágyazott <span class="n" data-count="hw"></span></button>
-    <button class="chip" type="button" data-filter="ind" aria-pressed="false">Ipar &amp; tesztelés <span class="n" data-count="ind"></span></button>
-    <button class="chip" type="button" data-filter="ai" aria-pressed="false">AI <span class="n" data-count="ai"></span></button>
-    <button class="chip" type="button" data-filter="web" aria-pressed="false">Web &amp; SaaS <span class="n" data-count="web"></span></button>
-    <button class="chip" type="button" data-filter="edu" aria-pressed="false">Oktatás &amp; család <span class="n" data-count="edu"></span></button>
+  <div class="board-inner" role="group" aria-label="Filter">
+    <span class="eyebrow" data-i18n="f_label">Terület</span>
+    <button class="chip" type="button" data-filter="all" aria-pressed="true"><span data-i18n="f_all">Mind</span> <span class="n" data-count="all"></span></button>
+    <button class="chip" type="button" data-filter="hw" aria-pressed="false"><span data-i18n="f_hw">Hardver &amp; beágyazott</span> <span class="n"></span></button>
+    <button class="chip" type="button" data-filter="ind" aria-pressed="false"><span data-i18n="f_ind">Ipar &amp; tesztelés</span> <span class="n"></span></button>
+    <button class="chip" type="button" data-filter="ai" aria-pressed="false">AI <span class="n"></span></button>
+    <button class="chip" type="button" data-filter="web" aria-pressed="false"><span data-i18n="f_web">Web &amp; SaaS</span> <span class="n"></span></button>
+    <button class="chip" type="button" data-filter="edu" aria-pressed="false"><span data-i18n="f_edu">Oktatás &amp; család</span> <span class="n"></span></button>
   </div>
 </div>
 
@@ -316,40 +327,40 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
 <section class="block" id="kiemelt">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2>Kiemelt munkák</h2>
-      <p>Három nagyobb rendszer, amelyeken hónapokig dolgoztam, és ma is élesben futnak vagy termékként árulják őket.</p>
+      <h2 data-i18n="k_h">Kiemelt munkák</h2>
+      <p data-i18n="k_p">Három nagyobb rendszer, amelyeken hónapokig dolgoztam, és ma is élesben futnak vagy termékként árulják őket.</p>
     </div>
 
     <article class="feature rv" data-tags="ai ind">
       <div class="f-text">
-        <div class="kicker"><span class="pill">Ipari AI</span><span class="pill cu">Larix Technologies</span><span class="eyebrow">v1.7.6</span></div>
+        <div class="kicker"><span class="pill" data-i18n="s_pill">Ipari AI</span><span class="pill cu">Larix Technologies</span><span class="eyebrow">v1.7.6</span></div>
         <h3>Sentinel</h3>
-        <p>On-premise vizuális minőségellenőrző platform gyártósorokra: NYÁK-ok, forrasztások, csatlakozók, hiányzó alkatrészek. A mérnök egy „golden” képen bejelöli a vizsgálandó régiókat, a rendszer ORB + homográfia alapon igazítja a képeket, adathalmazt épít, GPU-sorban modellt tanít, majd kötegelt, ütemezett vagy figyelt mappás ellenőrzést futtat. Az operátor által átnézett eredmények visszakerülnek a tanításba, így a modell folyamatosan javul.</p>
-        <p>Hibakereső motorok: osztályozó, PatchCore és EfficientAD anomáliadetektálás (csak jó képekből tanul, hőtérképet ad), YOLOv8, CLIP zero-shot. REST API MES/SCADA/PLC integrációhoz, aláírt gépre kötött licencelés, Windows telepítő és Linux csomag.</p>
+        <p data-i18n="s_p1">On-premise vizuális minőségellenőrző platform gyártósorokra: NYÁK-ok, forrasztások, csatlakozók, hiányzó alkatrészek. A mérnök egy „golden” képen bejelöli a vizsgálandó régiókat, a rendszer ORB + homográfia alapon igazítja a képeket, adathalmazt épít, GPU-sorban modellt tanít, majd kötegelt, ütemezett vagy figyelt mappás ellenőrzést futtat. Az operátor által átnézett eredmények visszakerülnek a tanításba, így a modell folyamatosan javul.</p>
+        <p data-i18n="s_p2">Hibakereső motorok: osztályozó, PatchCore és EfficientAD anomáliadetektálás (csak jó képekből tanul, hőtérképet ad), YOLOv8, CLIP zero-shot. REST API MES/SCADA/PLC integrációhoz, aláírt gépre kötött licencelés, Windows telepítő és Linux csomag.</p>
         <div class="facts">
-          <div><strong>82–95%</strong><span>hiba megtalálva a képek ~10%-ának átnézésével (VisA PCB)</span></div>
-          <div><strong>3 760</strong><span>backend teszt, 117 Playwright E2E</span></div>
-          <div><strong>2 000+</strong><span>commit 8 hónap alatt</span></div>
+          <div><strong>82–95%</strong><span data-i18n="s_f1">hiba megtalálva a képek ~10%-ának átnézésével (VisA PCB)</span></div>
+          <div><strong>3 760</strong><span data-i18n="s_f2">backend teszt, 117 Playwright E2E</span></div>
+          <div><strong>2 000+</strong><span data-i18n="s_f3">commit 8 hónap alatt</span></div>
         </div>
         <div class="stack"><span>Python</span><span>FastAPI</span><span>PyTorch</span><span>YOLOv8</span><span>OpenCV</span><span>Angular 17</span><span>Ed25519</span></div>
         <div class="links"><a href="https://larix-technologies.com" target="_blank" rel="noopener">larix-technologies.com ↗</a></div>
       </div>
       <div class="f-visual">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="images/portfolio/sentinel-roi.webp" alt="Sentinel: vizsgálati régió rajzolása egy ultrahangos szenzor panelen" loading="lazy" width="1366" height="768"></div>
-        <div class="shot float"><img src="images/portfolio/sentinel-heatmap.webp" alt="EfficientAD hőtérkép: a hibás tüske pirossal kiemelve" loading="lazy" width="640" height="580"></div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="images/portfolio/sentinel-roi.webp" alt="Sentinel: drawing an inspection region on a sensor board" loading="lazy" width="1366" height="768"></div>
+        <div class="shot float"><img src="images/portfolio/sentinel-heatmap.webp" alt="EfficientAD heatmap highlighting a defective pin" loading="lazy" width="640" height="580"></div>
       </div>
     </article>
 
     <article class="feature rv" data-tags="hw ind">
       <div class="f-text">
-        <div class="kicker"><span class="pill">RF tesztműszerek</span><span class="pill cu">NOFFZ Technologies</span></div>
-        <h3>ITN tesztplatform</h3>
-        <p>A NOFFZ Technologies vezeték nélküli tesztműszereinek szoftvere, amelyben a legtöbb commit az enyém. Az ITN 1000 Wi-Fi 6E és Bluetooth 5.2 ellenpárként szolgál a gyártósori végtesztnél: hozzáférési pont, kliens vagy BT eszköz, amelyhez a vizsgált termék rádiója csatlakozik. Az ITN 1200 ezt Zigbee-vel és Thread-del bővíti, az ITN 3000 V2X (C-V2X, DSRC) járműszimulátor, a BSE X pedig mobilhálózat-emulátor.</p>
-        <p>Egy közös kódbázis több terméket szolgál ki: .NET backend Docker konténerben egy ARM-os SBC-n, Angular webes felület, REST API és kliensek LabVIEW, TestStand, Python és C# alá. A munkám nagy része Wi-Fi és Bluetooth stabilitási hibák mély kivizsgálása volt, valódi eszközökön futó Playwright tesztekkel.</p>
+        <div class="kicker"><span class="pill" data-i18n="n_pill">RF tesztműszerek</span><span class="pill cu">NOFFZ Technologies</span></div>
+        <h3 data-i18n="n_h">ITN tesztplatform</h3>
+        <p data-i18n="n_p1">A NOFFZ Technologies vezeték nélküli tesztműszereinek szoftvere, amelyben a legtöbb commit az enyém. Az ITN 1000 Wi-Fi 6E és Bluetooth 5.2 ellenpárként szolgál a gyártósori végtesztnél: hozzáférési pont, kliens vagy BT eszköz, amelyhez a vizsgált termék rádiója csatlakozik. Az ITN 1200 ezt Zigbee-vel és Thread-del bővíti, az ITN 3000 V2X (C-V2X, DSRC) járműszimulátor, a BSE X pedig mobilhálózat-emulátor.</p>
+        <p data-i18n="n_p2">Egy közös kódbázis több terméket szolgál ki: .NET backend Docker konténerben egy ARM-os SBC-n, Angular webes felület, REST API és kliensek LabVIEW, TestStand, Python és C# alá. A munkám nagy része Wi-Fi és Bluetooth stabilitási hibák mély kivizsgálása volt, valódi eszközökön futó Playwright tesztekkel.</p>
         <div class="facts">
-          <div><strong>2,4/5/6</strong><span>GHz sávok, 20–160 MHz csatornák, WPA3</span></div>
-          <div><strong>BR/EDR/LE</strong><span>GATT profilok, A2DP, HFP, OBEX</span></div>
-          <div><strong>4</strong><span>termék egy kódbázison</span></div>
+          <div><strong>2,4/5/6</strong><span data-i18n="n_f1">GHz sávok, 20–160 MHz csatornák, WPA3</span></div>
+          <div><strong>BR/EDR/LE</strong><span data-i18n="n_f2">GATT profilok, A2DP, HFP, OBEX</span></div>
+          <div><strong>4</strong><span data-i18n="n_f3">termék egy kódbázison</span></div>
         </div>
         <div class="stack"><span>C# .NET</span><span>ASP.NET Core</span><span>Angular</span><span>BlueZ / D-Bus</span><span>hostapd</span><span>OpenThread</span><span>Docker</span></div>
         <div class="links"><a href="https://www.noffz.com/produkte-komponenten/itn-1000-iot-test-node/" target="_blank" rel="noopener">ITN 1000 ↗</a><a href="https://www.noffz.com/itn-3000-iot-test-node/" target="_blank" rel="noopener">ITN 3000 ↗</a></div>
@@ -357,9 +368,9 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
       <div class="f-visual">
         <div class="bench">
           <figure class="wide"><img src="images/portfolio/itn1000-render.webp" alt="NOFFZ ITN 1000 IoT Test Node" loading="lazy" width="1000" height="559"><figcaption><b>ITN 1000 / 1200</b>Wi-Fi 6E · BT 5.2 · Zigbee · Thread</figcaption></figure>
-          <figure><img src="images/portfolio/itn3000.webp" alt="NOFFZ ITN 3000 V2X szimulátor" loading="lazy" width="900" height="389"><figcaption><b>ITN 3000</b>V2X · C-V2X · DSRC</figcaption></figure>
-          <figure><img src="images/portfolio/bsex.webp" alt="NOFFZ BSE X mobilhálózat-emulátor" loading="lazy" width="900" height="342"><figcaption><b>BSE X</b>Mobile Network Emulator</figcaption></figure>
-          <figure class="note"><figcaption><b>Egy kódbázis</b>.NET + Angular, REST API, LabVIEW / TestStand / Python / C# kliensek</figcaption></figure>
+          <figure><img src="images/portfolio/itn3000.webp" alt="NOFFZ ITN 3000 V2X simulator" loading="lazy" width="900" height="389"><figcaption><b>ITN 3000</b>V2X · C-V2X · DSRC</figcaption></figure>
+          <figure><img src="images/portfolio/bsex.webp" alt="NOFFZ BSE X mobile network emulator" loading="lazy" width="900" height="342"><figcaption><b>BSE X</b>Mobile Network Emulator</figcaption></figure>
+          <figure class="note"><figcaption><b data-i18n="n_note_b">Egy kódbázis</b><span data-i18n="n_note">.NET + Angular, REST API, LabVIEW / TestStand / Python / C# kliensek</span></figcaption></figure>
         </div>
       </div>
     </article>
@@ -368,18 +379,18 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
       <div class="f-text">
         <div class="kicker"><span class="pill">Web &amp; 3D</span><span class="pill cu">Bútorterv</span></div>
         <h3>Bútorterv</h3>
-        <p>Webes bútortervező, amellyel a vásárló maga tervezi meg a gardróbját, íróasztalát vagy konyháját. Milliméterre megrajzolja a helyiséget (ferde tetőtér, ajtók, ablakok, radiátorok), 3D-ben megtervezi a bútort élő árral, PDF árajánlatot kap, rendel, és naptárban választ szállítási napot. A gyártó oldalon rendeléskezelés, raktár, anyagszükséglet és lapszabászati terv készül.</p>
-        <p>A rendszer automatikusan összeszerelési útmutatót is generál: az alkatrészek 3D animációban repülnek a helyükre, lépésről lépésre. Az árat a szerver is újraszámolja, és annak egyeznie kell az ajánlattal.</p>
+        <p data-i18n="b_p1">Webes bútortervező, amellyel a vásárló maga tervezi meg a gardróbját, íróasztalát vagy konyháját. Milliméterre megrajzolja a helyiséget (ferde tetőtér, ajtók, ablakok, radiátorok), 3D-ben megtervezi a bútort élő árral, PDF árajánlatot kap, rendel, és naptárban választ szállítási napot. A gyártó oldalon rendeléskezelés, raktár, anyagszükséglet és lapszabászati terv készül.</p>
+        <p data-i18n="b_p2">A rendszer automatikusan összeszerelési útmutatót is generál: az alkatrészek 3D animációban repülnek a helyükre, lépésről lépésre. Az árat a szerver is újraszámolja, és annak egyeznie kell az ajánlattal.</p>
         <div class="facts">
-          <div><strong>357</strong><span>unit teszt fájl tiszta TypeScript domainre</span></div>
-          <div><strong>49</strong><span>dokumentált tervezési döntés</span></div>
-          <div><strong>L · U · sziget</strong><span>konyhák, fogantyú nélküli front</span></div>
+          <div><strong>357</strong><span data-i18n="b_f1">unit teszt fájl tiszta TypeScript domainre</span></div>
+          <div><strong>49</strong><span data-i18n="b_f2">dokumentált tervezési döntés</span></div>
+          <div><strong data-i18n="b_f3b">L · U · sziget</strong><span data-i18n="b_f3">konyhák, fogantyú nélküli front</span></div>
         </div>
         <div class="stack"><span>Next.js 15</span><span>React 19</span><span>three.js / R3F</span><span>Prisma</span><span>PostgreSQL</span><span>Playwright</span></div>
       </div>
       <div class="f-visual">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="images/portfolio/butorterv-kitchen.webp" alt="Bútorterv: szigetes konyha 3D nézetben, nyitott fiókokkal" loading="lazy" width="1384" height="852"></div>
-        <div class="shot float left"><img src="images/portfolio/butorterv-assembly.webp" alt="Automatikusan generált összeszerelési útmutató, 22. lépés a 72-ből" loading="lazy" width="1384" height="852"></div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="images/portfolio/butorterv-kitchen.webp" alt="Bútorterv: island kitchen in 3D with open drawers" loading="lazy" width="1384" height="852"></div>
+        <div class="shot float left"><img src="images/portfolio/butorterv-assembly.webp" alt="Generated assembly guide, step 22 of 72" loading="lazy" width="1384" height="852"></div>
       </div>
     </article>
   </div>
@@ -389,64 +400,97 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
 <section class="block" id="projektek">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2>További projektek</h2>
-      <p>Beágyazott eszközök, belső céges eszközök, kis SaaS-ok és kísérletek. Mindegyik egy konkrét ember konkrét problémájára született.</p>
+      <h2 data-i18n="g_h">További projektek</h2>
+      <p data-i18n="g_p">Beágyazott eszközök, belső céges eszközök, kis SaaS-ok és kísérletek. Mindegyik egy konkrét ember konkrét problémájára született. Ez is csak válogatás.</p>
     </div>
     <div class="grid">
 
       <article class="card rv" data-tags="hw">
-        <div class="vis contain"><img src="images/portfolio/secofon.webp" alt="Vintage fa telefon kerek kijelzővel" loading="lazy" style="object-position:center"></div>
+        <div class="vis contain"><img src="images/portfolio/secofon.webp" alt="Vintage wooden telephone with a round display" loading="lazy" style="object-position:center"></div>
         <div class="body">
-          <span class="sub">Hardver · saját NYÁK</span>
-          <h3>ReCall videós vendégkönyv</h3>
-          <p>Régi stílusú fa telefon, amely esküvőn videós vendégkönyvként működik: a vendég felemeli a kagylót, lejátszódik egy köszöntő, és felvétel indul. Raspberry Pi CM4, hat iteráción át fejlesztett saját NYÁK, titkosított OTA frissítés, USB kulcsos licencelés. Az új generáció ESP32-P4-en hardveres H.264 kódolással rögzít 1080p-ben. Egy rejtett −23 dB-es analóg erősítőfokozatot is távolról, frissítéssel javítottam.</p>
-          <div class="stack"><span>Raspberry Pi CM4</span><span>ESP32-P4</span><span>ESP-IDF</span><span>PyQt5</span><span>FFmpeg</span><span>KiCad NYÁK</span></div>
+          <span class="sub" data-i18n="r_sub">Hardver · saját NYÁK</span>
+          <h3 data-i18n="r_h">ReCall videós vendégkönyv</h3>
+          <p data-i18n="r_p">Régi stílusú fa telefon, amely esküvőn videós vendégkönyvként működik: a vendég felemeli a kagylót, lejátszódik egy köszöntő, és felvétel indul. Raspberry Pi CM4, hat iteráción át fejlesztett saját NYÁK, titkosított OTA frissítés, USB kulcsos licencelés. Az új generáció ESP32-P4-en hardveres H.264 kódolással rögzít 1080p-ben. Egy rejtett −23 dB-es analóg erősítőfokozatot is távolról, frissítéssel javítottam.</p>
+          <div class="stack"><span>Raspberry Pi CM4</span><span>ESP32-P4</span><span>ESP-IDF</span><span>PyQt5</span><span>FFmpeg</span><span>KiCad</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="hw edu">
-        <div class="vis device ill"><div class="bezel"><img src="images/portfolio/familyscreen-farm.webp" alt="Családi Farm játék a 7 colos kijelzőn" loading="lazy"><span class="call">● Hívás · Márk</span></div></div>
+        <div class="vis device">
+          <div class="bezel"><div class="slides" id="devSlides">
+            <img class="on" src="images/portfolio/familyscreen-inc.webp" alt="Incoming call screen with large answer and decline buttons" loading="lazy">
+            <img src="images/portfolio/familyscreen-photo.webp" alt="Photo viewer showing a grandchild's photo" loading="lazy">
+            <img src="images/portfolio/familyscreen-quiz.webp" alt="Quiz game with prize ladder and lifelines" loading="lazy">
+            <img src="images/portfolio/familyscreen-farm.webp" alt="Shared family farm game" loading="lazy">
+          </div></div>
+          <div class="dev-cap" id="devCap">
+            <button type="button" class="on" data-i18n="d_c1">Hívás</button>
+            <button type="button" data-i18n="d_c2">Unokák</button>
+            <button type="button" data-i18n="d_c3">Kvíz</button>
+            <button type="button" data-i18n="d_c4">Farm</button>
+          </div>
+        </div>
         <div class="body">
-          <span class="sub">ESP32-P4 · időseknek</span>
-          <h3>Családablak</h3>
-          <p>7 colos érintőképernyős eszköz nagyszülőknek: digitális képkeret az unokák friss fotóival, és videótelefon, amelyet a család egy webes felületről hív. A nagypapa egyetlen nagy zöld gombbal fogad. Saját videóhívás-protokoll WebSocketen: JPEG képkockák az ESP32-P4 hardveres kódolójával, 16 kHz-es hang, amelyet a szerver lassú hálózaton sem dob el. Van benne kvízjáték 5000+ kérdéssel és egy közös családi farm is.</p>
+          <span class="sub" data-i18n="d_sub">ESP32-P4 · időseknek</span>
+          <h3 data-i18n="d_h">Családablak</h3>
+          <p data-i18n="d_p">7 colos érintőképernyős eszköz nagyszülőknek: digitális képkeret az unokák friss fotóival, és videótelefon, amelyet a család egy webes felületről hív. A nagypapa egyetlen nagy zöld gombbal fogad, vagy az eszköz magától veszi fel. Saját videóhívás-protokoll WebSocketen: JPEG képkockák az ESP32-P4 hardveres kódolójával, 16 kHz-es hang, amelyet a szerver lassú hálózaton sem dob el. Van rajta kvízjáték 5000+ kérdéssel, segítségekkel és nyereménylétrával, valamint egy közös családi farm.</p>
           <div class="stack"><span>ESP32-P4 + C6</span><span>LVGL 9</span><span>C</span><span>aiohttp</span><span>WebSocket</span><span>OTA</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="ai edu web">
-        <div class="vis"><img src="images/portfolio/botee-hero.webp" alt="Botee robot a szorzótábla feladattal a hasán" loading="lazy"></div>
+        <div class="vis"><img src="images/portfolio/botee-hero.webp" alt="Botee robot showing a times-table task on its belly display" loading="lazy"></div>
         <div class="body">
-          <span class="sub">AI oktatás · 7–12 éveseknek</span>
+          <span class="sub" data-i18n="bo_sub">AI oktatás · 7–12 éveseknek</span>
           <h3>Botee</h3>
-          <p>AI magántanár robot koncepció és működő demó: a gyerek élőszóban beszélget vele, a hasán lévő 6 colos kijelzőn kapja a feladatot, a 3 colos arc együtt örül vagy gondolkodik vele. A tanári „agy” cserélhető: szkriptelt, emberi vagy Claude API alapú, egyetlen strukturált válaszformátummal. Tudásfa 1–4. osztályig, XP és szintek.</p>
+          <p data-i18n="bo_p">AI magántanár robot koncepció és működő demó: a gyerek élőszóban beszélget vele, a hasán lévő 6 colos kijelzőn kapja a feladatot, a 3 colos arc együtt örül vagy gondolkodik vele. A tanári „agy” cserélhető: szkriptelt, emberi vagy Claude API alapú, egyetlen strukturált válaszformátummal. Tudásfa 1–4. osztályig, XP és szintek.</p>
           <div class="stack"><span>Vanilla JS</span><span>Web Speech</span><span>Python</span><span>Claude API</span></div>
-          <div class="links"><a href="botee/">Élő demó →</a></div>
+          <div class="links"><a href="botee/" data-i18n="bo_l">Élő demó →</a></div>
+        </div>
+      </article>
+
+      <article class="card rv" data-tags="hw ai">
+        <div class="vis"><img src="images/portfolio/pcbforge.webp" alt="PCBForge: schematic and 4-layer PCB layout side by side" loading="lazy" style="object-position:left top"></div>
+        <div class="body">
+          <span class="sub" data-i18n="pf_sub">Elektronika · NYÁK-tervező eszköz</span>
+          <h3>PCBForge</h3>
+          <p data-i18n="pf_p">Saját NYÁK-tervező eszköz webes felülettel. Algoritmikusan helyezi el az alkatrészeket (ePlace-alapú analitikus placement, legalizálás, szimulált hűtés), még routing előtt minőségi indexet ad hőtérképpel, saját PathFinder routerrel routol több rétegen, egzakt DRC/LVS-sel ellenőriz, és JLCPCB rendelési csomagot készít (Gerber X2, BOM, CPL). Kb. 60 szabályos EMC/ESD előellenőrzés, RoHS/REACH dosszié, és egyszerűbb paneleket szöveges leírásból (Claude) is megtervez.</p>
+          <div class="stack"><span>Python</span><span>PathFinder</span><span>Freerouting</span><span>Gerber X2</span><span>Claude API</span><span>Web UI</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="ind web">
-        <div class="vis loto"><img src="images/portfolio/loto-editor.webp" alt="LOTO utasítás-szerkesztő: gépelrendezés leválasztási pontokkal és nyilakkal" loading="lazy"></div>
+        <div class="vis"><img src="images/portfolio/rack-designer.webp" alt="Rack Designer: 19-inch RF test rack in 3D" loading="lazy"></div>
         <div class="body">
-          <span class="sub">Munkavédelem · WinForms → Blazor → Next.js</span>
-          <h3>LOTO adatbázis</h3>
-          <p>Lockout–Tagout utasítások adatbázisa: gépenként leírja, hogyan kell biztonságosan leválasztani az energiaforrásokat. Asztali alkalmazásként indult, ma több bérlős webes rendszer. Térképszerkesztő piktogramokkal és nyilakkal, élő PDF előnézet, táblaexport PDF-be és vízhatlan STL 3D modellbe a fizikai jelölőkhöz. A régi PDF-ekből 1078 táblát ismert fel automatikusan.</p>
-          <div class="stack"><span>Next.js 15</span><span>Prisma</span><span>react-pdf</span><span>C# WinForms</span><span>2400+ teszt</span></div>
+          <span class="sub" data-i18n="rd_sub">Célgépgyártás · 3D konfigurátor</span>
+          <h3>Rack Designer</h3>
+          <p data-i18n="rd_p">Webes eszköz tesztergyártóknak: egy projekt 19"-os RF mérőrackje percek alatt összekattintható 3D-ben, a szabálymotor pedig feloldja, mi kell még hozzá (tápegység, DIN-sín, hűtés, rögzítők, adapterek). Kábelutak és hosszak, villamos terv, RF jelutak csillapítással, majd automatikusan BOM, árajánlat, leadtime és Gantt-ütemterv. Csatlakozók felismerése az előlapfotókon helyi Florence-2 modellel.</p>
+          <div class="stack"><span>React</span><span>three.js</span><span>Fastify</span><span>Prisma</span><span>PostgreSQL</span><span>pg-boss</span><span>Florence-2</span></div>
+        </div>
+      </article>
+
+      <article class="card rv" data-tags="ind web">
+        <div class="vis"><img src="images/portfolio/loto-app.webp" alt="LOTO database web app" loading="lazy"></div>
+        <div class="body">
+          <span class="sub" data-i18n="l_sub">Munkavédelem · WinForms → Blazor → Next.js</span>
+          <h3 data-i18n="l_h">LOTO adatbázis</h3>
+          <p data-i18n="l_p">Lockout–Tagout utasítások adatbázisa: gépenként leírja, hogyan kell biztonságosan leválasztani az energiaforrásokat. Asztali alkalmazásként indult, ma több bérlős webes rendszer. Térképszerkesztő piktogramokkal és nyilakkal, élő PDF előnézet, táblaexport PDF-be és vízhatlan STL 3D modellbe a fizikai jelölőkhöz. A régi PDF-ekből 1078 táblát ismert fel automatikusan.</p>
+          <div class="stack"><span>Next.js 15</span><span>Prisma</span><span>react-pdf</span><span>C# WinForms</span><span data-i18n="l_t">2400+ teszt</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="web">
-        <div class="vis"><img src="images/portfolio/konyveles-overview.webp" alt="Könyvelői ügyfélportál áttekintő oldala, fiktív ügyfelekkel" loading="lazy" style="object-position:left top"></div>
+        <div class="vis"><img src="images/portfolio/konyveles-overview.webp" alt="Accountant client portal overview with fictional clients" loading="lazy" style="object-position:left top"></div>
         <div class="body">
-          <span class="sub">Könyvelőiroda · ügyfélportál</span>
-          <h3>Könyvelői ügyfélportál</h3>
-          <p>Egy kis könyvelőiroda és ügyfelei közötti dokumentumcsere, e-mail és papír helyett. Az ügyfél év és kategória szerint tölti fel a számláit, a könyvelő feldolgozza, megjelöli vagy visszaküldi. TOTP kétlépcsős azonosítás, adatbázis-triggerekkel védett audit napló, elgépelést tűrő teljes szöveges keresés, OCR és böngészős előnézet.</p>
+          <span class="sub" data-i18n="k2_sub">Könyvelőiroda · ügyfélportál</span>
+          <h3 data-i18n="k2_h">Könyvelői ügyfélportál</h3>
+          <p data-i18n="k2_p">Egy kis könyvelőiroda és ügyfelei közötti dokumentumcsere, e-mail és papír helyett. Az ügyfél év és kategória szerint tölti fel a számláit, a könyvelő feldolgozza, megjelöli vagy visszaküldi. TOTP kétlépcsős azonosítás, adatbázis-triggerekkel védett audit napló, elgépelést tűrő teljes szöveges keresés, OCR és böngészős előnézet.</p>
           <div class="stack"><span>React 19</span><span>Hono</span><span>Cloudflare Workers</span><span>D1 + R2</span><span>tesseract.js</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="ind hw">
-        <div class="vis cam ill" aria-label="Kamerakép súlyadat-feliratozással (illusztráció)">
+        <div class="vis cam ill" role="img" aria-label="Camera image with weight overlay (illustration)">
           <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
             <rect x="0" y="190" width="400" height="60" fill="#2a3036"/>
             <rect x="40" y="178" width="320" height="14" fill="#4a5258"/>
@@ -455,19 +499,19 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
           </svg>
           <div class="rec"><i></i>CAM 01 · RTSP</div>
           <div class="ts mono" id="camTime">2026-11-25 08:14:03</div>
-          <div class="stab" id="camStab">◌ mérés…</div>
+          <div class="stab" id="camStab">◌</div>
           <div class="osd"><span id="camKg">0</span><small>kg</small></div>
         </div>
         <div class="body">
-          <span class="sub">Ipari · Modbus-TCP · videó</span>
-          <h3>Mérleg-kameraoverlay</h3>
-          <p>Hídmérleghez: kiolvassa a mérlegterminál élő súlyadatát Modbus-TCP-n, ráégeti az IP kamera képére, és az eredményt MJPEG „IP kameraként” adja tovább VLC-nek, böngészőnek vagy NVR-nek. ONVIF kamerakeresés, Modbus host keresés a teljes helyi hálózaton, húzd-és-ejtsd feliratpozicionálás, és egy hardver nélküli szimulátor, amely egy teljes kamionmérést modellez.</p>
+          <span class="sub" data-i18n="v_sub">Ipari · Modbus-TCP · videó</span>
+          <h3 data-i18n="v_h">Mérleg-kameraoverlay</h3>
+          <p data-i18n="v_p">Hídmérleghez: kiolvassa a mérlegterminál élő súlyadatát Modbus-TCP-n, ráégeti az IP kamera képére, és az eredményt MJPEG „IP kameraként” adja tovább VLC-nek, böngészőnek vagy NVR-nek. ONVIF kamerakeresés, Modbus host keresés a teljes helyi hálózaton, húzd-és-ejtsd feliratpozicionálás, és egy hardver nélküli szimulátor, amely egy teljes kamionmérést modellez.</p>
           <div class="stack"><span>Python</span><span>Flask</span><span>OpenCV</span><span>pymodbus</span><span>ONVIF</span><span>systemd</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="web ind">
-        <div class="vis desk ill" aria-label="Árajánlat jóváhagyásra várva (illusztráció)">
+        <div class="vis desk ill" role="img" aria-label="Quotation awaiting approval (illustration)">
           <div class="paper" aria-hidden="true">
             <div class="h"></div>
             <div class="r"><span>15 01 01</span><span>papír és karton csomagolás</span><span>12 500</span></div>
@@ -475,45 +519,55 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
             <div class="r hz"><span>15 01 10*</span><span>veszélyes anyagot tartalmazó csomagolás</span><span>94 000</span></div>
             <div class="r"><span>20 03 01</span><span>egyéb települési hulladék</span><span>31 200</span></div>
             <div class="r hz"><span>13 02 05*</span><span>ásványi motorolaj</span><span>72 400</span></div>
-            <div class="wm">JÓVÁHAGYÁSRA VÁR</div>
+            <div class="wm" data-i18n="q_wm">JÓVÁHAGYÁSRA VÁR</div>
           </div>
-          <div class="chain" aria-hidden="true"><span><i></i>Értékesítő</span><span><i></i>Csoportvezető</span><span class="wait"><i></i>Igazgató</span></div>
+          <div class="chain" aria-hidden="true"><span><i></i><em data-i18n="q_c1" style="font-style:normal">Értékesítő</em></span><span><i></i><em data-i18n="q_c2" style="font-style:normal">Csoportvezető</em></span><span class="wait"><i></i><em data-i18n="q_c3" style="font-style:normal">Igazgató</em></span></div>
         </div>
         <div class="body">
-          <span class="sub">Hulladékgazdálkodás · belső eszköz</span>
-          <h3>Árajánlat-készítő</h3>
-          <p>Egy hulladékgazdálkodó cég értékesítőinek: hulladékgyűjtési és -kezelési ajánlat összeállítása, jóváhagyás tetszőleges mélységű vezetői láncon, majd arculatos A4-es PDF. A teljes EU hulladékkatalógus (842 kód, ebből 408 veszélyes) ékezettűrő keresővel, veszélyes tételeknél automatikus pótdíj-záradékkal. Egyetlen 30 MB-os exe, amely Python nélkül, 3,7 mp alatt indul.</p>
+          <span class="sub" data-i18n="q_sub">Hulladékgazdálkodás · belső eszköz</span>
+          <h3 data-i18n="q_h">Árajánlat-készítő</h3>
+          <p data-i18n="q_p">Egy hulladékgazdálkodó cég értékesítőinek: hulladékgyűjtési és -kezelési ajánlat összeállítása, jóváhagyás tetszőleges mélységű vezetői láncon, majd arculatos A4-es PDF. A teljes EU hulladékkatalógus (842 kód, ebből 408 veszélyes) ékezettűrő keresővel, veszélyes tételeknél automatikus pótdíj-záradékkal. Egyetlen 30 MB-os exe, amely Python nélkül, 3,7 mp alatt indul.</p>
           <div class="stack"><span>Python</span><span>Flask</span><span>SQLite</span><span>WeasyPrint</span><span>PyInstaller + GTK</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="web">
-        <div class="vis plan ill" aria-label="Esküvői ültetési rend alaprajzon (illusztráció)">
+        <div class="vis plan ill" role="img" aria-label="Wedding seating plan (illustration)">
           <svg viewBox="0 0 320 200" aria-hidden="true" id="planSvg">
             <path class="wall" d="M10 10 H310 V190 H190 M150 190 H10 Z"/>
             <path d="M150 190 A40 40 0 0 1 190 190" fill="none" stroke="var(--ink-3)" stroke-dasharray="3 3"/>
             <rect class="dance" x="200" y="30" width="90" height="70" rx="4"/>
-            <text x="245" y="69" text-anchor="middle">TÁNCTÉR</text>
+            <text x="245" y="69" text-anchor="middle" data-i18n="w_t1">TÁNCTÉR</text>
             <rect class="tbl" x="200" y="128" width="90" height="22" rx="3"/>
-            <text x="245" y="143" text-anchor="middle">IFJÚ PÁR</text>
+            <text x="245" y="143" text-anchor="middle" data-i18n="w_t2">IFJÚ PÁR</text>
           </svg>
         </div>
         <div class="body">
-          <span class="sub">Rendezvényhelyszíneknek · SaaS</span>
-          <h3>Esküvőszervező</h3>
-          <p>Több bérlős rendszer rendezvényhelyszíneknek és ifjú pároknak. A helyszín canvasra rajzolja a terem alaprajzát és felviszi az asztalkészletét, a pár kezeli a vendéglistát, az ültetést, a szállást és a nyomtatható ültetőkártyákat. Az automatikus ültetés együtt tartja a családokat, és betartja a „mellé / ne mellé” szabályokat. Elmenthető A és B változatok, térkép a közeli szállásokkal, vendégportál.</p>
+          <span class="sub" data-i18n="w_sub">Rendezvényhelyszíneknek · SaaS</span>
+          <h3 data-i18n="w_h">Esküvőszervező</h3>
+          <p data-i18n="w_p">Több bérlős rendszer rendezvényhelyszíneknek és ifjú pároknak. A helyszín canvasra rajzolja a terem alaprajzát és felviszi az asztalkészletét, a pár kezeli a vendéglistát, az ültetést, a szállást és a nyomtatható ültetőkártyákat. Az automatikus ültetés együtt tartja a családokat, és betartja a „mellé / ne mellé” szabályokat. Elmenthető A és B változatok, térkép a közeli szállásokkal, vendégportál.</p>
           <div class="stack"><span>FastAPI</span><span>SQLAlchemy</span><span>React 18</span><span>Konva</span><span>Leaflet</span><span>PostgreSQL</span></div>
         </div>
       </article>
 
       <article class="card rv" data-tags="hw ind">
-        <div class="vis"><img src="images/portfolio/magszelelo.webp" alt="Magszelelő Műhely: a szeparálási ablak diagramja" loading="lazy"></div>
+        <div class="vis"><img src="images/portfolio/magszelelo.webp" alt="Seed separator workshop: separation window chart" loading="lazy"></div>
         <div class="body">
-          <span class="sub">Gépészet · szimuláció</span>
-          <h3>Magszelelő Műhely</h3>
-          <p>Háztáji szőlőmag-szeparátor tervezése törkölyből történő olajsajtoláshoz. Fizikai alapú folyamatszimuláció lebegési sebességekkel és Tromp-görbével, ütközéses (DEM) modell, hozamkalkulátor, interaktív 3D gépnézet és a 3D nyomtatott alkatrészek listája egyetlen weboldalon.</p>
-          <div class="stack"><span>JavaScript</span><span>three.js</span><span>DEM szimuláció</span><span>3D nyomtatás</span></div>
-          <div class="links"><a href="magszelelo/">Megnyitás →</a></div>
+          <span class="sub" data-i18n="m_sub">Gépészet · szimuláció</span>
+          <h3 data-i18n="m_h">Magszelelő Műhely</h3>
+          <p data-i18n="m_p">Háztáji szőlőmag-szeparátor tervezése törkölyből történő olajsajtoláshoz. Fizikai alapú folyamatszimuláció lebegési sebességekkel és Tromp-görbével, ütközéses (DEM) modell, hozamkalkulátor, interaktív 3D gépnézet és a 3D nyomtatott alkatrészek listája egyetlen weboldalon.</p>
+          <div class="stack"><span>JavaScript</span><span>three.js</span><span data-i18n="m_t1">DEM szimuláció</span><span data-i18n="m_t2">3D nyomtatás</span></div>
+          <div class="links"><a href="magszelelo/" data-i18n="m_l">Megnyitás →</a></div>
+        </div>
+      </article>
+
+      <article class="card more rv" data-tags="hw ind ai web edu">
+        <div class="body">
+          <span class="sub" data-i18n="x_sub">És még sok más</span>
+          <h3 data-i18n="x_h">Ez csak egy szelet.</h3>
+          <p data-i18n="x_p">Az itt bemutatott projektek a munkáim egy részét fedik le. Ezek mellett számos további belső eszközt, automatizálást, tesztprogramot, prototípust és ügyfélprojektet fejlesztettem, amelyek titoktartás vagy terjedelem miatt nem szerepelnek az oldalon.</p>
+          <div class="more-list"><span data-i18n="x_1">gyártósori tesztszoftverek</span><span data-i18n="x_2">adatfeldolgozó szkriptek</span><span data-i18n="x_3">belső webes eszközök</span><span data-i18n="x_4">eszköz-prototípusok</span><span data-i18n="x_5">integrációk és API-k</span></div>
+          <div class="links"><a href="#kapcsolat" data-i18n="x_l">Kérdezz bátran →</a></div>
         </div>
       </article>
 
@@ -524,18 +578,18 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
 <section class="block" id="rolam">
   <div class="wrap about rv">
     <div>
-      <div class="eyebrow">Rólam</div>
-      <h2 style="font-size:var(--step-3);font-weight:800;margin:10px 0 18px">Gépészmérnökként kezdtem, ma a teljes láncot építem.</h2>
-      <p>Gépészmérnöki végzettségem után kezdtem programozni, és azóta a munkám a hardver és a szoftver határán mozog. Nálam egy projekt gyakran a kapcsolási rajznál kezdődik, és egy webes admin felületnél, egy Windows telepítőnél vagy egy OTA frissítésnél ér véget.</p>
-      <p>Szeretem, ha egy eszközt a felhasználója tényleg tud használni: a nagypapa egy gombbal, az operátor billentyűparancsokkal, a könyvelő e-mail nélkül. Tesztekkel dolgozom, és a döntéseimet dokumentálom.</p>
+      <div class="eyebrow" data-i18n="a_eb">Rólam</div>
+      <h2 style="font-size:var(--step-3);font-weight:800;margin:10px 0 18px" data-i18n="a_h">Gépészmérnökként kezdtem, ma a teljes láncot építem.</h2>
+      <p data-i18n="a_p1">Gépészmérnöki végzettségem után kezdtem programozni, és azóta a munkám a hardver és a szoftver határán mozog. Nálam egy projekt gyakran a kapcsolási rajznál kezdődik, és egy webes admin felületnél, egy Windows telepítőnél vagy egy OTA frissítésnél ér véget.</p>
+      <p data-i18n="a_p2">Szeretem, ha egy eszközt a felhasználója tényleg tud használni: a nagypapa egy gombbal, az operátor billentyűparancsokkal, a könyvelő e-mail nélkül. Tesztekkel dolgozom, és a döntéseimet dokumentálom.</p>
     </div>
     <div class="skills">
-      <div><h4>Beágyazott &amp; hardver</h4><p>ESP32-P4/C6, ESP-IDF, Raspberry Pi CM4, LVGL, NYÁK tervezés, Bluetooth, Wi-Fi, Zigbee, Thread, Modbus</p></div>
+      <div><h4 data-i18n="sk1">Beágyazott &amp; hardver</h4><p data-i18n="sk1p">ESP32-P4/C6, ESP-IDF, Raspberry Pi CM4, LVGL, NYÁK tervezés, Bluetooth, Wi-Fi, Zigbee, Thread, Modbus</p></div>
       <div><h4>Backend</h4><p>C# / .NET, Python (FastAPI, Flask), Node / Hono, SQL, Docker, Linux, systemd</p></div>
-      <div><h4>Frontend</h4><p>Angular, React, Next.js, three.js, Konva, Tailwind, akadálymentes UI</p></div>
-      <div><h4>AI &amp; látás</h4><p>PyTorch, YOLOv8, anomáliadetektálás, OpenCV, CLIP, LLM integráció (Claude API)</p></div>
-      <div><h4>Minőség</h4><p>Playwright E2E, pytest, Vitest, MSTest, CI, vizuális regresszió</p></div>
-      <div><h4>Szállítás</h4><p>PyInstaller, Inno Setup, Docker image, OTA, Cloudflare, AWS</p></div>
+      <div><h4>Frontend</h4><p data-i18n="sk3p">Angular, React, Next.js, three.js, Konva, Tailwind, akadálymentes UI</p></div>
+      <div><h4 data-i18n="sk4">AI &amp; látás</h4><p data-i18n="sk4p">PyTorch, YOLOv8, anomáliadetektálás, OpenCV, CLIP, LLM integráció (Claude API)</p></div>
+      <div><h4 data-i18n="sk5">Minőség</h4><p data-i18n="sk5p">Playwright E2E, pytest, Vitest, MSTest, CI, vizuális regresszió</p></div>
+      <div><h4 data-i18n="sk6">Szállítás</h4><p>PyInstaller, Inno Setup, Docker, OTA, Cloudflare, AWS</p></div>
     </div>
   </div>
 </section>
@@ -544,14 +598,14 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
 <footer id="kapcsolat">
   <div class="wrap">
     <div>
-      <h2>Beszéljünk egy projektről.</h2>
-      <p>Ha olyan eszközre vagy rendszerre van szükséged, amely valahol a hardver, a gyártósor és a web között van, szívesen meghallgatom.</p>
+      <h2 data-i18n="c_h">Beszéljünk egy projektről.</h2>
+      <p data-i18n="c_p">Ha olyan eszközre vagy rendszerre van szükséged, amely valahol a hardver, a gyártósor és a web között van, szívesen meghallgatom.</p>
     </div>
     <div class="links">
       <a href="https://github.com/nikhazy" target="_blank" rel="noopener">GitHub ↗</a>
       <a href="https://larix-technologies.com" target="_blank" rel="noopener">Larix Technologies ↗</a>
     </div>
-    <div class="small">© <span id="yr">2026</span> Nikházy Márk · A NOFFZ termékképek és nevek a NOFFZ Technologies GmbH tulajdonai. Egyes képek illusztrációk, ahol az eredeti ügyféladatot tartalmazna.</div>
+    <div class="small">© <span id="yr">2026</span> Nikházy Márk · <span data-i18n="c_small">A NOFFZ termékképek és nevek a NOFFZ Technologies GmbH tulajdonai. Egyes képek illusztrációk, ahol az eredeti ügyféladatot tartalmazna.</span></div>
   </div>
 </footer>
 
@@ -561,26 +615,106 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.getElementById('yr').textContent=new Date().getFullYear();
 
-  // theme toggle
+  /* ---------- i18n ---------- */
+  var EN={
+    h_name:'Márk Nikházy',
+    nav1:'Featured',nav2:'Projects',nav3:'About',nav4:'Contact',
+    h_eyebrow:'Mechanical engineer · software &amp; hardware developer',
+    h_thin:'from the soldering iron to the cloud.',
+    h_lede:'I build tools that solve real problems: <b>RF test instruments</b> for production lines, <b>industrial AI vision</b> for quality control, <b>ESP32 and Raspberry Pi devices</b> with their own PCBs, and <b>web systems</b> for accountants, furniture makers and event venues.',
+    h_note:'This page is only a selection: I have built far more tools and projects than the ones shown here.',
+    h_m1:'projects on this page',h_m2:'domains',h_m3:'everyday languages',
+    f_label:'Domain',f_all:'All',f_hw:'Hardware &amp; embedded',f_ind:'Industry &amp; test',f_web:'Web &amp; SaaS',f_edu:'Education &amp; family',
+    k_h:'Featured work',k_p:'Three larger systems I worked on for months. They run in production today or are sold as products.',
+    s_pill:'Industrial AI',
+    s_p1:'On-premise visual quality inspection platform for production lines: PCBs, solder joints, connectors, missing parts. An engineer marks the inspection regions on a golden image; the system aligns images with ORB + homography, builds datasets, trains models in a GPU queue, then runs batch, scheduled or watch-folder inspections. Results reviewed by operators flow back into training, so the model keeps improving.',
+    s_p2:'Inspection engines: classifier, PatchCore and EfficientAD anomaly detection (learns from good images only and produces heatmaps), YOLOv8, CLIP zero-shot. REST API for MES/SCADA/PLC integration, signed machine-bound licensing, Windows installer and Linux package.',
+    s_f1:'of defects caught by reviewing ~10% of images (VisA PCB)',s_f2:'backend tests, 117 Playwright E2E',s_f3:'commits in 8 months',
+    n_pill:'RF test instruments',n_h:'ITN test platform',
+    n_p1:'Software for NOFFZ Technologies’ wireless test instruments, where I am the top committer. The ITN 1000 acts as the Wi-Fi 6E and Bluetooth 5.2 counterpart in end-of-line testing: an access point, client or BT device that the radio of the product under test connects to. The ITN 1200 adds Zigbee and Thread, the ITN 3000 is a V2X (C-V2X, DSRC) vehicle simulator, and the BSE X is a mobile network emulator.',
+    n_p2:'One shared codebase serves several products: a .NET backend in Docker on an ARM SBC, an Angular web UI, a REST API and clients for LabVIEW, TestStand, Python and C#. Much of my work was deep investigation of Wi-Fi and Bluetooth reliability issues, with Playwright tests running on real hardware.',
+    n_f1:'GHz bands, 20–160 MHz channels, WPA3',n_f2:'GATT profiles, A2DP, HFP, OBEX',n_f3:'products on one codebase',
+    n_note_b:'One codebase',n_note:'.NET + Angular, REST API, LabVIEW / TestStand / Python / C# clients',
+    b_p1:'A web furniture designer where customers design their own wardrobe, desk or kitchen. They draw the room to the millimetre (sloped attic ceilings, doors, windows, radiators), design the furniture in 3D with a live price, get a PDF quote, order, and pick a delivery day on a calendar. On the manufacturer side it handles orders, stock, material requirements and board-cutting plans.',
+    b_p2:'It also generates an assembly guide automatically: parts fly into place in a step-by-step 3D animation. The server recalculates the price, and it must match the quote.',
+    b_f1:'unit test files on a pure TypeScript domain',b_f2:'documented design decisions',b_f3b:'L · U · island',b_f3:'kitchens, handle-less fronts',
+    g_h:'More projects',g_p:'Embedded devices, internal company tools, small SaaS products and experiments. Each one was built for a specific person with a specific problem. This, too, is only a selection.',
+    r_sub:'Hardware · custom PCB',r_h:'ReCall video guestbook',
+    r_p:'A vintage-style wooden telephone that works as a video guestbook at weddings: a guest lifts the handset, a welcome message plays and recording starts. Raspberry Pi CM4, a custom PCB refined over six revisions, encrypted OTA updates and USB-key licensing. The next generation records 1080p on an ESP32-P4 with hardware H.264 encoding. I also found a hidden −23 dB analog amplifier stage and fixed it remotely with an update.',
+    d_c1:'Call',d_c2:'Grandkids',d_c3:'Quiz',d_c4:'Farm',
+    d_sub:'ESP32-P4 · for the elderly',d_h:'Family Window',
+    d_p:'A 7-inch touchscreen device for grandparents: a digital photo frame with the latest pictures of the grandchildren, and a video phone the family calls from a web app. Grandpa answers with one big green button, or the device picks up on its own. A custom video-call protocol over WebSocket: JPEG frames from the ESP32-P4 hardware encoder and 16 kHz audio that the server never drops, even on slow links. It also has a quiz game with 5000+ questions, lifelines and a prize ladder, plus a shared family farm.',
+    bo_sub:'AI education · ages 7–12',
+    bo_p:'An AI tutor robot concept with a working demo: the child talks to it out loud, gets tasks on the 6-inch belly display, and the 3-inch face celebrates or thinks along. The tutor “brain” is pluggable (scripted, human or Claude API) behind one structured reply format. Knowledge tree for grades 1–4, XP and levels.',
+    bo_l:'Live demo →',
+    pf_sub:'Electronics · PCB design tool',
+    pf_p:'My own PCB design tool with a web UI. It places components algorithmically (ePlace-style analytical placement, legalisation, simulated annealing), scores placement quality with heatmaps before routing, routes multiple layers with its own PathFinder router, verifies with exact DRC/LVS, and produces a JLCPCB order package (Gerber X2, BOM, CPL). Around 60 EMC/ESD pre-compliance rules, a RoHS/REACH evidence dossier, and it can design simpler boards from a text prompt (Claude).',
+    rd_sub:'Test system building · 3D configurator',
+    rd_p:'A web tool for test-system builders: click together a project’s 19-inch RF test rack in 3D in minutes, while a rule engine resolves what else it needs (power supplies, DIN rail, cooling, fixings, adapters). Cable routes and lengths, electrical schematics, RF signal paths with losses, then an automatic BOM, quote, lead time and Gantt schedule. Connectors on front-panel photos are detected with a local Florence-2 model.',
+    l_sub:'Workplace safety · WinForms → Blazor → Next.js',l_h:'LOTO database',
+    l_p:'A database of Lockout–Tagout procedures: for each machine it describes how to isolate energy sources safely. It started as a desktop app and is now a multi-tenant web system. Map editor with pictograms and arrows, live PDF preview, sign export to PDF and to watertight STL 3D models for physical tags. It automatically recognised 1078 signs in the legacy PDFs.',
+    l_t:'2400+ tests',
+    k2_sub:'Accounting office · client portal',k2_h:'Accountant client portal',
+    k2_p:'Document exchange between a small accounting office and its clients, replacing email and paper. Clients upload invoices by year and category; the accountant processes, flags or returns them. TOTP two-factor login, an audit log protected by database triggers, typo-tolerant full-text search, OCR and in-browser previews.',
+    v_sub:'Industrial · Modbus-TCP · video',v_h:'Weighbridge camera overlay',
+    v_p:'For truck scales: reads live weight from the weighing terminal over Modbus-TCP, burns it into the IP camera image, and republishes the result as an MJPEG “IP camera” for VLC, browsers or NVRs. ONVIF camera discovery, Modbus host scan across the local network, drag-and-drop label placement, and a hardware-free simulator that models a full truck weighing cycle.',
+    q_wm:'AWAITING APPROVAL',q_c1:'Sales',q_c2:'Team lead',q_c3:'Director',
+    q_sub:'Waste management · internal tool',q_h:'Quotation builder',
+    q_p:'For the sales team of a waste management company: build waste collection and treatment quotes, route them for approval up a manager chain of any depth, and export a branded A4 PDF. The full EU waste catalogue (842 codes, 408 hazardous) with accent-insensitive search, and automatic surcharge clauses for hazardous items. A single 30 MB exe that starts in 3.7 s without Python.',
+    w_t1:'DANCE FLOOR',w_t2:'NEWLYWEDS',
+    w_sub:'For event venues · SaaS',w_h:'Wedding organiser',
+    w_p:'A multi-tenant system for event venues and couples. The venue draws its hall on a canvas and enters its table inventory; the couple manages the guest list, seating, accommodation and printable place cards. Auto-seating keeps households together and respects “next to / not next to” rules. Saved plan A and B variants, a map of nearby lodging, and a guest portal.',
+    m_sub:'Mechanical design · simulation',m_h:'Seed Separator Workshop',
+    m_p:'Design of a small-scale grape seed separator for pressing oil from pomace. Physics-based process simulation with terminal velocities and a Tromp curve, a collision (DEM) model, a yield calculator, an interactive 3D machine view and the list of 3D-printed parts, all on one web page.',
+    m_t1:'DEM simulation',m_t2:'3D printing',m_l:'Open →',
+    x_sub:'And much more',x_h:'This is only a slice.',
+    x_p:'The projects shown here cover only part of my work. Alongside them I have built many more internal tools, automations, test programs, prototypes and client projects that are not on this page for confidentiality or space reasons.',
+    x_1:'production test software',x_2:'data processing scripts',x_3:'internal web tools',x_4:'device prototypes',x_5:'integrations &amp; APIs',x_l:'Feel free to ask →',
+    a_eb:'About',a_h:'I started as a mechanical engineer. Today I build the whole chain.',
+    a_p1:'I started programming after graduating in mechanical engineering, and my work has lived on the border of hardware and software ever since. A project of mine often starts at the schematic and ends at a web admin panel, a Windows installer or an OTA update.',
+    a_p2:'I want the people who use a device to actually manage it: grandpa with one button, the operator with keyboard shortcuts, the accountant without email. I work test-first and document my decisions.',
+    sk1:'Embedded &amp; hardware',sk1p:'ESP32-P4/C6, ESP-IDF, Raspberry Pi CM4, LVGL, PCB design, Bluetooth, Wi-Fi, Zigbee, Thread, Modbus',
+    sk3p:'Angular, React, Next.js, three.js, Konva, Tailwind, accessible UI',
+    sk4:'AI &amp; vision',sk4p:'PyTorch, YOLOv8, anomaly detection, OpenCV, CLIP, LLM integration (Claude API)',
+    sk5:'Quality',sk5p:'Playwright E2E, pytest, Vitest, MSTest, CI, visual regression',sk6:'Shipping',
+    c_h:'Let’s talk about a project.',
+    c_p:'If you need a device or system that sits somewhere between hardware, the production line and the web, I’d be glad to hear about it.',
+    c_small:'NOFFZ product images and names are property of NOFFZ Technologies GmbH. Some images are illustrations where the original would show client data.'
+  };
+  var nodes=[].slice.call(document.querySelectorAll('[data-i18n]'));
+  nodes.forEach(function(n){n._hu=n.innerHTML});
+  var langBtn=document.getElementById('langBtn'),lang='hu';
+  var TXT={hu:{stab:'● STABIL',meas:'◌ mérés…',empty:'◌ üres',title:'Nikházy Márk · Portfólió'},en:{stab:'● STABLE',meas:'◌ weighing…',empty:'◌ empty',title:'Márk Nikházy · Portfolio'}};
+  function setLang(l){
+    lang=l;root.lang=l;
+    nodes.forEach(function(n){var k=n.getAttribute('data-i18n');n.innerHTML=l==='en'&&EN[k]!=null?EN[k]:n._hu});
+    langBtn.textContent=l==='en'?'HU':'EN';
+    langBtn.setAttribute('aria-label',l==='en'?'Magyar nyelv':'English');
+    document.title=TXT[l].title;
+  }
+  var pref=null;try{pref=localStorage.getItem('lang')}catch(e){}
+  if(!pref){pref=(navigator.language||'hu').toLowerCase().indexOf('hu')===0?'hu':'en'}
+  if(location.hash==='#en')pref='en';if(location.hash==='#hu')pref='hu';
+  setLang(pref);
+  langBtn.addEventListener('click',function(){var n=lang==='en'?'hu':'en';setLang(n);try{localStorage.setItem('lang',n)}catch(e){}});
+
+  /* ---------- theme ---------- */
   document.getElementById('themeBtn').addEventListener('click',function(){
     var cur=root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
     var next=cur==='dark'?'light':'dark';root.dataset.theme=next;
     try{localStorage.setItem('theme',next)}catch(e){}
   });
 
-  // sticky bar border
   var top=document.getElementById('top');
   addEventListener('scroll',function(){top.classList.toggle('scrolled',scrollY>8)},{passive:true});
-
-  // oscilloscope path lengths
   document.querySelectorAll('.scope path').forEach(function(p){p.style.setProperty('--len',Math.ceil(p.getTotalLength()))});
 
-  // filters
-  var items=[].slice.call(document.querySelectorAll('[data-tags]'));
+  /* ---------- filters ---------- */
+  var items=[].slice.call(document.querySelectorAll('[data-tags]')).filter(function(i){return !i.classList.contains('more')});
   var chips=[].slice.call(document.querySelectorAll('.chip'));
   chips.forEach(function(c){
     var f=c.dataset.filter,n=f==='all'?items.length:items.filter(function(i){return i.dataset.tags.split(' ').indexOf(f)>-1}).length;
-    var el=c.querySelector('.n');if(el)el.textContent=n;
+    c.querySelector('.n').textContent=n;
     c.addEventListener('click',function(){
       chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false')});
       items.forEach(function(i){
@@ -588,22 +722,27 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
         i.classList.toggle('hidden-by-filter',!show);
         if(show)i.classList.add('in');
       });
-      var fl=document.querySelectorAll('.feature:not(.hidden-by-filter)').length;
-      document.getElementById('kiemelt').hidden=fl===0;
+      document.getElementById('kiemelt').hidden=document.querySelectorAll('.feature:not(.hidden-by-filter)').length===0;
     });
   });
 
-  // scroll reveal (armed only if supported; items already on screen show immediately)
+  /* ---------- scroll reveal ---------- */
   if('IntersectionObserver' in window && !reduce){
     root.classList.add('reveal-on');
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
     document.querySelectorAll('.rv').forEach(function(el,i){
-      var r=el.getBoundingClientRect();
-      if(r.top<innerHeight){el.classList.add('in')}else{el.style.transitionDelay=(i%3)*70+'ms';io.observe(el)}
+      if(el.getBoundingClientRect().top<innerHeight){el.classList.add('in')}else{el.style.transitionDelay=(i%3)*70+'ms';io.observe(el)}
     });
   }
 
-  // floor plan: round tables, seats fill in
+  /* ---------- device screen carousel ---------- */
+  var slides=[].slice.call(document.querySelectorAll('#devSlides img')),caps=[].slice.call(document.querySelectorAll('#devCap button')),cur=0,timer;
+  function show(i){cur=i;slides.forEach(function(s,k){s.classList.toggle('on',k===i)});caps.forEach(function(b,k){b.classList.toggle('on',k===i)})}
+  function auto(){clearInterval(timer);if(!reduce)timer=setInterval(function(){show((cur+1)%slides.length)},3200)}
+  caps.forEach(function(b,k){b.addEventListener('click',function(){show(k);auto()})});
+  auto();
+
+  /* ---------- floor plan ---------- */
   var svg=document.getElementById('planSvg'),NS='http://www.w3.org/2000/svg',seats=[];
   [[50,50],[115,50],[50,115],[115,115],[50,160],[115,160],[170,80],[170,145]].forEach(function(t){
     var c=document.createElementNS(NS,'circle');c.setAttribute('cx',t[0]);c.setAttribute('cy',t[1]);c.setAttribute('r',15);c.setAttribute('class','tbl');svg.appendChild(c);
@@ -618,21 +757,20 @@ footer .links a:hover{background:var(--bg);color:var(--ink);text-decoration:none
   }
   if(reduce){seats.forEach(function(s,i){if(i%7)s.classList.add('on')})}else fillSeats();
 
-  // weighbridge OSD: truck arrives, value oscillates, settles
+  /* ---------- weighbridge OSD ---------- */
   var kg=document.getElementById('camKg'),st=document.getElementById('camStab'),tEl=document.getElementById('camTime');
-  function fmt(v){return Math.round(v/20)*20}
+  function fmt(v){return (Math.round(v/20)*20).toLocaleString('hu-HU')}
   function cycle(){
-    var target=21800+Math.round(Math.random()*1200/20)*20,t0=performance.now();
+    var target=21800+Math.round(Math.random()*60)*20,t0=performance.now();
     function step(now){
-      var t=(now-t0)/1000,v;
-      if(t<1.2){v=target*(t/1.2)}else{v=target+Math.exp(-(t-1.2)*1.6)*900*Math.sin((t-1.2)*9)}
-      kg.textContent=fmt(Math.max(0,v)).toLocaleString('hu-HU');
-      var stable=t>3.6;st.textContent=stable?'● STABIL':'◌ mérés…';st.style.color=stable?'#9ff0c9':'#ffd37a';
-      if(t<7)requestAnimationFrame(step);else{kg.textContent='0';st.textContent='◌ üres';setTimeout(cycle,900)}
+      var t=(now-t0)/1000,v=t<1.2?target*(t/1.2):target+Math.exp(-(t-1.2)*1.6)*900*Math.sin((t-1.2)*9);
+      kg.textContent=fmt(Math.max(0,v));
+      var stable=t>3.6;st.textContent=stable?TXT[lang].stab:TXT[lang].meas;st.style.color=stable?'#9ff0c9':'#ffd37a';
+      if(t<7)requestAnimationFrame(step);else{kg.textContent='0';st.textContent=TXT[lang].empty;setTimeout(cycle,900)}
     }
     requestAnimationFrame(step);
   }
-  if(reduce){kg.textContent='22 340';st.textContent='● STABIL'}else cycle();
+  if(reduce){kg.textContent='22 340';st.textContent=TXT[lang].stab}else cycle();
   setInterval(function(){var d=new Date();tEl.textContent=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+d.toTimeString().slice(0,8)},1000);
 })();
 </script>
